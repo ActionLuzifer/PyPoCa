@@ -25,6 +25,7 @@ class PyPoCaDB:
             
             
     def _createStrings(self):
+        self.sqlCREATEcastsAndEpisodes = "CREATE TABLE podcastsAndEpisodes (castID INTEGER NOT NULL, highestEpisodeID INTEGER NOT NULL, UNIQUE(castid, highestEpisodeID);"
         self.sqlite3CREATEpodcasts = "CREATE TABLE podcasts (castid CONSTRAINT primkey PRIMARY KEY, castname, casturl);"
         self.sqlite3INSERTpodcasts = "INSERT INTO podcasts VALUES ({0}, {1}, {2});"
         self.sqlite3UPDATEpodcasts_name = "UPDATE podcasts SET castname='{0}' WHERE castid={1};"
@@ -40,12 +41,7 @@ class PyPoCaDB:
         self.sqlite3UPDATEepisodes_status      = "UPDATE episodes SET status={0} WHERE castID={1};"
         self.sqlite3DELETEepisodes = "DELETE episodes WHERE castid={0} AND episodesid={1};"
         self.sqlite3SELECTepisodesByCast = "SELECT * FROM episodes WHERE castid={0};"
-        
-        self.sqlCREATEcastsAndEpisodes = "CREATE TABLE podcastsAndEpisodes (castID INTEGER NOT NULL, highestEpisodeID INTEGER NOT NULL, UNIQUE(castid, highestEpisodeID);"
-        self.sqlINSERTcastsAndEpisodes = "INSERT INTO podcastsAndEpisodes VALUES ({0}, {1});"
-        self.sqlUPDATEcastsAndEpisodes = "UPDATE podcastsAndEpisodes SET highestEpisodeID={0} WHERE castID={1};"
-        self.sqlDELETEcastsAndEpisodes = "DELETE podcastsAndEpisodes WHERE castid={0}"
-         
+
         
         
         self.sqlite3CREATEconfig = "CREATE TABLE config (confid CONSTRAINT primkey PRIMARY KEY, confname, confdata);"

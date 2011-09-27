@@ -82,3 +82,7 @@ class Podcast:
 
     def getEpisodesByHTML(self, htmlpage):
         print("TODO:")
+        
+    def getNewEpisodes(self):
+        print("TODO:")
+        
