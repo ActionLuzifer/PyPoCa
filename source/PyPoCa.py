@@ -16,11 +16,6 @@ class PyPoCa:
         self._openDatabase()
 
 
-    def update(self):
-        for podcast in self.mPodcasts:
-            print("TODO:")
-
-
     def _openDatabase(self):
         self.mDB = PyPoCaDB.PyPoCaDB()
 
@@ -42,6 +37,6 @@ class PyPoCa:
         podcast.updateNameByURL(url=_url)
         self.mDB.addPodcast(castID, _url, podcast.getName())
 
-    def updatePodcasts(self):
+    def update(self):
         for podcast in self.mPodcasts:
             podcast.update()
