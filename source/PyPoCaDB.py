@@ -64,7 +64,7 @@ class PyPoCaDB:
             print(tables)
             print(tables.arraysize)
             if not tables.arraysize == 2:
-                self.mtablesArray = {'config': False, 'podcasts': False, 'episodes': False}
+                self.mtablesArray = {'config': False, 'podcasts': False, 'episodes': False, 'podcastsAndEpisodes': False}
                 for table in tables:
                     print(table)
                     self.mtablesArray[table[0]] = True
@@ -74,12 +74,15 @@ class PyPoCaDB:
                     self.createTablePodcasts()
                 if not self.mtablesArray['episodes']:
                     self.createTableEpisodes()
+                if not self.mtablesArray['podcastsAndEpisodes']:
+                    self.createTablepodcastsAndEpisodes()
 
 
     def createDB(self):
         self.createTableConfig()
         self.createTablePodcasts()
         self.createTableEpisodes()
+        self.createTablepodcastsAndEpisodes()
 
 
     def createTableConfig(self):
@@ -94,6 +97,10 @@ class PyPoCaDB:
 
     def createTableEpisodes(self):
         self._executeCommand(self.sqlite3CREATEepisodes)
+
+
+    def createTablepodcastsAndEpisodes(self):
+        self._executeCommand(self.sqlCREATEcastsAndEpisodes)
 
 
     def getConfig(self, _config):
