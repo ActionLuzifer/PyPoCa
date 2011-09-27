@@ -10,7 +10,8 @@ import sqlite3
 import Podcast
 
 class PyPoCaDB:
-
+    ''' dumme Klasse, sendet nur die Daten an die Datenbank wie es sie uebergeben bekommt
+    '''
     def __init__(self):
         self._createStrings()
         self.mDBopen = False
@@ -39,6 +40,11 @@ class PyPoCaDB:
         self.sqlite3UPDATEepisodes_status      = "UPDATE episodes SET status={0} WHERE castID={1};"
         self.sqlite3DELETEepisodes = "DELETE episodes WHERE castid={0} AND episodesid={1};"
         self.sqlite3SELECTepisodesByCast = "SELECT * FROM episodes WHERE castid={0};"
+        
+        self.sqlCREATEcastsAndEpisodes = "CREATE TABLE podcastsAndEpisodes (castID INTEGER NOT NULL, highestEpisodeID INTEGER NOT NULL, UNIQUE(castid, highestEpisodeID);"
+        self.sqlINSERTcastsAndEpisodes = "INSERT INTO podcastsAndEpisodes VALUES ({0}, {1});"
+        self.sqlUPDATEcastsAndEpisodes = "UPDATE podcastsAndEpisodes SET highestEpisodeID={0} WHERE castID={1};"
+        self.sqlDELETEcastsAndEpisodes = "DELETE podcastsAndEpisodes WHERE castid={0}"
          
         
         
@@ -151,4 +157,7 @@ class PyPoCaDB:
 
 
     def insertEpisodes(self, episodes):
-        print("TODO")
+        ''' erwartet ein Set von Episoden
+        '''
+        for episode in episodes:
+            self._executeCommand(self.sqlite3INSERTepisodes.format(episode[0], episode[1], episode[2], episode[3], episode[4]))
