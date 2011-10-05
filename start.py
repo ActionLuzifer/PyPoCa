@@ -14,5 +14,5 @@ import PyPoCa
 if __name__ == '__main__':
     pypoca = PyPoCa.PyPoCa()
     pypoca.loadConfig()
-    pypoca.addPodcastByFile()
+    #pypoca.addPodcastByFile()
     pypoca.update()
