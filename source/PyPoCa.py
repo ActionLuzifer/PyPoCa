@@ -8,6 +8,7 @@ Created on 2011-09-24
 
 import PyPoCaDB
 import Podcast
+import os
 
 class PyPoCa:
     def __init__(self):
@@ -24,11 +25,11 @@ class PyPoCa:
         self.mPodcasts = set()
         self.mDB.getPodcasts(self.mPodcasts)
         for podcast in self.mPodcasts:
-            print(podcast)
+            print(podcast.getName())
         self.mConfig = {self.STR_lastCastID:0, self.STR_numberOfCasts:0}
         self.mDB.getConfig(self.mConfig)
         for config in self.mConfig:
-            print(config+" - "+self.mConfig[config])
+            print(config+" - "+str(self.mConfig[config]))
 
 
     def addPodcast(self, _url):
@@ -36,6 +37,32 @@ class PyPoCa:
         podcast = Podcast(castID, self.mDB)
         podcast.updateNameByURL(url=_url)
         self.mDB.addPodcast(castID, _url, podcast.getName())
+
+
+    def addPodcastByFile(self):
+        # allgemeine Daten holen
+        castID = int(self.mConfig[self.STR_lastCastID]) + 1 
+        numberofcasts = int(self.mConfig[self.STR_numberOfCasts]) + 1
+        
+        
+        # Podcast-spezifische Daten holen
+        podcast = Podcast.Podcast(castID, self.mDB)
+        _url = os.path.normpath("C:\\Office\\arbeit\\pypoca\\Doc\\podcasts\\Breitband-feed.xml")
+        podcast.updateNameByFile(_url)
+        
+        # Podcast-spezifische Daten in die DB schreiben
+        self.mDB.addPodcast(castID, podcast.getName(), _url)
+        self.mDB.addEpisodeConfig(castID, 0)
+        
+        # allgemeine Daten in die DB schreiben
+        self.mDB.updateConfigLastCastID(castID)
+        self.mDB.updateConfigNumberOfCasts(numberofcasts)
+        
+        # allgemeine Daten im RAM updaten
+        self.mConfig[self.STR_lastCastID] = castID
+        self.mConfig[self.STR_numberOfCasts] = numberofcasts
+        self.mDB.writeChanges()
+
 
     def update(self):
         for podcast in self.mPodcasts:

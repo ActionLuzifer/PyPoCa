@@ -12,7 +12,7 @@ class PyPoCaDB_Podcast():
     def __init__(self, _DB):
         print()
         self.mDB = _DB
-        self.mDBcuror = self.mDB.cursor()
+        self.mDBcursor = self.mDB.cursor()
 
 
     def insertEpisodes(self, episodes):

@@ -6,6 +6,8 @@ Created on 25.09.2011
 
 import urllib
 import re
+import io
+import os
 
 class Podcast:
     '''
@@ -32,11 +34,15 @@ class Podcast:
             ausserdem speichert sich der Podcast die neue 'url'
         '''
         self.mURL = url
-        self.mNAME = self.getCastName(url)
+        self.mNAME = self._getCastName(url)
+
+    def updateNameByFile(self, url):
+        self.mURL = url
+        self.mNAME = self._getCastNameByFile(url)
 
 
     def setName(self, name):
-        ''' ändert seinen Namen in 'name' um
+        ''' aendert seinen Namen in "name" um
         '''
         self.mNAME = name
 
@@ -62,14 +68,49 @@ class Podcast:
         return castNAME
 
 
+    def _getCastNameByFile(self, url):
+        htmlpage = self.f_fileToString(url)
+        bigRE = "(.)*<title>(?P<CastTitle>(.)*)</title>(.)*";
+        REprogramm = re.compile(bigRE);
+        foundObject = REprogramm.search(htmlpage);
+        castNAME = foundObject.group("CastTitle")
+        return castNAME
+
+
+
     def f_urlToString(self, url):
         htmldings = urllib.request.urlopen(url);
-        return str(htmldings.read().decode('utf-8'));
+        #return str(htmldings.read().decode('ISO-8859-1'));
+        return self.f_decodeString(str(htmldings.read()));
+
+
+    def f_fileToString(self, file):
+        castreader = io.FileIO(file)
+        #caststring = castreader.read().decode('utf-8')
+        caststring = self.f_decodeString(castreader.read())
+        return caststring
+
+
+    def f_decodeString(self, string):
+        try:
+            return string.decode('utf-8')
+        except:
+            try:
+                return string.decode('ISO-8859-1')
+            except:
+                print("error")
 
 
     def update(self):
         # catch the url
-        htmlpage = self.f_urlToString(self.mURL)
+        htmlpage = ""
+        byFile = True
+        if byFile:
+            htmlpage = self.f_fileToString(os.path.normpath("C:\\Office\\arbeit\\pypoca\\Doc\\podcasts\\Breitband-feed.xml"))
+
+        else:
+            htmlpage = self.f_urlToString(self.mURL)
+
         # getEpisodesFromDB
         episodesDB = self.mDB.getAllEpisodesByCastID()
         # getEpisodesFromURL
@@ -81,8 +122,13 @@ class Podcast:
 
 
     def getEpisodesByHTML(self, htmlpage):
+        ''' zieht aus der html-datei die einzelnen Episoden-Urls
+        '''
         print("TODO:")
         
-    def getNewEpisodes(self):
+    def getNewEpisodes(self, episodesDB, episodesURL):
+        ''' Zieht die Episoden aus der episodesURL ab die bereits in der episodesDB
+            vorhanden sind.
+        '''
         print("TODO:")
         
