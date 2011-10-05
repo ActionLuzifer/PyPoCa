@@ -124,8 +124,25 @@ class Podcast:
     def getEpisodesByHTML(self, htmlpage):
         ''' zieht aus der html-datei die einzelnen Episoden-Urls
         '''
-        print("TODO:")
+        linkList = set()
         
+        # um den einzelnen Cast zu identifizieren
+        castRE = "<item>*"
+        castREprog = re.compile(castRE)
+        
+        # um den Link fuer die Episode zu identifizieren
+        linkRE = "(.)*<link>(?P<link>(.)*)</link>(.)*"
+        linkREprog = re.compile(linkRE)
+        
+        for foundSomething in castREprog.split(htmlpage):
+            if re.search("(.)*</item>(.)*", foundSomething):
+                foundLink = linkREprog.search(foundSomething)
+                if foundLink:
+                    link = foundLink.group("link")
+                    linkList.append(link)
+        return linkList
+
+
     def getNewEpisodes(self, episodesDB, episodesURL):
         ''' Zieht die Episoden aus der episodesURL ab die bereits in der episodesDB
             vorhanden sind.
