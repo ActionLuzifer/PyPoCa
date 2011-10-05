@@ -112,7 +112,7 @@ class Podcast:
             htmlpage = self.f_urlToString(self.mURL)
 
         # getEpisodesFromDB
-        episodesDB = self.mDB.getAllEpisodesByCastID()
+        episodesDB = self.mDB.getAllEpisodesByCastID(self.mID)
         # getEpisodesFromURL
         episodesURL = self.getEpisodesByHTML(htmlpage)
         # make a diff
