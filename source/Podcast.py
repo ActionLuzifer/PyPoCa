@@ -20,8 +20,14 @@ class Podcast:
         Constructor
         '''
         self.mDB = DB
+         
+        ''' CAST-ID '''
         self.mID = ID
+        
+        ''' CAST-Name '''
         self.mNAME = ""
+        
+        ''' CAST-URL '''
         self.mURL = ""
 
 
