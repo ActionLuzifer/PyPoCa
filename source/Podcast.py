@@ -177,5 +177,28 @@ class Podcast:
         return newEpisodes
 
 
-    def download(self):
+    def download(self, downloadMethod):
         print("TODO")
+        episoden = self.mDB.getAllEpisodesByCastID(self.mID)
+        for episode in episoden:
+            print(episode)
+            if downloadMethod=="wget":
+                self.downloadEpisodePerWget(episode)
+            elif downloadMethod=="curl":
+                self.downloadEpisodePerCurl(episode)
+            elif downloadMethod=="intern":
+                self.downloadEpisodePerIntern(episode)
+
+
+    def downloadEpisodePerWget(self, episode):
+        print("TODO")
+
+
+    def downloadEpisodePerCurl(self, episode):
+        print("TODO")
+
+
+    def downloadEpisodePerIntern(self, episode):
+        print("TODO")
+
+        

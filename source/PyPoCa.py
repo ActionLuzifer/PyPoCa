@@ -71,4 +71,4 @@ class PyPoCa:
 
     def download(self):
         for podcast in self.mPodcasts:
-            podcast.download()
+            podcast.download("intern")
