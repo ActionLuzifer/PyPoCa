@@ -8,6 +8,7 @@ import urllib
 import re
 import io
 import os
+import PyPoCaDB_Podcast
 
 class Podcast:
     '''
@@ -19,7 +20,8 @@ class Podcast:
         '''
         Constructor
         '''
-        self.mDB = DB
+        
+        self.mDB = PyPoCaDB_Podcast.PyPoCaDB_Podcast(DB)
          
         ''' CAST-ID '''
         self.mID = ID
@@ -124,13 +126,13 @@ class Podcast:
         # make a diff
         newEpisodes = self.getNewEpisodes(episodesDB, episodesURL)
         # send new episodes to DB
-        self.mDB.insertEpisodes(newEpisodes)
+        self.mDB.insertEpisodes(newEpisodes, self.mID)
 
 
     def getEpisodesByHTML(self, htmlpage):
         ''' zieht aus der html-datei die einzelnen Episoden-Urls
         '''
-        linkList = set()
+        linkList = []
         
         # um den einzelnen Cast zu identifizieren
         castRE = "<item>*"
@@ -140,11 +142,15 @@ class Podcast:
         linkRE = "(.)*<link>(?P<link>(.)*)</link>(.)*"
         linkREprog = re.compile(linkRE)
         
+        nameRE = "(.)*<title>(?P<name>(.)*)</title>(.)*"
+        nameREprog = re.compile(nameRE)
+        
         for foundSomething in castREprog.split(htmlpage):
             if re.search("(.)*</item>(.)*", foundSomething):
                 foundLink = linkREprog.search(foundSomething)
                 if foundLink:
-                    link = foundLink.group("link")
+                    foundName = nameREprog.search(foundSomething)
+                    link = [foundLink.group("link"), foundName.group("name")]
                     linkList.append(link)
         return linkList
 
@@ -153,5 +159,23 @@ class Podcast:
         ''' Zieht die Episoden aus der episodesURL ab die bereits in der episodesDB
             vorhanden sind.
         '''
-        print("TODO:")
-        
+        if len(episodesDB):
+            newEpisodes = []
+            
+            for episodeurl in episodesURL:
+                found = False
+                for episodedb in episodesDB:
+                    print(episodeurl[0])
+                    print(episodedb[2])
+                    if episodeurl[0] == episodedb[2]:
+                        found = True
+                        break 
+                if not found:
+                    newEpisodes.append(episodeurl)
+        else:
+            newEpisodes = episodesURL
+        return newEpisodes
+
+
+    def download(self):
+        print("TODO")

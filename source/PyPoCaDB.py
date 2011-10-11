@@ -136,23 +136,17 @@ class PyPoCaDB:
                 print("PyPoCaDB@_executeCommand(self, command):")
                 print("ERROR: ", e.args[0])
                 print("SQL:   ", command)
+                return 0
         except:
             print("PyPoCaDB@_executeCommand(self, command):")
             print("ERROR: UNKNOWN")
             print("SQL:   ", command)
+            return 2
+        return 0
 
 
     def getAllEpisodes(self):
         episodesQuery = self._executeCommand("SELECT * FROM episodes")
-        episodes = set()
-        for qepisode in episodesQuery:
-            episode = [qepisode[0], qepisode[1], qepisode[2], qepisode[3], qepisode[4]]
-            episodes.add(episode)
-        return episodes
-
-
-    def getAllEpisodesByCastID(self, castID):
-        episodesQuery = self._executeCommand(SQLs.SQLs.sqlSELECTepisodesByCast.format(castID))
         episodes = set()
         for qepisode in episodesQuery:
             episode = [qepisode[0], qepisode[1], qepisode[2], qepisode[3], qepisode[4]]

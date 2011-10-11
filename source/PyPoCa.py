@@ -67,3 +67,8 @@ class PyPoCa:
     def update(self):
         for podcast in self.mPodcasts:
             podcast.update()
+
+
+    def download(self):
+        for podcast in self.mPodcasts:
+            podcast.download()
