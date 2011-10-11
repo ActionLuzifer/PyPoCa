@@ -9,11 +9,13 @@ Created on 2011-09-24
 import PyPoCaDB
 import Podcast
 import os
+import sys
 
 class PyPoCa:
     def __init__(self):
         self.STR_lastCastID = 'lastCastID'
         self.STR_numberOfCasts = 'numberOfCasts'
+        self.STR_basepath = "downloadpath"
         self._openDatabase()
 
 
@@ -26,7 +28,7 @@ class PyPoCa:
         self.mDB.getPodcasts(self.mPodcasts)
         for podcast in self.mPodcasts:
             print(podcast.getName())
-        self.mConfig = {self.STR_lastCastID:0, self.STR_numberOfCasts:0}
+        self.mConfig = {self.STR_lastCastID:0, self.STR_numberOfCasts:0, self.STR_basepath:sys.argv[0]}
         self.mDB.getConfig(self.mConfig)
         for config in self.mConfig:
             print(config+" - "+str(self.mConfig[config]))
