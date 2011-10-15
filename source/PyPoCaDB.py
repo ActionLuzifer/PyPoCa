@@ -27,6 +27,7 @@ class PyPoCaDB:
     def openDB(self):
         self.mDBconnection = sqlite3.connect("pypoca.sqlite")
         self.mDBcursor = self.mDBconnection.cursor()
+        self.mDBcursor.row_factory = sqlite3.Row
 
 
     def checkDB(self):
@@ -82,10 +83,10 @@ class PyPoCaDB:
             _config[qconfig[1]] = qconfig[2] 
 
 
-    def getPodcasts(self, _podcasts):
+    def getPodcasts(self, _podcasts, downloadpath):
         podcastsQuery = self._executeCommand(SQLs.SQLs.sqlGETALLpodcasts)
         for qpodcast in podcastsQuery:
-            podcast = Podcast.Podcast(qpodcast[0], self)
+            podcast = Podcast.Podcast(qpodcast[0], self, downloadpath)
             podcast.setName(qpodcast[1])
             podcast.setURL(qpodcast[2])
             _podcasts.add(podcast)

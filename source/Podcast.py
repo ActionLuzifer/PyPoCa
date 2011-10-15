@@ -9,6 +9,7 @@ import re
 import io
 import os
 import PyPoCaDB_Podcast
+import urllib.request
 
 class Podcast:
     '''
@@ -16,21 +17,28 @@ class Podcast:
     '''
 
 
-    def __init__(self, ID, DB):
+    def __init__(self, ID, DB, downloadPath):
         '''
         Constructor
         '''
         
         self.mDB = PyPoCaDB_Podcast.PyPoCaDB_Podcast(DB)
-         
         ''' CAST-ID '''
         self.mID = ID
+        self.mDownloadPathBase = downloadPath
+        self.reloadData()
+
+
+    def reloadData(self):
+        cast = self.mDB.getPodcastInfosByCastID(self.mID)
+        if cast:        
+            ''' CAST-Name '''
+            self.mNAME = cast["castname"]
         
-        ''' CAST-Name '''
-        self.mNAME = ""
-        
-        ''' CAST-URL '''
-        self.mURL = ""
+            ''' CAST-URL '''
+            self.mURL = cast["casturl"]
+            
+            self.mDownloadPath = os.path.normpath(self.mDownloadPathBase+"\\" +self.mNAME)
 
 
     def updateName(self):
@@ -47,6 +55,10 @@ class Podcast:
     def updateNameByFile(self, url):
         self.mURL = url
         self.mNAME = self._getCastNameByFile(url)
+
+
+    def getID(self):
+        return self.mID
 
 
     def setName(self, name):
@@ -179,15 +191,22 @@ class Podcast:
 
     def download(self, downloadMethod):
         print("TODO")
-        episoden = self.mDB.getAllEpisodesByCastID(self.mID)
-        for episode in episoden:
-            print(episode)
-            if downloadMethod=="wget":
-                self.downloadEpisodePerWget(episode)
-            elif downloadMethod=="curl":
-                self.downloadEpisodePerCurl(episode)
-            elif downloadMethod=="intern":
-                self.downloadEpisodePerIntern(episode)
+        if self.checkDownloadPath():
+            episoden = self.mDB.getAllEpisodesByCastID(self.mID)
+            for episode in episoden:
+                print(episode)
+                try:
+                    if downloadMethod=="wget":
+                        self.downloadEpisodePerWget(episode)
+                    elif downloadMethod=="curl":
+                        self.downloadEpisodePerCurl(episode)
+                    elif downloadMethod=="intern":
+                        self.downloadEpisodePerIntern(episode)
+                except urllib.error.URLError as e:
+                    print("Podcast@download(self, downloadMethod):")
+                    print("ERROR: ", e.args[0])
+                    print("method:   ", downloadMethod)
+                    
 
 
     def downloadEpisodePerWget(self, episode):
@@ -199,6 +218,19 @@ class Podcast:
 
 
     def downloadEpisodePerIntern(self, episode):
-        print("TODO")
+        str = "{:0>4}".format(episode[1])
+        castFile = open(os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,episode[3])), 'wb')
+        castFile.write(urllib.request.urlopen(episode[2]).read())
+        castFile.close()
 
-        
+
+    def checkDownloadPath(self):
+        try:
+            if not os.path.exists(self.mDownloadPath):
+                os.makedirs(self.mDownloadPath)
+        except OSError as e:
+                print("Podcast@checkDownloadPath(self):")
+                print("ERROR: ", e.args[0])
+                print("PATH:   ", self.mDownloadPath)
+                return 0
+        return 1

@@ -16,7 +16,6 @@ class PyPoCa:
         self.STR_lastCastID = 'lastCastID'
         self.STR_numberOfCasts = 'numberOfCasts'
         self.STR_basepath = "downloadpath"
-        self._openDatabase()
 
 
     def _openDatabase(self):
@@ -24,14 +23,20 @@ class PyPoCa:
 
 
     def loadConfig(self):
-        self.mPodcasts = set()
-        self.mDB.getPodcasts(self.mPodcasts)
-        for podcast in self.mPodcasts:
-            print(podcast.getName())
-        self.mConfig = {self.STR_lastCastID:0, self.STR_numberOfCasts:0, self.STR_basepath:sys.argv[0]}
+        # Config
+        self._openDatabase()
+        self.mConfig = {self.STR_lastCastID:0, 
+                        self.STR_numberOfCasts:0, 
+                        self.STR_basepath:os.path.normpath(sys.argv[0])}
         self.mDB.getConfig(self.mConfig)
         for config in self.mConfig:
             print(config+" - "+str(self.mConfig[config]))
+            
+        # Podcasts
+        self.mPodcasts = set()
+        self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
+        for podcast in self.mPodcasts:
+            print(podcast.getName())
 
 
     def addPodcast(self, _url):
@@ -74,3 +79,32 @@ class PyPoCa:
     def download(self):
         for podcast in self.mPodcasts:
             podcast.download("intern")
+
+
+    def list(self):
+        anzahlStellen=len(repr(len(self.mPodcasts)))
+        formatStr = "{:0>"+repr(anzahlStellen)+"}"
+        for podcast in self.mPodcasts:
+            print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName())
+
+
+    def printVersion(self):
+        print("0.0.5")
+
+
+    def printHelp(self):
+        self.printVersion()
+        print("Usage: pypoca [options [sub-options]] \n\
+ -h, --help     Displays this help message \n\
+ -v, --version  Displays the current version \n\
+ update         updates all enabled podcasts from it sources (internet or file)\n\
+ download       download new episodes of all enabled podcasts \n\
+ (list [OPTION] shows all podcasts) not yet implemented \n\
+ add URL        add a new podcast from internet (per http(s)) \n\
+ addf FILE      add a new podcast from a file \n\
+ (remove ID     removes the podcast with this ID) not yet implemented \n\
+ (remove NAME   remove the podcast with this NAME) not yet implemented \n\
+ (enable ID     enables the podcast with this ID) not yet implemented \n\
+ (enable NAME   enables the podcast with this NAME) not yet implemented \n\
+ (disable ID    disables the podcast with this ID) not yet implemented \n\
+ (disable NAME  disables the podcast with this NAME) not yet implemented")
