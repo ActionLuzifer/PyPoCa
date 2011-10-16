@@ -28,7 +28,6 @@ if __name__ == '__main__':
                 pypoca.download()
             elif commandStr=="add":
                 pypoca.loadConfig()
-                #pypoca.addPodcastByFile()
                 pypoca.addPodcast(sys.argv[i+1])
             elif commandStr=="addf":
                 pypoca.loadConfig()
