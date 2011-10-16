@@ -196,12 +196,15 @@ class Podcast:
             for episode in episoden:
                 print(episode)
                 try:
-                    if downloadMethod=="wget":
-                        self.downloadEpisodePerWget(episode)
-                    elif downloadMethod=="curl":
-                        self.downloadEpisodePerCurl(episode)
-                    elif downloadMethod=="intern":
-                        self.downloadEpisodePerIntern(episode)
+                    try:
+                        if downloadMethod=="wget":
+                            self.downloadEpisodePerWget(episode)
+                        elif downloadMethod=="curl":
+                            self.downloadEpisodePerCurl(episode)
+                        elif downloadMethod=="intern":
+                            self.downloadEpisodePerIntern(episode)
+                    finally:
+                        #self.mDB.updateEpisodeStatus(episode, )
                 except urllib.error.URLError as e:
                     print("Podcast@download(self, downloadMethod):")
                     print("ERROR: ", e.args[0])
