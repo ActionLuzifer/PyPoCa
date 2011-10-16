@@ -40,10 +40,15 @@ class PyPoCa:
 
 
     def addPodcast(self, _url):
-        castID = self.mConfig[self.STR_lastCastID] =+ 1
-        podcast = Podcast(castID, self.mDB)
-        podcast.updateNameByURL(url=_url)
-        self.mDB.addPodcast(castID, _url, podcast.getName())
+        try:
+            castID = self.mConfig[self.STR_lastCastID] +1 
+            podcast = Podcast(castID, self.mDB)
+            podcast.updateNameByURL(url=_url)
+            self.mDB.addPodcast(castID, _url, podcast.getName())
+            self.mConfig[self.STR_lastCastID] + 1
+        except:
+            print("ERROR@PyPoCa::addPodcast(self, _url)")
+            print(os.error)
 
 
     def addPodcastByFile(self):
@@ -89,7 +94,7 @@ class PyPoCa:
 
 
     def printVersion(self):
-        print("0.0.5")
+        print("0.0.6")
 
 
     def printHelp(self):
@@ -99,7 +104,8 @@ class PyPoCa:
  -v, --version  Displays the current version \n\
  update         updates all enabled podcasts from it sources (internet or file)\n\
  download       download new episodes of all enabled podcasts \n\
- (list [OPTION] shows all podcasts) not yet implemented \n\
+ list           shows all podcasts \n\
+ (list OPTION   shows all podcasts) not yet implemented \n\
  add URL        add a new podcast from internet (per http(s)) \n\
  addf FILE      add a new podcast from a file \n\
  (remove ID     removes the podcast with this ID) not yet implemented \n\
