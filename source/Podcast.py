@@ -10,6 +10,7 @@ import os
 import PyPoCaDB_Podcast
 import urllib.request
 import SQLs
+import Downloader.Intern.Intern as DownIntern
 
 class Podcast:
     '''
@@ -199,11 +200,13 @@ class Podcast:
                     try:                        
                         try:
                             if downloadMethod=="wget":
-                                self.downloadEpisodePerWget(episode)
+                                downloader = False
                             elif downloadMethod=="curl":
-                                self.downloadEpisodePerCurl(episode)
+                                downloader = False                                
                             elif downloadMethod=="intern":
-                                self.downloadEpisodePerIntern(episode)
+                                downloader = DownIntern(self)
+                                
+                            self.downloadEpisode(downloader, episode)
                         finally:
                             self.mDB.updateEpisodeStatus(episode, "downloaded")
                     except urllib.error.URLError as e:
@@ -217,20 +220,10 @@ class Podcast:
             self.mDB.writeChanges()
                     
 
-
-    def downloadEpisodePerWget(self, episode):
-        print("TODO")
-
-
-    def downloadEpisodePerCurl(self, episode):
-        print("TODO")
-
-
-    def downloadEpisodePerIntern(self, episode):
+    def downloadEpisode(self, downloader, episode):
         str = "{:0>4}".format(episode[1])
-        castFile = open(os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,episode[3])), 'wb')
-        castFile.write(urllib.request.urlopen(episode[2]).read())
-        castFile.close()
+        castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,episode[3]))
+        downloader.download(castFileName, episode[2])
 
 
     def checkDownloadPath(self):
