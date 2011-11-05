@@ -4,12 +4,12 @@ Created on 25.09.2011
 @author: DuncanMCLeod
 '''
 
-import urllib
 import re
 import io
 import os
 import PyPoCaDB_Podcast
 import urllib.request
+import SQLs
 
 class Podcast:
     '''
@@ -195,20 +195,25 @@ class Podcast:
             episoden = self.mDB.getAllEpisodesByCastID(self.mID)
             for episode in episoden:
                 print(episode)
-                try:
-                    try:
-                        if downloadMethod=="wget":
-                            self.downloadEpisodePerWget(episode)
-                        elif downloadMethod=="curl":
-                            self.downloadEpisodePerCurl(episode)
-                        elif downloadMethod=="intern":
-                            self.downloadEpisodePerIntern(episode)
-                    finally:
-                        #self.mDB.updateEpisodeStatus(episode, )
-                except urllib.error.URLError as e:
-                    print("Podcast@download(self, downloadMethod):")
-                    print("ERROR: ", e.args[0])
-                    print("method:   ", downloadMethod)
+                    try:                        
+                        try:
+                            if downloadMethod=="wget":
+                                self.downloadEpisodePerWget(episode)
+                            elif downloadMethod=="curl":
+                                self.downloadEpisodePerCurl(episode)
+                            elif downloadMethod=="intern":
+                                self.downloadEpisodePerIntern(episode)
+                        finally:
+                            self.mDB.updateEpisodeStatus(episode, "downloaded")
+                    except urllib.error.URLError as e:
+                        print("Podcast@download(self, downloadMethod):")
+                        print("ERROR: ", e.args[0])
+                        print("method:   ", downloadMethod)
+                        try:
+                            self.mDB.updateEpisodeStatus(episode, "error")
+                        except:
+                            print("ERROR: can't write ERROR to Database")
+            self.mDB.writeChanges()
                     
 
 

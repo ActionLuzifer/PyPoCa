@@ -14,18 +14,18 @@ class PyPoCaDB_Podcast():
 
 
     def getPodcastInfosByCastID(self, castID):
-        result = self.mDB._executeCommand(SQLs.SQLs.sqlSELECTpodcasts.format(castID))
+        result = self.mDB._executeCommand(SQLs.sqlSELECTpodcasts.format(castID))
         return result.fetchone()
 
 
     def getHighestEpisodeIDByCastID(self, castID):
-        numbersQuery = self.mDB._executeCommand(SQLs.SQLs.sqlSELECTcastsAndEpisodes.format(castID))
+        numbersQuery = self.mDB._executeCommand(SQLs.sqlSELECTcastsAndEpisodes.format(castID))
         for number in numbersQuery:
             return number[0]
 
 
     def setHighestEpisodeIDByCastID(self, castID, episodeID):
-        self.mDB._executeCommand(SQLs.SQLs.sqlUPDATEcastsAndEpisodes.format(castID, episodeID))
+        self.mDB._executeCommand(SQLs.sqlUPDATEcastsAndEpisodes.format(castID, episodeID))
 
 
     def insertEpisodes(self, episodes, castID):
@@ -39,8 +39,8 @@ class PyPoCaDB_Podcast():
                 while(anzEpisoden):
                     episode = episodes[anzEpisoden-1]
                     anzEpisoden = anzEpisoden-1
-                    print(SQLs.SQLs.sqlINSERTepisodes.format(castID, episodeID+1, episode[0], episode[1], 1))
-                    if not self.mDB._executeCommand(SQLs.SQLs.sqlINSERTepisodes.format(castID, episodeID+1, episode[0], episode[1], 1))==0:
+                    print(SQLs.sqlINSERTepisodes.format(castID, episodeID+1, episode[0], episode[1], 1))
+                    if not self.mDB._executeCommand(SQLs.sqlINSERTepisodes.format(castID, episodeID+1, episode[0], episode[1], 1))==0:
                         episodeID = episodeID+1   # episodeID wird nur um eins erhoeht wenn die SQL-Abfrage keinen Fehler verursacht hat
                     else:
                         raise Exception()
@@ -52,9 +52,18 @@ class PyPoCaDB_Podcast():
 
 
     def getAllEpisodesByCastID(self, castID):
-        episodesQuery = self.mDB._executeCommand(SQLs.SQLs.sqlSELECTepisodesByCast.format(castID))
+        episodesQuery = self.mDB._executeCommand(SQLs.sqlSELECTepisodesByCast.format(castID))
         episodes = []
         for qepisode in episodesQuery:
             episode = [qepisode[0], qepisode[1], qepisode[2], qepisode[3], qepisode[4]]
             episodes.append(episode)
         return episodes
+
+
+    def updateEpisodeStatus(self, episode, status):
+        self.mDB._executeCommand(SQLs.sqlUPDATEepisodes_status.format(SQLs.episodestatus[status], episode[0], episode[1]))
+        print()
+
+
+    def writeChanges(self):
+        self.mDB.writeChanges()

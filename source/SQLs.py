@@ -13,14 +13,15 @@ sqlSELECTpodcasts = "SELECT * FROM podcasts WHERE castid={0}"
 
 #hpodder:
 #CREATE TABLE "episodes" (castid INTEGER NOT NULL,episodeid INTEGER NOT NULL,title TEXT NOT NULL,epurl TEXT NOT NULL,enctype TEXT NOT NULL,status TEXT NOT NULL,eplength INTEGER NOT NULL DEFAULT 0,epfirstattempt INTEGER,eplastattempt INTEGER,epfailedattempts INTEGER NOT NULL DEFAULT 0,epguid TEXT,UNIQUE(castid, epurl),UNIQUE(castid, episodeid),UNIQUE(castid, epguid))
-sqlCREATEepisodes = "CREATE TABLE episodes (castid INTEGER NOT NULL, episodesid INTEGER NOT NULL, episodeURL TEXT NOT NULL, episodeNAME TEXT NOT NULL, status INT NOT NULL, UNIQUE(castid, episodesid), UNIQUE(castid, episodeURL));"
+sqlCREATEepisodes = "CREATE TABLE episodes (castid INTEGER NOT NULL, episodeid INTEGER NOT NULL, episodeURL TEXT NOT NULL, episodeNAME TEXT NOT NULL, status INT NOT NULL, UNIQUE(castid, episodesid), UNIQUE(castid, episodeURL));"
 sqlINSERTepisodes = "INSERT INTO episodes VALUES ({0}, {1}, '{2}', '{3}', {4});"
-sqlUPDATEepisodes_episodeURL  = "UPDATE episodes SET episodeURL='{0}' WHERE castID={1};"
-sqlUPDATEepisodes_episodeNAME = "UPDATE episodes SET episodeNAME='{0}' WHERE castID={1};"
-sqlUPDATEepisodes_status      = "UPDATE episodes SET status={0} WHERE castID={1};"
+sqlUPDATEepisodes_episodeURL  = "UPDATE episodes SET episodeURL='{0}' WHERE castid={1} AND episodeid={2};"
+sqlUPDATEepisodes_episodeNAME = "UPDATE episodes SET episodeNAME='{0}' WHERE castid={1} AND episodeid={2};"
+sqlUPDATEepisodes_status      = "UPDATE episodes SET status={0} WHERE castid={1} AND episodeid={2};"
 sqlDELETEepisodes = "DELETE episodes WHERE castid={0} AND episodesid={1};"
 sqlSELECTepisodesByCast = "SELECT * FROM episodes WHERE castid={0};"
 
+episodestatus = {"new":3, "downloaded":2, "error":3}
 
 
 sqlCREATEconfig = "CREATE TABLE config (confid CONSTRAINT primkey PRIMARY KEY, confname, confdata);"
