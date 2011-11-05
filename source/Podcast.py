@@ -195,6 +195,7 @@ class Podcast:
             episoden = self.mDB.getAllEpisodesByCastID(self.mID)
             for episode in episoden:
                 print(episode)
+                if not episode[4] == SQLs.episodestatus["downloaded"]:
                     try:                        
                         try:
                             if downloadMethod=="wget":
