@@ -4,13 +4,18 @@ Created on 05.11.2011
 @author: DuncanMCLeod
 '''
 
-import Downloader
 import urllib.request
 
-class Intern(Downloader):
+class Intern:
     '''
     classdocs
     '''
+
+
+    def __init__(self, podcastObj, anzahlThreads):
+        '''
+        Constructor
+        '''
 
 
     def download(self, castFileName, url):
