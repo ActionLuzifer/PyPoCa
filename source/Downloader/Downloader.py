@@ -4,21 +4,15 @@ Created on 05.11.2011
 @author: DuncanMCLeod
 '''
 
-import urllib.request
-
 class Intern:
-    '''
-    classdocs
-    '''
+    '''Basisklasse fuer den Downloadprozess'''
 
 
     def __init__(self, podcastObj, anzahlThreads):
-        '''
-        Constructor
-        '''
+        '''Constructor'''
+        self.podcastObj     = podcastObj    # hierher koennen Statusaenderungen der jeweiligen Episode geschickt werden
+        self.anzahlThreads  = anzahlThreads
 
 
-    def download(self, castFileName, url):
-        castFile = open(castFileName, 'wb')
-        castFile.write(urllib.request.urlopen(url).read())
-        castFile.close()
+    def download(self, id, castFileName, url, status):
+        pass

@@ -223,7 +223,7 @@ class Podcast:
     def downloadEpisode(self, downloader, episode):
         str = "{:0>4}".format(episode[1])
         castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,episode[3]))
-        downloader.download(castFileName, episode[2])
+        downloader.download(episode[1], castFileName, episode[2], episode[4])
 
 
     def checkDownloadPath(self):

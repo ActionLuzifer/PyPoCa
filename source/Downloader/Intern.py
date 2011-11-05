@@ -8,12 +8,10 @@ import Downloader
 import urllib.request
 
 class Intern(Downloader):
-    '''
-    classdocs
-    '''
+    '''Downloadklasse die mithilfe von den Pythonklassen die Dateien herunterlaedt'''
 
 
-    def download(self, castFileName, url):
+    def download(self, id, castFileName, url, status):
         castFile = open(castFileName, 'wb')
         castFile.write(urllib.request.urlopen(url).read())
         castFile.close()
