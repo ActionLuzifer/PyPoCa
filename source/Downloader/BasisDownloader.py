@@ -4,12 +4,12 @@ Created on 05.11.2011
 @author: DuncanMCLeod
 '''
 
-class Intern:
+class Downloader:
     '''Basisklasse fuer den Downloadprozess'''
 
 
-    def __init__(self, podcastObj, anzahlThreads):
-        '''Constructor'''
+    def __init__(self, podcastObj=None, anzahlThreads=1):
+        ''' Constructor '''
         self.podcastObj     = podcastObj    # hierher koennen Statusaenderungen der jeweiligen Episode geschickt werden
         self.anzahlThreads  = anzahlThreads
 

@@ -51,15 +51,15 @@ class PyPoCa:
             print(os.error)
 
 
-    def addPodcastByFile(self):
+    def addPodcastByFile(self, _path):
         # allgemeine Daten holen
         castID = int(self.mConfig[self.STR_lastCastID]) + 1 
         numberofcasts = int(self.mConfig[self.STR_numberOfCasts]) + 1
         
         
-        # Podcast-spezifische Daten holen
+        # Podcast-spezifische Daten erstellen
         podcast = Podcast.Podcast(castID, self.mDB)
-        _url = os.path.normpath("C:\\Office\\arbeit\\pypoca\\Doc\\podcasts\\Breitband-feed.xml")
+        _url = os.path.normpath(_path)
         podcast.updateNameByFile(_url)
         
         # Podcast-spezifische Daten in die DB schreiben
@@ -74,6 +74,19 @@ class PyPoCa:
         self.mConfig[self.STR_lastCastID] = castID
         self.mConfig[self.STR_numberOfCasts] = numberofcasts
         self.mDB.writeChanges()
+
+
+    def removePodcastByID(self, _id):
+        if not self.mDB.removeCast(_id):
+            print("Fehler: konnte den Podcast NICHT korrekt aus der Datenbank entfernen!")
+        self.mDB.writeChanges()
+
+
+    def removePodcastByName(self, _name):
+        for podcast in self.mPodcasts:
+            if podcast.getName() == _name:
+                self.removePodcastByID(podcast.getID())
+                break
 
 
     def update(self):
@@ -94,23 +107,23 @@ class PyPoCa:
 
 
     def printVersion(self):
-        print("0.0.6")
+        print("0.0.10")
 
 
     def printHelp(self):
         self.printVersion()
-        print("Usage: pypoca [options [sub-options]] \n\
- -h, --help     Displays this help message \n\
- -v, --version  Displays the current version \n\
+        print("Usage: pypoca [options [sub-options]]\n\
+ -h, --help     Displays this help message\n\
+ -v, --version  Displays the current version\n\
  update         updates all enabled podcasts from it sources (internet or file)\n\
- download       download new episodes of all enabled podcasts \n\
- list           shows all podcasts \n\
- (list OPTION   shows all podcasts) not yet implemented \n\
- add URL        add a new podcast from internet (per http(s)) \n\
- addf FILE      add a new podcast from a file \n\
- (remove ID     removes the podcast with this ID) not yet implemented \n\
- (remove NAME   remove the podcast with this NAME) not yet implemented \n\
- (enable ID     enables the podcast with this ID) not yet implemented \n\
- (enable NAME   enables the podcast with this NAME) not yet implemented \n\
- (disable ID    disables the podcast with this ID) not yet implemented \n\
- (disable NAME  disables the podcast with this NAME) not yet implemented")
+ download       download new episodes of all enabled podcasts\n\
+ list           shows all podcasts\n\
+ (list OPTION   shows all podcasts) not yet implemented\n\
+ add URL        add a new podcast from internet (per http(s))\n\
+ addf FILE      add a new podcast from a file\n\
+ removeI ID     removes the podcast with this ID\n\
+ removeN NAME   remove the podcast with this NAME\n\
+ (enable ID     enables the podcast with this ID (not yet implemented))\n\
+ (enable NAME   enables the podcast with this NAME (not yet implemented))\n\
+ (disable ID    disables the podcast with this ID (not yet implemented))\n\
+ (disable NAME  disables the podcast with this NAME (not yet implemented))")

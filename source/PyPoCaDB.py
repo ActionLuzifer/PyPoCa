@@ -9,6 +9,7 @@ Created on 2011-09-24
 import sqlite3
 import Podcast
 import SQLs
+import sys
 
 class PyPoCaDB:
     ''' dumme Klasse, sendet nur die Daten an die Datenbank wie sie sie uebergeben bekommt
@@ -160,3 +161,34 @@ class PyPoCaDB:
         '''
         for episode in episodes:
             self._executeCommand(SQLs.sqlINSERTepisodes.format(episode[0], episode[1], episode[2], episode[3], episode[4]))
+
+
+    def removeAllEpisodesOfCast(self, id):
+        ''' erwartet die ID des Podcasts
+        '''
+        try:
+            self._executeCommand(SQLs.sqlDELETEepisodesByCast.format(id))
+        except:
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR@PyPoCaDB::removeAllEpisodesOfCast(self,id)")
+            print("Typ:  "+exctype)
+            print("Wert: "+value)
+            return False
+        return True
+
+
+    def removeCast(self, id):
+        ''' erwartet die ID des Podcasts
+        '''
+        try:
+            if not self.removeAllEpisodesOfCast(id):
+                print("Fehler: konnte nicht alle Episoden aus der Datenbank entfernen")
+            self._executeCommand(SQLs.sqlDELETEcastsAndEpisodes.format(id))
+            self._executeCommand(SQLs.sqlDELETEpodcasts.format(id))
+        except:
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR@PyPoCaDB::removeAllEpisodesOfCast(self,id)")
+            print("Typ:  "+exctype)
+            print("Wert: "+value)
+            return False
+        return True

@@ -4,25 +4,39 @@ Created on 05.11.2011
 @author: DuncanMCLeod
 '''
 
-import Downloader
+import Downloader.BasisDownloader
 import urllib.request
 import SQLs
 import os
+import sys
 
-class Intern(Downloader):
+class Intern(Downloader.BasisDownloader.Downloader):
     '''Downloadklasse die mithilfe von den Pythonklassen die Dateien herunterlaedt'''
-
-
+   
     def download(self, id, castFileName, url, status):
+        fileOptions = ''
         # Datei NEU oder beim letzten Versuch nen Fehler jehabt?
-        if (status==SQLs.episodestatus["new"]) or (status==SQLs.episodestatus["error"]): 
-            castFile = open(castFileName, 'wb')
-            castFile.write(urllib.request.urlopen(url).read())
-            castFile.close()
+        if (status==SQLs.episodestatus["new"]) or (status==SQLs.episodestatus["error"]):
+            fileOptions = 'wb' 
         # Datei Unvollstaendig?
         elif (status==SQLs.episodestatus["incomplete"]):
-            sizeOfcastFile = os.path.getsize(castFileName)
-            castFile = open(castFileName, 'ab')
+            fileOptions = 'ab'
+            try:
+                sizeOfcastFile = os.path.getsize(castFileName)
+            except:
+                exctype, value = sys.exc_info()[:2]
+                print("ERROR"+exctype)
+                print("   ->"+value)
+                sizeOfcastFile = 0
+                fileOptions = 'wb'
+
+        try:
+            castFile = open(castFileName, fileOptions)
             downloaddingens = urllib.request.urlopen(url)
             castFile.write(downloaddingens.read().seek(sizeOfcastFile))
+        except:
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR"+exctype)
+            print("   ->"+value)
+        finally:
             castFile.close()

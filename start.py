@@ -32,6 +32,12 @@ if __name__ == '__main__':
             elif commandStr=="addf":
                 pypoca.loadConfig()
                 pypoca.addPodcastByFile(sys.argv[i+1])
+            elif commandStr=="removeI":
+                pypoca.loadConfig()
+                pypoca.removePodcastByID(sys.argv[i+1])
+            elif commandStr=="removeN":
+                pypoca.loadConfig()
+                pypoca.removePodcastByName(sys.argv[i+1])
             elif commandStr=="--version" or commandStr=="-v":
                 pypoca.printVersion()
             elif commandStr=="--help" or commandStr=="-h":

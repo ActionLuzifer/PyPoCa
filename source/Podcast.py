@@ -10,7 +10,7 @@ import os
 import PyPoCaDB_Podcast
 import urllib.request
 import SQLs
-import Downloader.Intern.Intern as DownIntern
+from Downloader.Intern import Intern as DownIntern
 
 class Podcast:
     '''

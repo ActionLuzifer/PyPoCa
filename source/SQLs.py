@@ -19,6 +19,7 @@ sqlUPDATEepisodes_episodeURL  = "UPDATE episodes SET episodeURL='{0}' WHERE cast
 sqlUPDATEepisodes_episodeNAME = "UPDATE episodes SET episodeNAME='{0}' WHERE castid={1} AND episodeid={2};"
 sqlUPDATEepisodes_status      = "UPDATE episodes SET status={0} WHERE castid={1} AND episodeid={2};"
 sqlDELETEepisodes = "DELETE episodes WHERE castid={0} AND episodesid={1};"
+sqlDELETEepisodesByCast = "DELETE episodes WHERE castid={0};"
 sqlSELECTepisodesByCast = "SELECT * FROM episodes WHERE castid={0};"
 
 episodestatus = {"new":3, "downloaded":2, "error":3, "incomplete":4}
