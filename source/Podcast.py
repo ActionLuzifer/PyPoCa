@@ -39,7 +39,13 @@ class Podcast:
             ''' CAST-URL '''
             self.mURL = cast["casturl"]
             
+            self.mStatus = cast["status"]
+            
             self.mDownloadPath = os.path.normpath(self.mDownloadPathBase+"\\" +self.mNAME)
+        else:
+            self.mNAME = ""
+            self.mURL = ""            
+            self.mStatus = 1
 
 
     def updateName(self):
@@ -78,6 +84,14 @@ class Podcast:
 
     def getURL(self):
         return self.mURL
+    
+    
+    def setStatus(self, _status):
+        self.mStatus = _status
+        
+    
+    def getStatus(self):
+        return self.mStatus
 
 
     def _getCastName(self, url):

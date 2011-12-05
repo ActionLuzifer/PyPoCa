@@ -38,6 +38,18 @@ if __name__ == '__main__':
             elif commandStr=="removeN":
                 pypoca.loadConfig()
                 pypoca.removePodcastByName(sys.argv[i+1])
+            elif commandStr=="enableI":
+                pypoca.loadConfig()
+                pypoca.enablePodcastByID(sys.argv[i+1])
+            elif commandStr=="enableN":
+                pypoca.loadConfig()
+                pypoca.disablePodcastByName(sys.argv[i+1])
+            elif commandStr=="disableI":
+                pypoca.loadConfig()
+                pypoca.disablePodcastByID(sys.argv[i+1])
+            elif commandStr=="disableN":
+                pypoca.loadConfig()
+                pypoca.enablePodcastByName(sys.argv[i+1])
             elif commandStr=="--version" or commandStr=="-v":
                 pypoca.printVersion()
             elif commandStr=="--help" or commandStr=="-h":

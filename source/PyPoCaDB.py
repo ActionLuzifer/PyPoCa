@@ -93,8 +93,8 @@ class PyPoCaDB:
             _podcasts.add(podcast)
 
 
-    def addPodcast(self, _id, _url, _name):
-        self._executeCommand(SQLs.sqlINSERTpodcasts.format(_id, _url, _name))
+    def addPodcast(self, _id, _url, _name, _status):
+        self._executeCommand(SQLs.sqlINSERTpodcasts.format(_id, _url, _name, _status))
 
 
     def addEpisodeConfig(self, _castID, _episodeID):
@@ -105,9 +105,10 @@ class PyPoCaDB:
         self._executeCommand(SQLs.sqlINSERTepisodes.format(_episodeId, _idCast, _episodeUrl, _episodeName, _status))
 
 
-    def updatePodcast(self, _id, _url, _name):
+    def updatePodcast(self, _id, _url, _name, _status):
         self._executeCommand(SQLs.sqlUPDATEpodcasts_url.format(_id, _url))
         self._executeCommand(SQLs.sqlUPDATEpodcasts_name.format(_id, _name))
+        self._executeCommand(SQLs.sqlUPDATEpodcasts_status.format(_id, _status))
 
 
     def updateConfigLastCastID(self, id):
@@ -192,3 +193,7 @@ class PyPoCaDB:
             print("Wert: "+value)
             return False
         return True
+
+
+    def updateStatusOfPodcast(self, _id, _status):
+        self._executeCommand(SQLs.sqlUPDATEpodcasts_status.format(_status, _id))

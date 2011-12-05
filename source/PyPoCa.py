@@ -39,12 +39,18 @@ class PyPoCa:
             print(podcast.getName())
 
 
+    def getIDofPodcast(self, _name):
+        for podcast in self.mPodcasts:
+            if podcast.getName() == _name:
+                return podcast.getID()
+
+
     def addPodcast(self, _url):
         try:
             castID = self.mConfig[self.STR_lastCastID] +1 
             podcast = Podcast(castID, self.mDB)
             podcast.updateNameByURL(url=_url)
-            self.mDB.addPodcast(castID, _url, podcast.getName())
+            self.mDB.addPodcast(castID, _url, podcast.getName(), 1)
             self.mConfig[self.STR_lastCastID] + 1
         except:
             print("ERROR@PyPoCa::addPodcast(self, _url)")
@@ -83,20 +89,39 @@ class PyPoCa:
 
 
     def removePodcastByName(self, _name):
-        for podcast in self.mPodcasts:
-            if podcast.getName() == _name:
-                self.removePodcastByID(podcast.getID())
-                break
+        self.removePodcastByID(self.getIDofPodcast(_name))
+
+
+    def enablePodcastByID(self, _id):
+        ''' enables the podcast with this ID '''
+        self.mDB.updateStatusOfPodcast(_id, 1)
+
+        
+    def enablePodcastByName(self, _name):
+        ''' enables the podcast with this NAME '''
+        self.enablePodcastByID(self.getIDofPodcast(_name))
+
+
+    def disablePodcastByID(self, _id):
+        ''' disables the podcast with this ID '''
+        self.mDB.updateStatusOfPodcast(_id, 0)
+
+        
+    def disablePodcastByName(self, _name):
+        ''' disables the podcast with this NAME '''
+        self.disablePodcastByID(self.getIDofPodcast(_name))
 
 
     def update(self):
         for podcast in self.mPodcasts:
-            podcast.update()
+            if podcast.getStatus()==1:
+                podcast.update()
 
 
     def download(self):
         for podcast in self.mPodcasts:
-            podcast.download("intern")
+            if podcast.getStatus()==1:
+                podcast.download("intern")
 
 
     def list(self):
@@ -107,7 +132,7 @@ class PyPoCa:
 
 
     def printVersion(self):
-        print("0.0.10")
+        print("0.0.11")
 
 
     def printHelp(self):
@@ -123,7 +148,7 @@ class PyPoCa:
  addf FILE      add a new podcast from a file\n\
  removeI ID     removes the podcast with this ID\n\
  removeN NAME   remove the podcast with this NAME\n\
- (enable ID     enables the podcast with this ID (not yet implemented))\n\
- (enable NAME   enables the podcast with this NAME (not yet implemented))\n\
- (disable ID    disables the podcast with this ID (not yet implemented))\n\
- (disable NAME  disables the podcast with this NAME (not yet implemented))")
+ enable ID      enables the podcast with this ID\n\
+ enable NAME    enables the podcast with this NAME\n\
+ disable ID     disables the podcast with this ID\n\
+ disable NAME   disables the podcast with this NAME")
