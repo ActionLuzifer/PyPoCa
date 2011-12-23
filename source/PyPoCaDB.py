@@ -93,8 +93,8 @@ class PyPoCaDB:
             _podcasts.add(podcast)
 
 
-    def addPodcast(self, _id, _url, _name, _status):
-        self._executeCommand(SQLs.sqlINSERTpodcasts.format(_id, _url, _name, _status))
+    def addPodcast(self, _id, _name, _url, _status):
+        self._executeCommand(SQLs.sqlINSERTpodcasts.format(_id, _name, _url, _status))
 
 
     def addEpisodeConfig(self, _castID, _episodeID):
@@ -134,7 +134,9 @@ class PyPoCaDB:
     def _executeCommand(self, command):
         try:
             try:
-                return self.mDBcursor.execute(command)
+                #return self.mDBcursor.execute(command)
+                self.mDBcursor.execute(command)
+                return self.mDBcursor.fetchall()
             except sqlite3.Error as e:
                 print("PyPoCaDB@_executeCommand(self, command):")
                 print("ERROR: ", e.args[0])

@@ -57,7 +57,7 @@ class Podcast:
             ausserdem speichert sich der Podcast die neue 'url'
         '''
         self.mURL = url
-        self.mNAME = self._getCastName(url)
+        self.mNAME = self._getCastNameByURL(url)
 
     def updateNameByFile(self, url):
         self.mURL = url
@@ -94,22 +94,22 @@ class Podcast:
         return self.mStatus
 
 
-    def _getCastName(self, url):
-        htmlpage = self.f_urlToString(url)
-        bigRE = "(.)*<title>(?P<CastTitle>(.)*)</title>(.)*";
+    def _getCastName(self, htmlstring):
+        bigRE = "(.)*<title( )*>(?P<CastTitle>(.)*)</title( )*>(.)*";
         REprogramm = re.compile(bigRE);
-        foundObject = REprogramm.search(htmlpage);
+        foundObject = REprogramm.search(htmlstring);
         castNAME = foundObject.group("CastTitle")
         return castNAME
+
+
+    def _getCastNameByURL(self, url):
+        htmlpage = self.f_urlToString(url)
+        return self._getCastName(htmlpage)
 
 
     def _getCastNameByFile(self, url):
         htmlpage = self.f_fileToString(url)
-        bigRE = "(.)*<title>(?P<CastTitle>(.)*)</title>(.)*";
-        REprogramm = re.compile(bigRE);
-        foundObject = REprogramm.search(htmlpage);
-        castNAME = foundObject.group("CastTitle")
-        return castNAME
+        return self._getCastName(htmlpage)
 
 
 

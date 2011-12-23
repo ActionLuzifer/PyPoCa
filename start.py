@@ -59,5 +59,7 @@ if __name__ == '__main__':
                 pypoca.list()
     else:
         pypoca.loadConfig()
-        pypoca.update()
-        pypoca.download()
+        pypoca.list()
+#        pypoca.loadConfig()
+#        pypoca.update()
+#        pypoca.download()

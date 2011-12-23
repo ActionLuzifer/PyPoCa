@@ -50,7 +50,7 @@ class PyPoCa:
             castID = self.mConfig[self.STR_lastCastID] +1 
             podcast = Podcast(castID, self.mDB)
             podcast.updateNameByURL(url=_url)
-            self.mDB.addPodcast(castID, _url, podcast.getName(), 1)
+            self.mDB.addPodcast(castID, podcast.getName(), _url, 1)
             self.mConfig[self.STR_lastCastID] + 1
         except:
             print("ERROR@PyPoCa::addPodcast(self, _url)")
@@ -64,12 +64,12 @@ class PyPoCa:
         
         
         # Podcast-spezifische Daten erstellen
-        podcast = Podcast.Podcast(castID, self.mDB)
+        podcast = Podcast.Podcast(castID, self.mDB, self.mConfig["downloadpath"])
         _url = os.path.normpath(_path)
         podcast.updateNameByFile(_url)
         
         # Podcast-spezifische Daten in die DB schreiben
-        self.mDB.addPodcast(castID, podcast.getName(), _url)
+        self.mDB.addPodcast(castID, podcast.getName(), _url, 1)
         self.mDB.addEpisodeConfig(castID, 0)
         
         # allgemeine Daten in die DB schreiben
@@ -128,7 +128,7 @@ class PyPoCa:
         anzahlStellen=len(repr(len(self.mPodcasts)))
         formatStr = "{:0>"+repr(anzahlStellen)+"}"
         for podcast in self.mPodcasts:
-            print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName())
+            print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName() + "  |  "+podcast.getURL())
 
 
     def printVersion(self):

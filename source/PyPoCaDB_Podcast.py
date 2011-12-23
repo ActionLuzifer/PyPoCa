@@ -14,8 +14,10 @@ class PyPoCaDB_Podcast():
 
 
     def getPodcastInfosByCastID(self, castID):
+        #result = self.mDB._executeCommand(SQLs.sqlSELECTpodcasts.format(castID))
+        #return result.fetchone()
         result = self.mDB._executeCommand(SQLs.sqlSELECTpodcasts.format(castID))
-        return result.fetchone()
+        return result[0]
 
 
     def getHighestEpisodeIDByCastID(self, castID):
