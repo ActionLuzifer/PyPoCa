@@ -9,7 +9,7 @@ Created on 2011-09-24
 import PyPoCaDB
 import Podcast
 import os
-import sys
+import re
 
 class PyPoCa:
     def __init__(self):
@@ -26,8 +26,8 @@ class PyPoCa:
         # Config
         self._openDatabase()
         self.mConfig = {self.STR_lastCastID:0, 
-                        self.STR_numberOfCasts:0, 
-                        self.STR_basepath:os.path.normpath(sys.argv[0])}
+                        self.STR_numberOfCasts:0,
+                        self.STR_basepath:self.getDownloadpathInConfig()}
         self.mDB.getConfig(self.mConfig)
         for config in self.mConfig:
             print(config+" - "+str(self.mConfig[config]))
@@ -47,10 +47,16 @@ class PyPoCa:
 
     def addPodcast(self, _url):
         try:
-            castID = self.mConfig[self.STR_lastCastID] +1 
-            podcast = Podcast(castID, self.mDB)
+            print("#1")
+            castID = self.mConfig[self.STR_lastCastID] +1
+            print(castID)
+            print("#2")
+            podcast = Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
+            print("#3")
             podcast.updateNameByURL(url=_url)
+            print("#4")
             self.mDB.addPodcast(castID, podcast.getName(), _url, 1)
+            print("#5")
             self.mConfig[self.STR_lastCastID] + 1
         except:
             print("ERROR@PyPoCa::addPodcast(self, _url)")
@@ -129,6 +135,22 @@ class PyPoCa:
         formatStr = "{:0>"+repr(anzahlStellen)+"}"
         for podcast in self.mPodcasts:
             print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName() + "  |  "+podcast.getURL())
+
+
+    def getDownloadpathInConfig(self):
+        # Datei einlesen
+        myfileName = os.path.normpath("{0}/config.xml".format(os.getcwd()))
+        myfile = open(myfileName, 'r')
+        result = myfile.read()
+        myfile.close()
+        
+        # Ausdruck finden
+        bigRE = "(.)*<downloadpath>(?P<DownloadPath>(.)*)</downloadpath>(.)*";
+        REprogramm = re.compile(bigRE);
+        foundObject = REprogramm.search(result);
+        result = foundObject.group("DownloadPath")
+        
+        return result
 
 
     def printVersion(self):
