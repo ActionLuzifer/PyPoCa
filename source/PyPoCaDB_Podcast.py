@@ -9,7 +9,7 @@ import SQLs
 class PyPoCaDB_Podcast():
     
     def __init__(self, _DB):
-        print()
+        print("BLA")
         self.mDB = _DB
 
 

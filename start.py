@@ -29,15 +29,19 @@ if __name__ == '__main__':
             elif commandStr=="add":
                 pypoca.loadConfig()
                 pypoca.addPodcast(sys.argv[i+1])
+                pypoca.saveConfig()
             elif commandStr=="addf":
                 pypoca.loadConfig()
                 pypoca.addPodcastByFile(sys.argv[i+1])
+                pypoca.saveConfig()
             elif commandStr=="removeI":
                 pypoca.loadConfig()
                 pypoca.removePodcastByID(sys.argv[i+1])
+                pypoca.saveConfig()
             elif commandStr=="removeN":
                 pypoca.loadConfig()
                 pypoca.removePodcastByName(sys.argv[i+1])
+                pypoca.saveConfig()
             elif commandStr=="enableI":
                 pypoca.loadConfig()
                 pypoca.enablePodcastByID(sys.argv[i+1])

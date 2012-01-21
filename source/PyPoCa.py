@@ -8,8 +8,12 @@ Created on 2011-09-24
 
 import PyPoCaDB
 import Podcast
+#from Podcast.Podcast import Podcast as Podcast
+#from Downloader.Intern import Intern as DownIntern
 import os
 import re
+import locale
+
 
 class PyPoCa:
     def __init__(self):
@@ -39,6 +43,13 @@ class PyPoCa:
             print(podcast.getName())
 
 
+    def saveConfig(self):
+        print()
+        self.mDB.updateConfig(self.mConfig[self.STR_lastCastID], self.mConfig[self.STR_numberOfCasts])
+        self.mDB.writeChanges()
+        
+
+
     def getIDofPodcast(self, _name):
         for podcast in self.mPodcasts:
             if podcast.getName() == _name:
@@ -48,19 +59,24 @@ class PyPoCa:
     def addPodcast(self, _url):
         try:
             print("#1")
-            castID = self.mConfig[self.STR_lastCastID] +1
+            print(self.mConfig)
+            print(self.STR_lastCastID)
+            castID = locale.atoi(self.mConfig[self.STR_lastCastID]) + 1
             print(castID)
             print("#2")
-            podcast = Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
+            podcast = Podcast.Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
             print("#3")
             podcast.updateNameByURL(url=_url)
             print("#4")
             self.mDB.addPodcast(castID, podcast.getName(), _url, 1)
             print("#5")
-            self.mConfig[self.STR_lastCastID] + 1
+            self.mConfig[self.STR_lastCastID] = str(castID)
+            print("done!")
+            self.mDB.writeChanges()
+            print("donedone!")
         except:
             print("ERROR@PyPoCa::addPodcast(self, _url)")
-            print(os.error)
+            print(os.error.__str__())
 
 
     def addPodcastByFile(self, _path):
@@ -120,8 +136,9 @@ class PyPoCa:
 
     def update(self):
         for podcast in self.mPodcasts:
-            if podcast.getStatus()==1:
-                podcast.update()
+            print("podcast.getStatus(): "+podcast.getStatus())
+            if int(podcast.getStatus())==1:
+                podcast.update(False)
 
 
     def download(self):

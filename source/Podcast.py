@@ -12,6 +12,7 @@ import urllib.request
 import SQLs
 from Downloader.Intern import Intern as DownIntern
 
+
 class Podcast:
     '''
     classdocs
@@ -22,8 +23,10 @@ class Podcast:
         '''
         Constructor
         '''
-        
+
+        print("MOIN")        
         self.mDB = PyPoCaDB_Podcast.PyPoCaDB_Podcast(DB)
+        print("MOINMOIN")
         ''' CAST-ID '''
         self.mID = ID
         self.mDownloadPathBase = downloadPath
@@ -31,7 +34,10 @@ class Podcast:
 
 
     def reloadData(self):
-        cast = self.mDB.getPodcastInfosByCastID(self.mID)
+        try:
+            cast = self.mDB.getPodcastInfosByCastID(self.mID)
+        except:
+            cast = False
         if cast:        
             ''' CAST-Name '''
             self.mNAME = cast["castname"]
@@ -104,6 +110,7 @@ class Podcast:
 
     def _getCastNameByURL(self, url):
         htmlpage = self.f_urlToString(url)
+        print("htmlpage: "+htmlpage)
         return self._getCastName(htmlpage)
 
 
@@ -115,34 +122,36 @@ class Podcast:
 
     def f_urlToString(self, url):
         htmldings = urllib.request.urlopen(url);
-        #return str(htmldings.read().decode('ISO-8859-1'));
-        return self.f_decodeString(str(htmldings.read()));
+        return self.f_decodeCastReader(htmldings);
 
 
     def f_fileToString(self, file):
         castreader = io.FileIO(file)
-        #caststring = castreader.read().decode('utf-8')
-        caststring = self.f_decodeString(castreader.read())
+        caststring = self.f_decodeCastReader(castreader)
         return caststring
 
 
-    def f_decodeString(self, string):
+    def f_decodeCastReader(self, reader):
+        isoStr = 'encoding="ISO-8859-1"'
+        utfStr = 'encoding="utf-8"'
         try:
-            return string.decode('utf-8')
-        except:
+            readString = str(reader.read())
             try:
-                return string.decode('ISO-8859-1')
+                return readString.decode(utfStr)
             except:
-                print("error")
+                try:
+                    return readString.decode(isoStr)
+                except:
+                    return readString
+        except:
+            return ""
 
 
-    def update(self):
+    def update(self, byFile):
         # catch the url
         htmlpage = ""
-        byFile = True
         if byFile:
             htmlpage = self.f_fileToString(os.path.normpath("C:\\Office\\arbeit\\pypoca\\Doc\\podcasts\\Breitband-feed.xml"))
-
         else:
             htmlpage = self.f_urlToString(self.mURL)
 

@@ -81,7 +81,7 @@ class PyPoCaDB:
     def getConfig(self, _config):
         configQuery = self._executeCommand(SQLs.sqlGETALLconfig)
         for qconfig in configQuery:
-            _config[qconfig[1]] = qconfig[2] 
+            _config[qconfig[1]] = qconfig[2]
 
 
     def getPodcasts(self, _podcasts, downloadpath):
@@ -132,6 +132,7 @@ class PyPoCaDB:
 
 
     def _executeCommand(self, command):
+        print("SQL: "+command)
         try:
             try:
                 #return self.mDBcursor.execute(command)
@@ -199,3 +200,9 @@ class PyPoCaDB:
 
     def updateStatusOfPodcast(self, _id, _status):
         self._executeCommand(SQLs.sqlUPDATEpodcasts_status.format(_status, _id))
+
+
+    def updateConfig(self, lastCastID, numberOfCasts):
+        print()
+        self.updateConfigLastCastID(lastCastID)
+        self.updateConfigNumberOfCasts(numberOfCasts)
