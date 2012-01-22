@@ -97,8 +97,6 @@ class RSS20():
                     
                     item = item.addItem(item, name, content)
                     
-        #self.debugItem(item)
-        self.debugItem2(item)
         return item
 
 
