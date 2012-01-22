@@ -28,7 +28,7 @@ def starten():
                 pypoca.download()
             elif commandStr=="add":
                 pypoca.loadConfig()
-                pypoca.addPodcast(sys.argv[i+1])
+                pypoca.addPodcastByURL(sys.argv[i+1])
                 pypoca.saveConfig()
             elif commandStr=="addf":
                 pypoca.loadConfig()
@@ -67,7 +67,6 @@ def starten():
     else:
         pypoca.loadConfig()
         pypoca.list()
-#        pypoca.loadConfig()
 #        pypoca.update()
 #        pypoca.download()
 

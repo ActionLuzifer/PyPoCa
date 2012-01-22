@@ -57,52 +57,42 @@ class PyPoCa:
                 return podcast.getID()
 
 
-    def addPodcast(self, _url):
+    def addPodcast(self, name, _url):
         try:
-            print("#1")
-            print(self.mConfig)
-            print(self.STR_lastCastID)
+            # allgemeine Daten holen
             castID = locale.atoi(self.mConfig[self.STR_lastCastID]) + 1
-            print(castID)
-            print("#2")
+            numberofcasts = int(self.mConfig[self.STR_numberOfCasts]) + 1
+            
+            # Podcast-spezifische Daten erstellen
             podcast = Podcast.Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
-            print("#3")
-            podcast.updateNameByURL(url=_url)
-            print("#4")
+            podcast.updateName(name)
+            
+            # Podcast-spezifische Daten in die DB schreiben
             self.mDB.addPodcast(castID, podcast.getName(), _url, 1)
-            print("#5")
+            self.mDB.addEpisodeConfig(castID, 0)
+            
+            # allgemeine Daten in die DB schreiben
+            self.mDB.updateConfigLastCastID(castID)
+            self.mDB.updateConfigNumberOfCasts(numberofcasts)
+        
             self.mConfig[self.STR_lastCastID] = str(castID)
-            print("done!")
+            self.mConfig[self.STR_numberOfCasts] = str(numberofcasts)
             self.mDB.writeChanges()
-            print("donedone!")
         except:
             print("ERROR@PyPoCa::addPodcast(self, _url)")
             print(os.error.__str__())
+        return podcast
+
+
+    def addPodcastByURL(self, _url):
+        name =  Podcast._getCastNameByURL(_url)
+        self.addPodcast(name, _url)
 
 
     def addPodcastByFile(self, _path):
-        # allgemeine Daten holen
-        castID = int(self.mConfig[self.STR_lastCastID]) + 1 
-        numberofcasts = int(self.mConfig[self.STR_numberOfCasts]) + 1
-        
-        
-        # Podcast-spezifische Daten erstellen
-        podcast = Podcast.Podcast(castID, self.mDB, self.mConfig["downloadpath"])
         _url = os.path.normpath(_path)
-        podcast.updateNameByFile(_url)
-        
-        # Podcast-spezifische Daten in die DB schreiben
-        self.mDB.addPodcast(castID, podcast.getName(), _url, 1)
-        self.mDB.addEpisodeConfig(castID, 0)
-        
-        # allgemeine Daten in die DB schreiben
-        self.mDB.updateConfigLastCastID(castID)
-        self.mDB.updateConfigNumberOfCasts(numberofcasts)
-        
-        # allgemeine Daten im RAM updaten
-        self.mConfig[self.STR_lastCastID] = castID
-        self.mConfig[self.STR_numberOfCasts] = numberofcasts
-        self.mDB.writeChanges()
+        name =  Podcast._getCastNameByFile(_url)
+        self.addPodcast(name, _path)
 
 
     def removePodcastByID(self, _id):

@@ -14,6 +14,49 @@ from Downloader.Intern import Intern as DownIntern
 import RSS20
 
 
+def f_decodeCastReader(reader):
+    alreadyread = reader.read()
+    readString = str(alreadyread)
+    if('encoding="ISO-8859-1"' in readString):
+        decodedStr = alreadyread.decode('iso-8859-1', errors='ignore')
+    elif('encoding="utf-8"' in readString):
+        decodedStr = alreadyread.decode('utf_8', errors='ignore')
+    else:
+        print("UNKNOWN ENCODING!!!")
+        decodedStr = readString
+    return decodedStr
+
+
+def f_urlToString(url):
+    htmldings = urllib.request.urlopen(url);
+    return f_decodeCastReader(htmldings);
+
+
+def _getCastName(htmlstring):
+    bigRE = "(.)*<title( )*>(?P<CastTitle>(.)*)</title( )*>(.)*";
+    REprogramm = re.compile(bigRE);
+    foundObject = REprogramm.search(htmlstring);
+    castNAME = foundObject.group("CastTitle")
+    return castNAME
+
+
+def _getCastNameByURL(url):
+    htmlpage = f_urlToString(url)
+    print("htmlpage: "+htmlpage)
+    return _getCastName(htmlpage)
+
+
+def _getCastNameByFile(url):
+    htmlpage = f_fileToString(url)
+    return _getCastName(htmlpage)
+
+
+def f_fileToString(file):
+    castreader = io.FileIO(file)
+    caststring = f_decodeCastReader(castreader)
+    return caststring
+
+
 class Podcast:
     '''
     classdocs
@@ -55,8 +98,8 @@ class Podcast:
             self.mStatus = 1
 
 
-    def updateName(self):
-        self.updateNameByURL(self.mURL)
+    def updateName(self, name):
+        self.mNAME = name
 
 
     def updateNameByURL(self, url):
@@ -64,11 +107,11 @@ class Podcast:
             ausserdem speichert sich der Podcast die neue 'url'
         '''
         self.mURL = url
-        self.mNAME = self._getCastNameByURL(url)
+        self.mNAME = _getCastNameByURL(url)
 
     def updateNameByFile(self, url):
         self.mURL = url
-        self.mNAME = self._getCastNameByFile(url)
+        self.mNAME = _getCastNameByFile(url)
 
 
     def getID(self):
@@ -101,57 +144,13 @@ class Podcast:
         return self.mStatus
 
 
-    def _getCastName(self, htmlstring):
-        bigRE = "(.)*<title( )*>(?P<CastTitle>(.)*)</title( )*>(.)*";
-        REprogramm = re.compile(bigRE);
-        foundObject = REprogramm.search(htmlstring);
-        castNAME = foundObject.group("CastTitle")
-        return castNAME
-
-
-    def _getCastNameByURL(self, url):
-        htmlpage = self.f_urlToString(url)
-        print("htmlpage: "+htmlpage)
-        return self._getCastName(htmlpage)
-
-
-    def _getCastNameByFile(self, url):
-        htmlpage = self.f_fileToString(url)
-        return self._getCastName(htmlpage)
-
-
-
-    def f_urlToString(self, url):
-        htmldings = urllib.request.urlopen(url);
-        return self.f_decodeCastReader(htmldings);
-
-
-    def f_fileToString(self, file):
-        castreader = io.FileIO(file)
-        caststring = self.f_decodeCastReader(castreader)
-        return caststring
-
-
-    def f_decodeCastReader(self, reader):
-        alreadyread = reader.read()
-        readString = str(alreadyread)
-        if('encoding="ISO-8859-1"' in readString):
-            decodedStr = alreadyread.decode('iso-8859-1', errors='ignore')
-        elif('encoding="utf-8"' in readString):
-            decodedStr = alreadyread.decode('utf_8', errors='ignore')
-        else:
-            print("UNKNOWN ENCODING!!!")
-            decodedStr = readString
-        return decodedStr
-
-
     def update(self, byFile):
         # catch the url
         htmlpage = ""
         if byFile:
             htmlpage = self.f_fileToString(os.path.normpath("C:\\Office\\arbeit\\pypoca\\Doc\\podcasts\\Breitband-feed.xml"))
         else:
-            htmlpage = self.f_urlToString(self.mURL)
+            htmlpage = f_urlToString(self.mURL)
 
         # getEpisodesFromDB
         episodesDB = self.mDB.getAllEpisodesByCastID(self.mID)
@@ -178,7 +177,7 @@ class Podcast:
                 titleitem = rssitem.getSubitemWithName("title")
                 linkitem  = rssitem.getSubitemWithName("link")
                 if (titleitem) and (linkitem):
-                    linkList.append(linkitem, titleitem)
+                    linkList.append([linkitem.getContent(), titleitem.getContent()])
         
         return linkList
 
