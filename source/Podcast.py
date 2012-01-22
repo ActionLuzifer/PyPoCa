@@ -251,3 +251,14 @@ class Podcast:
                 print("PATH:   ", self.mDownloadPath)
                 return 0
         return 1
+
+
+if __name__ == '__main__':
+    import sys
+    sys.path.append("/home/actionluzifer/Dokumente/sourcen/workspace/pypoca")
+    files=os.listdir("/home/actionluzifer/Dokumente/sourcen/workspace/pypoca")
+    for file in files:
+        if ("start.py" in file):
+            file = file.replace(".py", "")
+            pluginImport = __import__(file, globals(), locals(), [], 0)
+            pluginImport.starten()
