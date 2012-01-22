@@ -11,6 +11,7 @@ import PyPoCaDB_Podcast
 import urllib.request
 import SQLs
 from Downloader.Intern import Intern as DownIntern
+import RSS20
 
 
 class Podcast:
@@ -132,19 +133,16 @@ class Podcast:
 
 
     def f_decodeCastReader(self, reader):
-        isoStr = 'encoding="ISO-8859-1"'
-        utfStr = 'encoding="utf-8"'
-        try:
-            readString = str(reader.read())
-            try:
-                return readString.decode(utfStr)
-            except:
-                try:
-                    return readString.decode(isoStr)
-                except:
-                    return readString
-        except:
-            return ""
+        alreadyread = reader.read()
+        readString = str(alreadyread)
+        if('encoding="ISO-8859-1"' in readString):
+            decodedStr = alreadyread.decode('iso-8859-1', errors='ignore')
+        elif('encoding="utf-8"' in readString):
+            decodedStr = alreadyread.decode('utf_8', errors='ignore')
+        else:
+            print("UNKNOWN ENCODING!!!")
+            decodedStr = readString
+        return decodedStr
 
 
     def update(self, byFile):
