@@ -11,7 +11,7 @@ sys.path.append("source");
 import PyPoCa
 
 
-if __name__ == '__main__':
+def starten():
     pypoca = PyPoCa.PyPoCa()
     if (len(sys.argv) > 1):
         i = 0
@@ -61,9 +61,16 @@ if __name__ == '__main__':
             elif commandStr=="list":
                 pypoca.loadConfig()
                 pypoca.list()
+            elif commandStr=="rss":
+                pypoca.loadConfig()
+                pypoca.rsstest()
     else:
         pypoca.loadConfig()
         pypoca.list()
 #        pypoca.loadConfig()
 #        pypoca.update()
 #        pypoca.download()
+
+
+if __name__ == '__main__':
+    starten()

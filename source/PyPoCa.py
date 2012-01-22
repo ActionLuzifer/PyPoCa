@@ -13,6 +13,7 @@ import Podcast
 import os
 import re
 import locale
+import RSS20
 
 
 class PyPoCa:
@@ -172,6 +173,13 @@ class PyPoCa:
 
     def printVersion(self):
         print("0.0.11")
+        
+        
+    def rsstest(self):
+        for podcast in self.mPodcasts:
+            rssHtml = podcast.f_urlToString("http://www.dradio.de/rss/podcast/sendungen/breitband")
+            rss = RSS20.RSS20()
+            rss.getRSSObject(rssHtml)
 
 
     def printHelp(self):
