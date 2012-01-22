@@ -52,6 +52,7 @@ class RSSItem():
         for item in self.subitems:
             if item.getName()==name:
                 return item
+        return False
 
 
     def getSubitemsWithName(self, name):
