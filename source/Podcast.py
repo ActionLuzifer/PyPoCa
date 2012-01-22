@@ -168,24 +168,18 @@ class Podcast:
         '''
         linkList = []
         
-        # um den einzelnen Cast zu identifizieren
-        castRE = "<item>*"
-        castREprog = re.compile(castRE)
+        rss = RSS20.RSS20()
+        rssBody = rss.getRSSObject(htmlpage)
         
-        # um den Link fuer die Episode zu identifizieren
-        linkRE = "(.)*<link>(?P<link>(.)*)</link>(.)*"
-        linkREprog = re.compile(linkRE)
+        channelItem = rssBody.getItemWithName("channel")
+        if channelItem:
+            items = channelItem.getSubitemsWithName("item")
+            for rssitem in items:
+                titleitem = rssitem.getSubitemWithName("title")
+                linkitem  = rssitem.getSubitemWithName("link")
+                if (titleitem) and (linkitem):
+                    linkList.append(linkitem, titleitem)
         
-        nameRE = "(.)*<title>(?P<name>(.)*)</title>(.)*"
-        nameREprog = re.compile(nameRE)
-        
-        for foundSomething in castREprog.split(htmlpage):
-            if re.search("(.)*</item>(.)*", foundSomething):
-                foundLink = linkREprog.search(foundSomething)
-                if foundLink:
-                    foundName = nameREprog.search(foundSomething)
-                    link = [foundLink.group("link"), foundName.group("name")]
-                    linkList.append(link)
         return linkList
 
 
