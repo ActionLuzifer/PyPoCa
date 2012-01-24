@@ -134,7 +134,8 @@ class PyPoCa:
 
     def download(self):
         for podcast in self.mPodcasts:
-            if podcast.getStatus()==1:
+            status = int(podcast.getStatus())
+            if status==1:
                 podcast.download("intern")
 
 
@@ -166,10 +167,9 @@ class PyPoCa:
         
         
     def rsstest(self):
-        for podcast in self.mPodcasts:
-            rssHtml = podcast.f_urlToString("http://www.dradio.de/rss/podcast/sendungen/breitband")
-            rss = RSS20.RSS20()
-            rss.getRSSObject(rssHtml)
+        rssHtml = Podcast.f_urlToString("http://www.dradio.de/rss/podcast/sendungen/breitband")
+        rss = RSS20.RSS20()
+        rss.getRSSObject(rssHtml)
 
 
     def printHelp(self):

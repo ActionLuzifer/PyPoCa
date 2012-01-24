@@ -91,7 +91,7 @@ class Podcast:
             
             self.mStatus = cast["status"]
             
-            self.mDownloadPath = os.path.normpath(self.mDownloadPathBase+"\\" +self.mNAME)
+            self.mDownloadPath = os.path.normpath(self.mDownloadPathBase+"/" +self.mNAME)
         else:
             self.mNAME = ""
             self.mURL = ""            
@@ -223,6 +223,7 @@ class Podcast:
                             self.downloadEpisode(downloader, episode)
                         finally:
                             self.mDB.updateEpisodeStatus(episode, "downloaded")
+                            self.mDB.writeChanges()
                     except urllib.error.URLError as e:
                         print("Podcast@download(self, downloadMethod):")
                         print("ERROR: ", e.args[0])
@@ -235,9 +236,10 @@ class Podcast:
                     
 
     def downloadEpisode(self, downloader, episode):
-        str = "{:0>4}".format(episode[1])
-        castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,episode[3]))
-        downloader.download(episode[1], castFileName, episode[2], episode[4])
+        if (episode[4]==SQLs.episodestatus["new"]):
+            str = "{:0>4}".format(episode[1])
+            castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,episode[3]))
+            downloader.download(episode[1], castFileName, episode[2], episode[4])
 
 
     def checkDownloadPath(self):
