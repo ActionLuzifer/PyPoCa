@@ -101,8 +101,8 @@ class PyPoCaDB:
         self.insertCastsAndEpisodes(_castID, _episodeID)
 
 
-    def addEpisode(self, _episodeId, _idCast, _episodeUrl, _episodeName, _status):
-        self._executeCommand(SQLs.sqlINSERTepisodes.format(_episodeId, _idCast, _episodeUrl, _episodeName, _status))
+    def addEpisode(self, _episodeId, _idCast, _episodeUrl, _episodeName, _episodeGUID, _status):
+        self._executeCommand(SQLs.sqlINSERTepisodes.format(_episodeId, _idCast, _episodeUrl, _episodeName, _episodeGUID, _status))
 
 
     def updatePodcast(self, _id, _url, _name, _status):
@@ -155,7 +155,7 @@ class PyPoCaDB:
         episodesQuery = self._executeCommand("SELECT * FROM episodes")
         episodes = set()
         for qepisode in episodesQuery:
-            episode = [qepisode[0], qepisode[1], qepisode[2], qepisode[3], qepisode[4]]
+            episode = [qepisode[0], qepisode[1], qepisode[2], qepisode[3], qepisode[4], qepisode[5]]
             episodes.add(episode)
         return episodes
 
@@ -164,7 +164,7 @@ class PyPoCaDB:
         ''' erwartet ein Set von Episoden
         '''
         for episode in episodes:
-            self._executeCommand(SQLs.sqlINSERTepisodes.format(episode[0], episode[1], episode[2], episode[3], episode[4]))
+            self._executeCommand(SQLs.sqlINSERTepisodes.format(episode[0], episode[1], episode[2], episode[3], episode[4], episode[5]))
 
 
     def removeAllEpisodesOfCast(self, id):
