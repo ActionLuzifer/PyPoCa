@@ -12,6 +12,7 @@ import urllib.request
 import SQLs
 from Downloader.Intern import Intern as DownIntern
 import RSS20
+import Episode
 
 
 def f_decodeCastReader(reader):
@@ -159,13 +160,14 @@ class Podcast:
         # make a diff
         newEpisodes = self.getNewEpisodes(episodesDB, episodesURL)
         # send new episodes to DB
-        self.mDB.insertEpisodes(newEpisodes, self.mID)
+        if ( len(newEpisodes)>0 ):
+            self.mDB.insertEpisodes(newEpisodes, self.mID)
 
 
     def getEpisodesByHTML(self, htmlpage):
         ''' zieht aus der html-datei die einzelnen Episoden-Urls
         '''
-        linkList = []
+        episoden = []
         
         rss = RSS20.RSS20()
         rssBody = rss.getRSSObject(htmlpage)
@@ -176,10 +178,15 @@ class Podcast:
             for rssitem in items:
                 titleitem = rssitem.getSubitemWithName("title")
                 linkitem  = rssitem.getSubitemWithName("link")
+                guiditem  = rssitem.getSubitemWithName("guid")
+                if guiditem is False:
+                    guiditem = linkitem
                 if (titleitem) and (linkitem):
-                    linkList.append([linkitem.getContent(), titleitem.getContent()])
+                    episode = Episode.Episode(self.mID, -1, linkitem.getContent(), 
+                                              titleitem.getContent(), guiditem.getContent(), SQLs.episodestatus["new"])
+                    episoden.insert(0, episode)
         
-        return linkList
+        return episoden
 
 
     def getNewEpisodes(self, episodesDB, episodesURL):
@@ -192,13 +199,11 @@ class Podcast:
             for episodeurl in episodesURL:
                 found = False
                 for episodedb in episodesDB:
-                    print(episodeurl[0])
-                    print(episodedb[2])
-                    if episodeurl[0] == episodedb[2]:
+                    if episodeurl.episodeGUID == episodedb.episodeGUID:
                         found = True
                         break 
                 if not found:
-                    newEpisodes.append(episodeurl)
+                    newEpisodes.insert(0,episodeurl)
         else:
             newEpisodes = episodesURL
         return newEpisodes
