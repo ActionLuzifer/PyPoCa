@@ -215,7 +215,7 @@ class Podcast:
             episoden = self.mDB.getAllEpisodesByCastID(self.mID)
             for episode in episoden:
                 print(episode)
-                if not episode[4] == SQLs.episodestatus["downloaded"]:
+                if not episode.episodeStatus == SQLs.episodestatus["downloaded"]:
                     try:                        
                         try:
                             if downloadMethod=="wget":
@@ -238,13 +238,15 @@ class Podcast:
                         except:
                             print("ERROR: can't write ERROR to Database")
             self.mDB.writeChanges()
-                    
+
 
     def downloadEpisode(self, downloader, episode):
-        if (episode[4]==SQLs.episodestatus["new"]):
-            str = "{:0>4}".format(episode[1])
-            castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,episode[3]))
-            downloader.download(episode[1], castFileName, episode[2], episode[4])
+        if (episode.episodeStatus==SQLs.episodestatus["new"]):
+            str = "{:0>4}".format(episode.episodeID)
+            # TODO: Dateiendung ermitteln und an castFileName anhaengen
+            castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,episode.episodeName))
+            print("castFileName: "+castFileName)
+            downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
 
 
     def checkDownloadPath(self):

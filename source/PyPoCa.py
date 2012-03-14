@@ -60,8 +60,8 @@ class PyPoCa:
     def addPodcast(self, name, _url):
         try:
             # allgemeine Daten holen
-            castID = locale.atoi(self.mConfig[self.STR_lastCastID]) + 1
-            numberofcasts = int(self.mConfig[self.STR_numberOfCasts]) + 1
+            castID = repr(self.mConfig[self.STR_lastCastID]) + 1
+            numberofcasts = repr(self.mConfig[self.STR_numberOfCasts]) + 1
             
             # Podcast-spezifische Daten erstellen
             podcast = Podcast.Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
@@ -80,7 +80,10 @@ class PyPoCa:
             self.mDB.writeChanges()
         except:
             print("ERROR@PyPoCa::addPodcast(self, _url)")
-            print(os.error.__str__())
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR: "+repr(exctype))
+            print("       "+repr(value))
+
         return podcast
 
 
