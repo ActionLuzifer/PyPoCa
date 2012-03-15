@@ -176,15 +176,20 @@ class Podcast:
         if channelItem:
             items = channelItem.getSubitemsWithName("item")
             for rssitem in items:
-                titleitem = rssitem.getSubitemWithName("title")
-                linkitem  = rssitem.getSubitemWithName("link")
-                guiditem  = rssitem.getSubitemWithName("guid")
-                if guiditem is False:
-                    guiditem = linkitem
-                if (titleitem) and (linkitem):
-                    episode = Episode.Episode(self.mID, -1, linkitem.getContent(), 
-                                              titleitem.getContent(), guiditem.getContent(), SQLs.episodestatus["new"])
-                    episoden.insert(0, episode)
+                titleitem     = rssitem.getSubitemWithName("title")
+                enclosureitem = rssitem.getSubitemWithName("enclosure")
+                guiditem      = rssitem.getSubitemWithName("guid")
+                if (enclosureitem != None):
+                    linkitem = enclosureitem.getSubitemWithName("url")
+                    if guiditem is False:
+                        guiditem = linkitem
+                    if (titleitem) and (linkitem):
+                        episode = Episode.Episode(self.mID, -1, linkitem.getContent(), 
+                                                  titleitem.getContent(), guiditem.getContent(), SQLs.episodestatus["new"])
+                        print(linkitem.getContent() + " # " + 
+                              titleitem.getContent()+ " # " +
+                              guiditem.getContent())
+                        episoden.insert(0, episode)
         
         return episoden
 
@@ -215,6 +220,7 @@ class Podcast:
             episoden = self.mDB.getAllEpisodesByCastID(self.mID)
             for episode in episoden:
                 print(episode)
+                print(self.getFileExtension(episode.episodeURL))
                 if not episode.episodeStatus == SQLs.episodestatus["downloaded"]:
                     try:                        
                         try:
@@ -238,6 +244,16 @@ class Podcast:
                         except:
                             print("ERROR: can't write ERROR to Database")
             self.mDB.writeChanges()
+
+
+    def getFileExtension(self, url):
+
+        foundAt = url.rfind(".")
+        if foundAt > 0:
+            result = url[foundAt:len(url)]
+            return result
+        else:
+            return ""
 
 
     def downloadEpisode(self, downloader, episode):

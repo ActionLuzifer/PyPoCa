@@ -14,6 +14,7 @@ import os
 import re
 import locale
 import RSS20
+import sys
 
 
 class PyPoCa:
@@ -60,8 +61,8 @@ class PyPoCa:
     def addPodcast(self, name, _url):
         try:
             # allgemeine Daten holen
-            castID = repr(self.mConfig[self.STR_lastCastID]) + 1
-            numberofcasts = repr(self.mConfig[self.STR_numberOfCasts]) + 1
+            castID = int(self.mConfig[self.STR_lastCastID]) + 1
+            numberofcasts = int(self.mConfig[self.STR_numberOfCasts]) + 1
             
             # Podcast-spezifische Daten erstellen
             podcast = Podcast.Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
@@ -83,6 +84,7 @@ class PyPoCa:
             exctype, value = sys.exc_info()[:2]
             print("ERROR: "+repr(exctype))
             print("       "+repr(value))
+            raise exctype
 
         return podcast
 

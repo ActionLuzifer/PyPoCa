@@ -4,6 +4,8 @@ Created on 20.01.2012
 @author: DuncanMCLeod
 '''
 
+import re
+
 class RSSItem():
     def __init__(self, parentItem, name, content):
         self.parentItem = parentItem
@@ -69,6 +71,43 @@ class RSS20():
         print("TODO:")
 
 
+    def addSelfClosedItem(self, item, itemString):
+        index=1
+        print(itemString)
+        print(itemString[0:str.find(itemString, " ", index)])
+        item = item.addItem(item, itemString[0:str.find(itemString, " ", index)], "")
+        while(index>0):
+            nextSpaceBegin = str.find(itemString, " ", index)
+            nextSpaceEnd   = str.find(itemString, " ", nextSpaceBegin+1)
+            if ( str.find(itemString, '"', nextSpaceBegin) < nextSpaceEnd ) :
+                # find next SpaceChar after the next Two Gaensefuesschen
+                nextOne = str.find(itemString, '"', nextSpaceBegin)
+                nextSecond = str.find(itemString, '"', nextOne+1)
+                nextSpaceEnd = str.find(itemString, " ", nextSecond)
+                
+            pattern = "="
+            matcher = re.search(pattern, itemString[nextSpaceBegin+1:nextSpaceEnd])
+            if ( matcher != None):
+                delimiter = matcher.span()
+                print(repr(delimiter))
+                name    = itemString[nextSpaceBegin+1:nextSpaceBegin+delimiter[0]+1]
+                content = itemString[nextSpaceBegin+delimiter[1]+2:nextSpaceEnd-1]
+                print("#"+ name + "#  -->  #" + content +"#")
+                item = item.addItem(item, name, content)
+                item = item.closeItem()
+
+                
+            else:
+                print("bloed gelaufen")
+            index = nextSpaceEnd
+            
+            #item = item.addItem(item, name, content)
+            #item = item.closeItem()
+
+        item = item.closeItem()
+        return item
+
+
     def getRSSObject(self, rssString):
         print("TODO:")
         index = 1
@@ -90,8 +129,7 @@ class RSS20():
                     name = elem[1:endNameIndex]
                     content = ""
                     
-                    item = item.addItem(item, name, content)
-                    item = item.closeItem()
+                    item = self.addSelfClosedItem(item, name)
                 else:
                     name = elem[1:endNameIndex]
                     content = elem[endNameIndex+1:elem.__len__()]
@@ -111,11 +149,11 @@ class RSS20():
         else:
             elemEnd = elemEnd1
         elemStr = rssString[elemBegin:elemEnd]
-        # Test auf ungewünschte HTML-Codierungsstrings
+        # Test auf ungewuenschte HTML-Codierungsstrings
         for badstring in badStrings:
             if (badstring==elemStr):
                 return self.getNextElem(rssString, elemEnd)
-        # Test auf ungewünschte HTML-Codierungsstrings_v2
+        # Test auf ungewuenschte HTML-Codierungsstrings_v2
         if (elemStr[0:9]=="<![CDATA["):
             return self.getNextElem(rssString, self.getNextIndexAfterCDATA(rssString, elemBegin))
         if (elemStr[0:3]=="<p>"):
@@ -165,7 +203,8 @@ class RSS20():
             for rssitem in items:
                 titleitem = rssitem.getSubitemWithName("title")
                 linkitem  = rssitem.getSubitemWithName("link")
-                print("   TITLE: "+titleitem.getContent() + " _ LINK: " + linkitem.getContent())
+                enclosureitem  = rssitem.getSubitemWithName("enclosure")
+                print("   TITLE: "+titleitem.getContent() + " _ LINK: " + linkitem.getContent() + " _ ENCL: " + enclosureitem.getContent())
             
 
 
