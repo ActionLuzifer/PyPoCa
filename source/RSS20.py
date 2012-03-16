@@ -109,10 +109,8 @@ class RSS20():
 
 
     def getRSSObject(self, rssString):
-        print("TODO:")
         index = 1
         item = RSSItem(0, "BODY", "")
-        print(item.name+"__"+item.content)
         while(index>0):
             elem, index, isCDATAelem = self.getNextElem(rssString, index)
             elem = elem.lstrip().rstrip()
@@ -136,12 +134,8 @@ class RSS20():
                     else:
                         endNameIndex = str.find(elem, ">", 1)
                 
-                    
                     name = elem[1:endNameIndex]
                     content = elem[endNameIndex+1:elem.__len__()]
-                    print("name: " + name + " #> content: " + content)
-                    print("###>"+rssString[index:index+100])
-                    
                     item = item.addItem(item, name, content)
                     
         return item
@@ -183,21 +177,15 @@ class RSS20():
                 if (countBrackets == 0):
                     fromIndex=0
 
-        print("CDATA: " + rssString[i:lastIndex])
         return lastIndex
 
 
     def getNextElem(self, rssString, indexStart):
         badStrings = ["<br>"]
         isCDATAelem = False
-        print("#########################")
-        print("100  ###>"+rssString[indexStart:indexStart+30])
         elemBegin = str.find(rssString, "<", indexStart)
-        print("Start###>"+rssString[elemBegin:elemBegin+30])
         elemEnd1    = str.find(rssString, "<", elemBegin+1)
-        print("End1 ###>"+rssString[elemBegin:elemEnd1])
         elemEnd2    = str.find(rssString, "/>", elemBegin+1)
-        print("End2 ###>"+rssString[elemBegin:elemEnd2])
         if (elemEnd1 > elemEnd2 and elemEnd2 > -1):
             elemEnd = elemEnd2+2
         else:
@@ -206,11 +194,8 @@ class RSS20():
             if elemEnd == elemCDATA and elemCDATA > 0:
                 isCDATAelem = True
                 elemCDATEend = self.extractCDATA(rssString, elemCDATA)
-                print("CDATA###>"+rssString[elemCDATA:elemCDATEend+1])
                 elemEnd1    = str.find(rssString, "<", elemCDATEend+1)
-                print("End1 ###>"+rssString[elemBegin:elemEnd1])
                 elemEnd2    = str.find(rssString, "/>", elemCDATEend+2)
-                print("End2 ###>"+rssString[elemBegin:elemEnd2])
                 if (elemEnd1 > elemEnd2 and elemEnd2 > -1):
                     elemEnd = elemEnd2
                 else:
@@ -225,6 +210,7 @@ class RSS20():
                 return self.getNextElem(rssString, elemEnd)
         # Test auf ungewuenschte HTML-Codierungsstrings_v2
         if (elemStr[0:9]=="<![CDATA["):
+            print ("CDATA an prominenter Stelle")
             return self.getNextElem(rssString, self.getNextIndexAfterCDATA(rssString, elemBegin))
         if (elemStr[0:3]=="<p>"):
             # TODO:
@@ -279,16 +265,3 @@ class RSS20():
                     print("|--LINK:  " + linkitem.getContent())
                     print("|--ENCL:  " + enclosureitem.getContent())
                     print("|")
-            
-
-
-if __name__ == '__main__':
-    import sys
-    import os
-    sys.path.append("/home/actionluzifer/Dokumente/sourcen/workspace/pypoca")
-    files=os.listdir("/home/actionluzifer/Dokumente/sourcen/workspace/pypoca")
-    for file in files:
-        if ("start.py" in file):
-            file = file.replace(".py", "")
-            pluginImport = __import__(file, globals(), locals(), [], 0)
-            pluginImport.starten()
