@@ -73,8 +73,6 @@ class RSS20():
 
     def addSelfClosedItem(self, item, itemString):
         index=1
-        print(itemString)
-        print(itemString[0:str.find(itemString, " ", index)])
         item = item.addItem(item, itemString[0:str.find(itemString, " ", index)], "")
         while(index>0):
             nextSpaceBegin = str.find(itemString, " ", index)
@@ -84,25 +82,21 @@ class RSS20():
                 nextOne = str.find(itemString, '"', nextSpaceBegin)
                 nextSecond = str.find(itemString, '"', nextOne+1)
                 nextSpaceEnd = str.find(itemString, " ", nextSecond)
-                
-            pattern = "="
-            matcher = re.search(pattern, itemString[nextSpaceBegin+1:nextSpaceEnd])
-            if ( matcher != None):
-                delimiter = matcher.span()
-                print(repr(delimiter))
-                name    = itemString[nextSpaceBegin+1:nextSpaceBegin+delimiter[0]+1]
-                content = itemString[nextSpaceBegin+delimiter[1]+2:nextSpaceEnd-1]
-                print("#"+ name + "#  -->  #" + content +"#")
-                item = item.addItem(item, name, content)
-                item = item.closeItem()
-
-                
-            else:
-                print("bloed gelaufen")
-            index = nextSpaceEnd
             
-            #item = item.addItem(item, name, content)
-            #item = item.closeItem()
+            if (nextSpaceBegin < nextSpaceEnd) and nextSpaceBegin > 0: 
+                pattern = "="
+                matcher = re.search(pattern, itemString[nextSpaceBegin+1:nextSpaceEnd])
+                if ( matcher != None):
+                    delimiter = matcher.span()
+                    name    = itemString[nextSpaceBegin+1:nextSpaceBegin+delimiter[0]+1]
+                    content = itemString[nextSpaceBegin+delimiter[1]+2:nextSpaceEnd-1]
+                    item = item.addItem(item, name, content)
+                    item = item.closeItem()
+    
+                    
+                else:
+                    print("bloed gelaufen bei: " + itemString[nextSpaceBegin+1:nextSpaceEnd])
+            index = nextSpaceEnd
 
         item = item.closeItem()
         return item
