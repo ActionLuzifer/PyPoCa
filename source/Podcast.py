@@ -195,16 +195,13 @@ class Podcast:
                 titleitem     = rssitem.getSubitemWithName("title")
                 enclosureitem = rssitem.getSubitemWithName("enclosure")
                 guiditem      = rssitem.getSubitemWithName("guid")
-                if (enclosureitem != None):
+                if enclosureitem:
                     linkitem = enclosureitem.getSubitemWithName("url")
                     if guiditem is False:
                         guiditem = linkitem
-                    if (titleitem) and (linkitem):
+                    if titleitem and linkitem:
                         episode = Episode.Episode(self.mID, -1, linkitem.getContent(), 
                                                   titleitem.getContent(), guiditem.getContent(), SQLs.episodestatus["new"])
-                        print(linkitem.getContent() + " # " + 
-                              titleitem.getContent()+ " # " +
-                              guiditem.getContent())
                         episoden.insert(0, episode)
         
         return episoden
