@@ -114,16 +114,16 @@ class RSS20():
         item = RSSItem(0, "BODY", "")
         print(item.name+"__"+item.content)
         while(index>0):
-            elem, index = self.getNextElem(rssString, index)
+            elem, index, isCDATAelem = self.getNextElem(rssString, index)
             elem = elem.lstrip().rstrip()
             if("</"==elem[0:2]):
                 # Ende eines Items
                 item = item.closeItem()
             else:
                 # Anfang eines Items
-                endNameIndex = str.find(elem, ">", 1)
                 if("/>"==elem[elem.__len__()-2:elem.__len__()]):
                     # sich selbst schliessend
+                    endNameIndex = str.find(elem, ">", 1)
                     endNameIndex = endNameIndex - 1
 
                     name = elem[1:endNameIndex]
@@ -131,23 +131,93 @@ class RSS20():
                     
                     item = self.addSelfClosedItem(item, name)
                 else:
+                    if (isCDATAelem == False):
+                        endNameIndex = str.find(elem, ">", 1)
+                    else:
+                        endNameIndex = str.find(elem, ">", 1)
+                
+                    
                     name = elem[1:endNameIndex]
                     content = elem[endNameIndex+1:elem.__len__()]
+                    print("name: " + name + " #> content: " + content)
+                    print("###>"+rssString[index:index+100])
                     
                     item = item.addItem(item, name, content)
                     
         return item
 
 
+    def getNextCDATAelem(self, rssString, fromIndex):
+        CLOSE = False
+        OPEN  = True
+        bracketOpen =  str.find(rssString, "[", fromIndex)
+        bracketClose = str.find(rssString, "]", fromIndex)
+        if ( bracketOpen < bracketClose ):
+            if ( bracketOpen >= 0 ):
+                return bracketOpen+1, OPEN
+            else:
+                return bracketClose+1, CLOSE
+        else:                
+            if ( bracketClose >= 0):
+                return bracketClose+1, CLOSE
+            elif ( bracketOpen >= 0 ):
+                return bracketOpen+1, OPEN
+            else:
+                return -2, OPEN
+
+
+    def extractCDATA(self, rssString, fromIndex):
+        i = fromIndex
+        fromIndex =  str.find(rssString, "[", fromIndex)
+        countBrackets = 0
+        while (fromIndex > 0):
+            lastIndex = fromIndex 
+            fromIndex, isOpen = self.getNextCDATAelem(rssString, fromIndex)
+            if fromIndex > 0:
+                lastIndex = fromIndex 
+                
+            if isOpen:
+                countBrackets = countBrackets+1
+            else:
+                countBrackets = countBrackets-1
+                if (countBrackets == 0):
+                    fromIndex=0
+
+        print("CDATA: " + rssString[i:lastIndex])
+        return lastIndex
+
+
     def getNextElem(self, rssString, indexStart):
         badStrings = ["<br>"]
+        isCDATAelem = False
+        print("#########################")
+        print("100  ###>"+rssString[indexStart:indexStart+30])
         elemBegin = str.find(rssString, "<", indexStart)
+        print("Start###>"+rssString[elemBegin:elemBegin+30])
         elemEnd1    = str.find(rssString, "<", elemBegin+1)
+        print("End1 ###>"+rssString[elemBegin:elemEnd1])
         elemEnd2    = str.find(rssString, "/>", elemBegin+1)
+        print("End2 ###>"+rssString[elemBegin:elemEnd2])
         if (elemEnd1 > elemEnd2 and elemEnd2 > -1):
             elemEnd = elemEnd2+2
         else:
             elemEnd = elemEnd1
+            elemCDATA    = str.find(rssString, "<![CDATA[", elemBegin+1)
+            if elemEnd == elemCDATA and elemCDATA > 0:
+                isCDATAelem = True
+                elemCDATEend = self.extractCDATA(rssString, elemCDATA)
+                print("CDATA###>"+rssString[elemCDATA:elemCDATEend+1])
+                elemEnd1    = str.find(rssString, "<", elemCDATEend+1)
+                print("End1 ###>"+rssString[elemBegin:elemEnd1])
+                elemEnd2    = str.find(rssString, "/>", elemCDATEend+2)
+                print("End2 ###>"+rssString[elemBegin:elemEnd2])
+                if (elemEnd1 > elemEnd2 and elemEnd2 > -1):
+                    elemEnd = elemEnd2
+                else:
+                    elemEnd = elemEnd1
+                
+                    
+                    
         elemStr = rssString[elemBegin:elemEnd]
         # Test auf ungewuenschte HTML-Codierungsstrings
         for badstring in badStrings:
@@ -159,7 +229,7 @@ class RSS20():
         if (elemStr[0:3]=="<p>"):
             # TODO:
             print("TODO: REMOVE '<p>")
-        return elemStr, elemEnd
+        return elemStr, elemEnd, isCDATAelem
 
 
     def getNextIndexAfterCDATA(self, rssString, elemBegin):
@@ -199,12 +269,16 @@ class RSS20():
             titleitem = channelItem.getSubitemWithName("title")
             linkitem  = channelItem.getSubitemWithName("link")
             items = channelItem.getSubitemsWithName("item")
-            print("TITLE: "+titleitem.getContent() + " _ LINK: " + linkitem.getContent())
+            print("|TITLE: "+titleitem.getContent() + " _ LINK: " + linkitem.getContent())
             for rssitem in items:
                 titleitem = rssitem.getSubitemWithName("title")
                 linkitem  = rssitem.getSubitemWithName("link")
                 enclosureitem  = rssitem.getSubitemWithName("enclosure")
-                print("   TITLE: "+titleitem.getContent() + " _ LINK: " + linkitem.getContent() + " _ ENCL: " + enclosureitem.getContent())
+                if (titleitem and linkitem and enclosureitem):
+                    print("|--TITLE: "+titleitem.getContent())
+                    print("|--LINK:  " + linkitem.getContent())
+                    print("|--ENCL:  " + enclosureitem.getContent())
+                    print("|")
             
 
 
