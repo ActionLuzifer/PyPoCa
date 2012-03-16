@@ -18,9 +18,9 @@ import Episode
 def f_decodeCastReader(reader):
     alreadyread = reader.read()
     readString = str(alreadyread)
-    if('encoding="ISO-8859-1"' in readString):
+    if('encoding="ISO-8859-1"' in readString) or (('encoding="iso-8859-1"' in readString)):
         decodedStr = alreadyread.decode('iso-8859-1', errors='ignore')
-    elif('encoding="utf-8"' in readString) or ('encoding="UTF-8"' in readString:
+    elif('encoding="utf-8"' in readString) or ('encoding="UTF-8"' in readString):
         decodedStr = alreadyread.decode('utf_8', errors='ignore')
     else:
         print("UNKNOWN ENCODING!!!")
