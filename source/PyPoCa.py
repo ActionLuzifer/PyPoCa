@@ -90,7 +90,9 @@ class PyPoCa:
 
 
     def addPodcastByURL(self, _url):
-        name =  Podcast._getCastNameByURL(_url)
+        rss = RSS20.RSS20()
+        rssBody = rss.getRSSObject(Podcast.f_urlToString(_url))
+        name =  Podcast._getCastNameByRSS(rssBody)
         self.addPodcast(name, _url)
 
 
