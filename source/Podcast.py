@@ -34,11 +34,36 @@ def f_urlToString(url):
 
 
 def _getCastName(htmlstring):
-    bigRE = "(.)*<title( )*>(?P<CastTitle>(.)*)</title( )*>(.)*";
-    REprogramm = re.compile(bigRE);
-    foundObject = REprogramm.search(htmlstring);
-    castNAME = foundObject.group("CastTitle")
-    return castNAME
+    rss = RSS20.RSS20()
+    rssBody = rss.getRSSObject(htmlstring)
+    
+    rss.debugItem2(rssBody)
+    #rss.debugItem(rssBody)
+    
+    channelItem = rssBody.getItemWithName("channel")
+    if channelItem:
+        item = channelItem.getSubitemWithName("title")
+        if (item):
+            print(item.getContent())
+            return item.getContent()
+
+
+def _getCastNameByRSS(rssBody):
+    if (rssBody != False):
+        channelItem = rssBody.getItemWithName("channel")
+        if channelItem:
+            item = channelItem.getSubitemWithName("title")
+            if item:
+                print(item.getContent())
+                return item.getContent()
+    else:
+        return ""
+
+    
+    
+    htmlpage = f_urlToString(url)
+    print("htmlpage: "+htmlpage)
+    return _getCastName(htmlpage)
 
 
 def _getCastNameByURL(url):
