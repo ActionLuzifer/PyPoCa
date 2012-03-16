@@ -37,9 +37,6 @@ def _getCastName(htmlstring):
     rss = RSS20.RSS20()
     rssBody = rss.getRSSObject(htmlstring)
     
-    rss.debugItem2(rssBody)
-    #rss.debugItem(rssBody)
-    
     channelItem = rssBody.getItemWithName("channel")
     if channelItem:
         item = channelItem.getSubitemWithName("title")
@@ -58,12 +55,6 @@ def _getCastNameByRSS(rssBody):
                 return item.getContent()
     else:
         return ""
-
-    
-    
-    htmlpage = f_urlToString(url)
-    print("htmlpage: "+htmlpage)
-    return _getCastName(htmlpage)
 
 
 def _getCastNameByURL(url):

@@ -12,7 +12,6 @@ import Podcast
 #from Downloader.Intern import Intern as DownIntern
 import os
 import re
-import locale
 import RSS20
 import sys
 
