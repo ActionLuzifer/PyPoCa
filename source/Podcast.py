@@ -13,6 +13,7 @@ import SQLs
 from Downloader.Intern import Intern as DownIntern
 import RSS20
 import Episode
+import public_functions
 
 
 def f_decodeCastReader(reader):
@@ -85,9 +86,7 @@ class Podcast:
         Constructor
         '''
 
-        print("MOIN")        
         self.mDB = PyPoCaDB_Podcast.PyPoCaDB_Podcast(DB)
-        print("MOINMOIN")
         ''' CAST-ID '''
         self.mID = ID
         self.mDownloadPathBase = downloadPath
@@ -99,6 +98,7 @@ class Podcast:
             cast = self.mDB.getPodcastInfosByCastID(self.mID)
         except:
             cast = False
+            print("ERROR@Podcast::reloadData: castID=="+repr(self.mID))
         if cast:        
             ''' CAST-Name '''
             self.mNAME = cast["castname"]
@@ -232,8 +232,6 @@ class Podcast:
         if self.checkDownloadPath():
             episoden = self.mDB.getAllEpisodesByCastID(self.mID)
             for episode in episoden:
-                print(episode)
-                print(self.getFileExtension(episode.episodeURL))
                 if not episode.episodeStatus == SQLs.episodestatus["downloaded"]:
                     try:                        
                         try:
@@ -260,7 +258,6 @@ class Podcast:
 
 
     def getFileExtension(self, url):
-
         foundAt = url.rfind(".")
         if foundAt > 0:
             result = url[foundAt:len(url)]
@@ -273,7 +270,7 @@ class Podcast:
         if (episode.episodeStatus==SQLs.episodestatus["new"]):
             str = "{:0>4}".format(episode.episodeID)
             # TODO: Dateiendung ermitteln und an castFileName anhaengen
-            castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,episode.episodeName))
+            castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,public_functions.f_replaceBadChars(episode.episodeName+self.getFileExtension(episode.episodeURL))))
             print("castFileName: "+castFileName)
             downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
 
