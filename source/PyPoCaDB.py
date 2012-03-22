@@ -135,7 +135,6 @@ class PyPoCaDB:
         print("SQL: "+command)
         try:
             try:
-                #return self.mDBcursor.execute(command)
                 self.mDBcursor.execute(command)
                 return self.mDBcursor.fetchall()
             except sqlite3.Error as e:
