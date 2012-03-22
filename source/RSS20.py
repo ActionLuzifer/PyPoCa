@@ -209,6 +209,9 @@ class RSS20():
         if (elemStr[0:3]=="<p>"):
             # TODO:
             print("TODO: REMOVE '<p>")
+        if (elemStr[0:4]=="<!--"):
+            print("KOMMENTAR")
+            return self.getNextElem(rssString, self.getNextIndexAfterComment(rssString, elemBegin))
         return elemStr, elemEnd, isCDATAelem
 
 
@@ -228,6 +231,11 @@ class RSS20():
         return firstBracket 
 
 
+    def getNextIndexAfterComment(self, rssString, elemBegin):
+        closeComment = str.find(rssString, "-->", elemBegin) + 3
+        return closeComment
+    
+    
     def debugItem(self, item, i=1):
         items = item.getItems()
         emptyStr = ""
@@ -249,13 +257,19 @@ class RSS20():
             titleitem = channelItem.getSubitemWithName("title")
             linkitem  = channelItem.getSubitemWithName("link")
             items = channelItem.getSubitemsWithName("item")
-            print("|TITLE: "+titleitem.getContent() + " _ LINK: " + linkitem.getContent())
+            try:
+                print("|TITLE: "+titleitem.getContent() + " _ LINK: " + linkitem.getContent())
+            except:
+                print("error: kann etwas nicht darstellen")
             for rssitem in items:
                 titleitem = rssitem.getSubitemWithName("title")
                 linkitem  = rssitem.getSubitemWithName("link")
                 enclosureitem  = rssitem.getSubitemWithName("enclosure")
                 if (titleitem and linkitem and enclosureitem):
-                    print("|--TITLE: "+titleitem.getContent())
-                    print("|--LINK:  " + linkitem.getContent())
-                    print("|--ENCL:  " + enclosureitem.getContent())
-                    print("|")
+                    try:
+                        print("|--TITLE: "+titleitem.getContent())
+                        print("|--LINK:  " + linkitem.getContent())
+                        print("|--ENCL:  " + enclosureitem.getContent())
+                        print("|")
+                    except:
+                        print("error: kann etwas nicht darstellen_2")
