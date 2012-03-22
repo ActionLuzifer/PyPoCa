@@ -271,7 +271,10 @@ class Podcast:
             str = "{:0>4}".format(episode.episodeID)
             # TODO: Dateiendung ermitteln und an castFileName anhaengen
             castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,public_functions.f_replaceBadChars(episode.episodeName+self.getFileExtension(episode.episodeURL))))
-            print("castFileName: "+castFileName)
+            try:
+                print("castFileName: "+castFileName)
+            except:
+                print("castFileName: KANN NICHT DARSTELLEN")
             downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
 
 
@@ -285,14 +288,3 @@ class Podcast:
                 print("PATH:   ", self.mDownloadPath)
                 return 0
         return 1
-
-
-if __name__ == '__main__':
-    import sys
-    sys.path.append("/home/actionluzifer/Dokumente/sourcen/workspace/pypoca")
-    files=os.listdir("/home/actionluzifer/Dokumente/sourcen/workspace/pypoca")
-    for file in files:
-        if ("start.py" in file):
-            file = file.replace(".py", "")
-            pluginImport = __import__(file, globals(), locals(), [], 0)
-            pluginImport.starten()
