@@ -41,7 +41,10 @@ class PyPoCa:
         self.mPodcasts = set()
         self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
         for podcast in self.mPodcasts:
-            print(podcast.getName())
+            try:
+                print(podcast.getName())
+            except:
+                print("can't say podcastname")
 
 
     def saveConfig(self):
@@ -133,7 +136,7 @@ class PyPoCa:
 
     def update(self):
         for podcast in self.mPodcasts:
-            print("podcast.getStatus(): "+podcast.getStatus())
+            print("podcast.getStatus(): "+repr(podcast.getStatus()))
             if int(podcast.getStatus())==1:
                 podcast.update(False)
 
@@ -149,7 +152,10 @@ class PyPoCa:
         anzahlStellen=len(repr(len(self.mPodcasts)))
         formatStr = "{:0>"+repr(anzahlStellen)+"}"
         for podcast in self.mPodcasts:
-            print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName() + "  |  "+podcast.getURL())
+            try:
+                print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName() + "  |  "+podcast.getURL())
+            except:
+                print("Problem bei der Darstellung von einem Podcast")
 
 
     def getDownloadpathInConfig(self):
