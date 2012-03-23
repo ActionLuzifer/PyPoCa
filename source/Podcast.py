@@ -274,7 +274,6 @@ class Podcast:
         isError = False
         if (episode.episodeStatus==SQLs.episodestatus["new"]):
             str = "{:0>4}".format(episode.episodeID)
-            # TODO: Dateiendung ermitteln und an castFileName anhaengen
             castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,public_functions.f_replaceBadChars(episode.episodeName+self.getFileExtension(episode.episodeURL))))
             try:
                 print("castFileName: "+castFileName)
