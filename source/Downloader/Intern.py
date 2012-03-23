@@ -14,6 +14,7 @@ class Intern(Downloader.BasisDownloader.Downloader):
     '''Downloadklasse die mithilfe von den Pythonklassen die Dateien herunterlaedt'''
    
     def download(self, id, castFileName, url, status):
+        isError = False
         fileOptions = ''
         #sizeOfcastFile = 0
         # Datei NEU oder beim letzten Versuch nen Fehler jehabt?
@@ -40,5 +41,7 @@ class Intern(Downloader.BasisDownloader.Downloader):
             exctype, value = sys.exc_info()[:2]
             print("ERROR"+exctype)
             print("   ->"+value)
+            isError = True
         finally:
             castFile.close()
+        return isError

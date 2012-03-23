@@ -232,6 +232,7 @@ class Podcast:
         if self.checkDownloadPath():
             episoden = self.mDB.getAllEpisodesByCastID(self.mID)
             for episode in episoden:
+                isError = False
                 if not episode.episodeStatus == SQLs.episodestatus["downloaded"]:
                     try:                        
                         try:
@@ -242,9 +243,12 @@ class Podcast:
                             elif downloadMethod=="intern":
                                 downloader = DownIntern(self)
                                 
-                            self.downloadEpisode(downloader, episode)
+                            isError = self.downloadEpisode(downloader, episode)
                         finally:
-                            self.mDB.updateEpisodeStatus(episode, "downloaded")
+                            if not isError:
+                                self.mDB.updateEpisodeStatus(episode, "downloaded")
+                            else:
+                                self.mDB.updateEpisodeStatus(episode, "error")
                             self.mDB.writeChanges()
                     except urllib.error.URLError as e:
                         print("Podcast@download(self, downloadMethod):")
@@ -267,6 +271,7 @@ class Podcast:
 
 
     def downloadEpisode(self, downloader, episode):
+        isError = False
         if (episode.episodeStatus==SQLs.episodestatus["new"]):
             str = "{:0>4}".format(episode.episodeID)
             # TODO: Dateiendung ermitteln und an castFileName anhaengen
@@ -275,7 +280,8 @@ class Podcast:
                 print("castFileName: "+castFileName)
             except:
                 print("castFileName: KANN NICHT DARSTELLEN")
-            downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
+            isError = downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
+        return isError
 
 
     def checkDownloadPath(self):
