@@ -7,6 +7,8 @@ Created on 27.09.2011
 import SQLs
 import sys
 import Episode
+from multiprocessing.managers import public_methods
+import public_functions
 
 class PyPoCaDB_Podcast():
     
@@ -43,7 +45,7 @@ class PyPoCaDB_Podcast():
         try:
             try:
                 for episode in episodes:
-                    if not self.episodes_INSERT(castID, episodeID+1, episode.episodeURL, episode.episodeName, episode.episodeGUID)==0:
+                    if not self.episodes_INSERT(castID, episodeID+1, episode.episodeURL, public_functions.f_replaceBadSQLChars(episode.episodeName), episode.episodeGUID)==0:
                         episodeID = episodeID+1   # episodeID wird nur um eins erhoeht wenn die SQL-Abfrage keinen Fehler verursacht hat
                     else:
                         raise Exception()

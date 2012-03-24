@@ -68,9 +68,16 @@ def f_replaceBadChars(mf_executeStr):
     mf_executeStr = mf_executeStr.replace("&thorn;", "þ") #     kleines Thorn (isländisch)     &thorn;     &#254;
     mf_executeStr = mf_executeStr.replace("&#255;", "ÿ")  #     y Umlaut     &yuml;     &#255;
     mf_executeStr = mf_executeStr.replace("&yuml;", "ÿ")  #     y Umlaut     &yuml;     &#255;
-    mf_executeStr = mf_executeStr.replace('"', "'")  #     y Umlaut     &yuml;     &#255;
+    mf_executeStr = mf_executeStr.replace('"', "'")
     
     if sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
         mf_executeStr = mf_executeStr.replace(":", "-")
         mf_executeStr = mf_executeStr.replace("?", "_")
+    return mf_executeStr
+
+
+def f_replaceBadSQLChars(mf_executeStr):
+    mf_executeStr = mf_executeStr.replace("'", "")
+    mf_executeStr = mf_executeStr.replace("&amp;", "&")
+    
     return mf_executeStr
