@@ -28,8 +28,8 @@ class Intern(Downloader.BasisDownloader.Downloader):
             castFile.write(downloaddingens.read())
         except:
             exctype, value = sys.exc_info()[:2]
-            print("ERROR"+exctype)
-            print("   ->"+value)
+            print("ERROR"+repr(exctype))
+            print("   ->"+repr(value))
             isError = True
         finally:
             castFile.close()
