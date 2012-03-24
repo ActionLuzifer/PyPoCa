@@ -210,7 +210,6 @@ class RSS20():
             # TODO:
             print("TODO: REMOVE '<p>")
         if (elemStr[0:4]=="<!--"):
-            print("KOMMENTAR")
             return self.getNextElem(rssString, self.getNextIndexAfterComment(rssString, elemBegin))
         return elemStr, elemEnd, isCDATAelem
 
