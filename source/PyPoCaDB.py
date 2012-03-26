@@ -90,7 +90,7 @@ class PyPoCaDB:
             podcast = Podcast.Podcast(qpodcast[0], self, downloadpath)
             podcast.setName(qpodcast[1])
             podcast.setURL(qpodcast[2])
-            _podcasts.add(podcast)
+            _podcasts.append(podcast)
 
 
     def addPodcast(self, _id, _name, _url, _status):

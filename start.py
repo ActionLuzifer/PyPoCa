@@ -34,13 +34,9 @@ def starten():
                 pypoca.loadConfig()
                 pypoca.addPodcastByFile(sys.argv[i+1])
                 pypoca.saveConfig()
-            elif commandStr=="removeI":
+            elif commandStr=="remove":
                 pypoca.loadConfig()
                 pypoca.removePodcastByID(sys.argv[i+1])
-                pypoca.saveConfig()
-            elif commandStr=="removeN":
-                pypoca.loadConfig()
-                pypoca.removePodcastByName(sys.argv[i+1])
                 pypoca.saveConfig()
             elif commandStr=="enable":
                 pypoca.loadConfig()

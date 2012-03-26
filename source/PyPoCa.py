@@ -38,7 +38,7 @@ class PyPoCa:
             print(config+" - "+str(self.mConfig[config]))
             
         # Podcasts
-        self.mPodcasts = set()
+        self.mPodcasts = list()
         self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
 
 
@@ -95,19 +95,17 @@ class PyPoCa:
 
     def addPodcastByFile(self, _path):
         _url = os.path.normpath(_path)
-        name =  Podcast._getCastNameByFile(_url)
+        rss = RSS20.RSS20()
+        rssBody = rss.getRSSObject(Podcast.f_fileToString(_url))
+        name =  Podcast._getCastNameByRSS(rssBody)
         self.addPodcast(name, _path)
 
 
     def removePodcastByID(self, _id):
         if not self.mDB.removeCast(_id):
             print("Fehler: konnte den Podcast NICHT korrekt aus der Datenbank entfernen!")
-        self.mDB.writeChanges()
-
-
-    def removePodcastByName(self, _name):
-        self.removePodcastByID(self.getIDofPodcast(_name))
-        self.mDB.writeChanges()
+        else:
+            self.mDB.writeChanges()
 
 
     def enablePodcastByID(self, _id):
@@ -163,7 +161,7 @@ class PyPoCa:
 
 
     def printVersion(self):
-        print("0.0.11")
+        print("0.0.1.1")
         
         
     def rsstest(self):

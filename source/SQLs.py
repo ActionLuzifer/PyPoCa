@@ -36,7 +36,7 @@ sqlUPDATEconfig_numberOfCasts = "UPDATE config SET confdata={0} WHERE confid=1;"
 
 
 sqlgetAllTables = "SELECT name, sql FROM sqlite_master WHERE type='table' ;"
-sqlGETALLpodcasts = "SELECT * from podcasts"
+sqlGETALLpodcasts = "SELECT * from podcasts ORDER BY castid"
 sqlGETALLconfig = "SELECT * from config"
 
 sqlCREATEcastsAndEpisodes = "CREATE TABLE podcastsAndEpisodes (castID INTEGER NOT NULL, highestEpisodeID INTEGER NOT NULL, UNIQUE(castid, highestEpisodeID));"
