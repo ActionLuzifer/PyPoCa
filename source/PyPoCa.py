@@ -119,21 +119,11 @@ class PyPoCa:
         self.mDB.updateStatusOfPodcast(_id, 1)
 
         
-    def enablePodcastByName(self, _name):
-        ''' enables the podcast with this NAME '''
-        self.enablePodcastByID(self.getIDofPodcast(_name))
-
-
     def disablePodcastByID(self, _id):
         ''' disables the podcast with this ID '''
         self.mDB.updateStatusOfPodcast(_id, 0)
 
         
-    def disablePodcastByName(self, _name):
-        ''' disables the podcast with this NAME '''
-        self.disablePodcastByID(self.getIDofPodcast(_name))
-
-
     def update(self):
         for podcast in self.mPodcasts:
             print("podcast.getStatus(): "+repr(podcast.getStatus()))
@@ -198,6 +188,4 @@ class PyPoCa:
  removeI ID     removes the podcast with this ID\n\
  removeN NAME   remove the podcast with this NAME\n\
  enable ID      enables the podcast with this ID\n\
- enable NAME    enables the podcast with this NAME\n\
- disable ID     disables the podcast with this ID\n\
- disable NAME   disables the podcast with this NAME")
+ disable ID     disables the podcast with this ID")

@@ -42,18 +42,12 @@ def starten():
                 pypoca.loadConfig()
                 pypoca.removePodcastByName(sys.argv[i+1])
                 pypoca.saveConfig()
-            elif commandStr=="enableI":
+            elif commandStr=="enable":
                 pypoca.loadConfig()
                 pypoca.enablePodcastByID(sys.argv[i+1])
-            elif commandStr=="enableN":
-                pypoca.loadConfig()
-                pypoca.disablePodcastByName(sys.argv[i+1])
-            elif commandStr=="disableI":
+            elif commandStr=="disable":
                 pypoca.loadConfig()
                 pypoca.disablePodcastByID(sys.argv[i+1])
-            elif commandStr=="disableN":
-                pypoca.loadConfig()
-                pypoca.enablePodcastByName(sys.argv[i+1])
             elif commandStr=="--version" or commandStr=="-v":
                 pypoca.printVersion()
             elif commandStr=="--help" or commandStr=="-h":
