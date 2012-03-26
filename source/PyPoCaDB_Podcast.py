@@ -7,13 +7,11 @@ Created on 27.09.2011
 import SQLs
 import sys
 import Episode
-from multiprocessing.managers import public_methods
 import public_functions
 
 class PyPoCaDB_Podcast():
     
     def __init__(self, _DB):
-        print("BLA")
         self.mDB = _DB
 
 

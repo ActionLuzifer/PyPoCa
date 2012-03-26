@@ -40,11 +40,6 @@ class PyPoCa:
         # Podcasts
         self.mPodcasts = set()
         self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
-        for podcast in self.mPodcasts:
-            try:
-                print(podcast.getName())
-            except:
-                print("can't say podcastname")
 
 
     def saveConfig(self):
