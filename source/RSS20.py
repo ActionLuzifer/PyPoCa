@@ -67,10 +67,7 @@ class RSSItem():
 
 
 class RSS20():
-    def __init__(self):
-        print("TODO:")
-
-
+    
     def addSelfClosedItem(self, item, itemString):
         index=1
         item = item.addItem(item, itemString[0:str.find(itemString, " ", index)], "")

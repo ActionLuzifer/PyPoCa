@@ -33,13 +33,13 @@ class PyPoCaDB:
 
     def checkDB(self):
         if self.mDBopen:
-            tables = self.mDBcursor.execute(SQLs.sqlgetAllTables)
-            print(tables)
-            print(tables.arraysize)
-            if not tables.arraysize == 4:
+            tablesC = self.mDBcursor.execute(SQLs.sqlgetAllTables)
+            tables = tablesC.fetchall()
+                
+            if not len(tables) == 4:
                 self.mtablesArray = {'config': False, 'podcasts': False, 'episodes': False, 'podcastsAndEpisodes': False}
                 for table in tables:
-                    print(table)
+                    print(table[0])
                     self.mtablesArray[table[0]] = True
                 if not self.mtablesArray['config']:
                     self.createTableConfig()
@@ -132,7 +132,6 @@ class PyPoCaDB:
 
 
     def _executeCommand(self, command):
-        print("SQL: "+command)
         try:
             try:
                 self.mDBcursor.execute(command)
@@ -141,11 +140,13 @@ class PyPoCaDB:
                 print("PyPoCaDB@_executeCommand(self, command):")
                 print("ERROR: ", e.args[0])
                 print("SQL:   ", command)
+                print("type: "+str(type(command)))
                 return 0
         except:
             print("PyPoCaDB@_executeCommand(self, command):")
             print("ERROR: UNKNOWN")
             print("SQL:   ", command)
+            print("type: "+str(type(command)))
             return 2
         return 0
 

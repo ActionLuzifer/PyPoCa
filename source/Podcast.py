@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 25.09.2011
 
@@ -30,8 +31,11 @@ def f_decodeCastReader(reader):
 
 
 def f_urlToString(url):
-    htmldings = urllib.request.urlopen(url);
-    return f_decodeCastReader(htmldings);
+    try:
+        htmldings = urllib.request.urlopen(url)
+        return f_decodeCastReader(htmldings), True
+    except:
+        return "", False
 
 
 def _getCastName(htmlstring):
@@ -111,7 +115,7 @@ class Podcast:
             self.mDownloadPath = os.path.normpath(self.mDownloadPathBase+"/" +self.mNAME)
         else:
             self.mNAME = ""
-            self.mURL = ""            
+            self.mURL = ""
             self.mStatus = 1
 
 
@@ -164,20 +168,23 @@ class Podcast:
     def update(self, byFile):
         # catch the url
         htmlpage = ""
+        isHTML = False
         if byFile:
             htmlpage = self.f_fileToString(os.path.normpath("C:\\Office\\arbeit\\pypoca\\Doc\\podcasts\\Breitband-feed.xml"))
+            isHTML = True
         else:
-            htmlpage = f_urlToString(self.mURL)
+            htmlpage, isHTML = f_urlToString(self.mURL)
 
-        # getEpisodesFromDB
-        episodesDB = self.mDB.getAllEpisodesByCastID(self.mID)
-        # getEpisodesFromURL
-        episodesURL = self.getEpisodesByHTML(htmlpage)
-        # make a diff
-        newEpisodes = self.getNewEpisodes(episodesDB, episodesURL)
-        # send new episodes to DB
-        if ( len(newEpisodes)>0 ):
-            self.mDB.insertEpisodes(newEpisodes, self.mID)
+        if isHTML:
+            # getEpisodesFromDB
+            episodesDB = self.mDB.getAllEpisodesByCastID(self.mID)
+            # getEpisodesFromURL
+            episodesURL = self.getEpisodesByHTML(htmlpage)
+            # make a diff
+            newEpisodes = self.getNewEpisodes(episodesDB, episodesURL)
+            # send new episodes to DB
+            if ( len(newEpisodes)>0 ):
+                self.mDB.insertEpisodes(newEpisodes, self.mID)
 
 
     def getEpisodesByHTML(self, htmlpage):

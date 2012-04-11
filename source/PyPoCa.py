@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 '''
 Created on 2011-09-24
@@ -17,10 +18,13 @@ import sys
 
 
 class PyPoCa:
+    
+    stdout_encoding = sys.stdout.encoding or sys.getfilesystemencoding()
+    
     def __init__(self):
         self.STR_lastCastID = 'lastCastID'
         self.STR_numberOfCasts = 'numberOfCasts'
-        self.STR_basepath = "downloadpath"
+        self.STR_basepath = 'downloadpath'
 
 
     def _openDatabase(self):
@@ -30,16 +34,17 @@ class PyPoCa:
     def loadConfig(self):
         # Config
         self._openDatabase()
-        self.mConfig = {self.STR_lastCastID:0, 
-                        self.STR_numberOfCasts:0,
+        self.mConfig = {self.STR_lastCastID:"0", 
+                        self.STR_numberOfCasts:"0",
                         self.STR_basepath:self.getDownloadpathInConfig()}
         self.mDB.getConfig(self.mConfig)
         for config in self.mConfig:
-            print(config+" - "+str(self.mConfig[config]))
+            print(str(config)+" - "+str(self.mConfig[config]))
             
         # Podcasts
         self.mPodcasts = list()
         self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
+        
 
 
     def saveConfig(self):
@@ -122,9 +127,12 @@ class PyPoCa:
         
     def update(self):
         for podcast in self.mPodcasts:
-            print("podcast.getStatus(): "+repr(podcast.getStatus()))
             if int(podcast.getStatus())==1:
-                podcast.update(False)
+                try:
+                    self.printPodcastName(podcast)
+                    podcast.update(False)
+                except:
+                    print("Ups")
 
 
     def download(self):
@@ -139,7 +147,7 @@ class PyPoCa:
         formatStr = "{:0>"+repr(anzahlStellen)+"}"
         for podcast in self.mPodcasts:
             try:
-                print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName() + "  |  "+podcast.getURL())
+                print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore')+ "  |  "+podcast.getURL()) 
             except:
                 print("Problem bei der Darstellung von einem Podcast")
 
@@ -168,6 +176,15 @@ class PyPoCa:
         rssHtml = Podcast.f_urlToString("http://www.dradio.de/rss/podcast/sendungen/breitband")
         rss = RSS20.RSS20()
         rss.getRSSObject(rssHtml)
+
+
+    def printPodcastName(self, podcast):
+        try:
+            anzahlStellen=len(repr(len(self.mPodcasts)))
+            formatStr = "{:0>"+repr(anzahlStellen)+"}"
+            print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore')) 
+        except:
+            print("Problem bei der Darstellung von einem Podcast")
 
 
     def printHelp(self):
