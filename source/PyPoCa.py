@@ -53,6 +53,14 @@ class PyPoCa:
         self.mDB.writeChanges()
         
 
+    def getPodcastByID(self, castID):
+        result = False
+        for podcast in self.mPodcasts:
+            if int(podcast.getID()) == int(castID):
+                result = podcast
+                break
+        return result
+
 
     def getIDofPodcast(self, _name):
         for podcast in self.mPodcasts:
@@ -134,12 +142,26 @@ class PyPoCa:
                 except:
                     print("Ups")
 
+        
+    def updateID(self, castID):
+        podcast = self.getPodcastByID(castID)
+        if podcast:
+            self.printPodcastName(podcast)
+            podcast.update(False)
+
 
     def download(self):
         for podcast in self.mPodcasts:
             status = int(podcast.getStatus())
             if status==1:
                 podcast.download("intern")
+
+
+    def downloadID(self, castID):
+        podcast = self.getPodcastByID(castID)
+        if podcast:
+            self.printPodcastName(podcast)
+            podcast.download("intern")
 
 
     def list(self):
@@ -169,7 +191,7 @@ class PyPoCa:
 
 
     def printVersion(self):
-        print("0.0.1.1")
+        print("0.0.1.5")
         
         
     def rsstest(self):
@@ -193,7 +215,9 @@ class PyPoCa:
  -h, --help     Displays this help message\n\
  -v, --version  Displays the current version\n\
  update         updates all enabled podcasts from it sources (internet or file)\n\
+ updateID       updates the podcast with the given ID from it source\n\
  download       download new episodes of all enabled podcasts\n\
+ downloadID     download new episodes of the podcast with the given ID\n\
  list           shows all podcasts\n\
  (list OPTION   shows all podcasts) not yet implemented\n\
  add URL        add a new podcast from internet (per http(s))\n\
