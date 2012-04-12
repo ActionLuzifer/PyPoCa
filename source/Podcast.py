@@ -83,8 +83,6 @@ class Podcast:
     '''
     classdocs
     '''
-
-
     def __init__(self, ID, DB, downloadPath):
         '''
         Constructor
@@ -235,7 +233,6 @@ class Podcast:
 
 
     def download(self, downloadMethod):
-        print("TODO")
         if self.checkDownloadPath():
             episoden = self.mDB.getAllEpisodesByCastID(self.mID)
             for episode in episoden:
@@ -282,10 +279,7 @@ class Podcast:
         if (episode.episodeStatus==SQLs.episodestatus["new"]):
             str = "{:0>4}".format(episode.episodeID)
             castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,str,public_functions.f_replaceBadChars(episode.episodeName+self.getFileExtension(episode.episodeURL))))
-            try:
-                print("castFileName: "+castFileName)
-            except:
-                print("castFileName: KANN NICHT DARSTELLEN")
+            episode.printName()
             isError = downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
         return isError
 
