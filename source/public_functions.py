@@ -1,9 +1,13 @@
 import sys
 
-def f_replaceBadChars(mf_executeStr):
+def f_replaceBadCharsFiles(mf_executeStr):
+    mf_executeStr = mf_executeStr.replace("/", "-")
+    mf_executeStr = f_replaceBadCharsPath(mf_executeStr)
+    return mf_executeStr
+    
+def f_replaceBadCharsPath(mf_executeStr):
     mf_executeStr = mf_executeStr.replace(" ", "_")
     mf_executeStr = mf_executeStr.replace("&amp;", "&")
-    mf_executeStr = mf_executeStr.replace("/", "-")
     mf_executeStr = mf_executeStr.replace("&#224;", "à"  )#     a mit accent grave (Gravis)     &agrave;     &#224;
     mf_executeStr = mf_executeStr.replace("&agrave;", "à")#     a mit accent grave (Gravis)     &agrave;     &#224;
     mf_executeStr = mf_executeStr.replace("&#225;", "á")  #     a mit accent aigu (Akut)     &aacute;     &#225;

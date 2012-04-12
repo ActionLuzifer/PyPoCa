@@ -91,7 +91,7 @@ class Podcast:
         self.mDB = PyPoCaDB_Podcast.PyPoCaDB_Podcast(DB)
         ''' CAST-ID '''
         self.mID = ID
-        self.mDownloadPathBase = downloadPath[:3] + public_functions.f_replaceBadChars(downloadPath[3:])
+        self.mDownloadPathBase = downloadPath[:3] + public_functions.f_replaceBadCharsPath(downloadPath[3:])
         self.reloadData()
 
 
@@ -110,7 +110,7 @@ class Podcast:
             
             self.mStatus = cast["status"]
             
-            self.mDownloadPath = os.path.normpath(self.mDownloadPathBase+"/" +public_functions.f_replaceBadChars(self.mNAME))
+            self.mDownloadPath = os.path.normpath(self.mDownloadPathBase+"/" +public_functions.f_replaceBadCharsPath(self.mNAME))
         else:
             self.mNAME = ""
             self.mURL = ""
@@ -182,6 +182,7 @@ class Podcast:
             newEpisodes = self.getNewEpisodes(episodesDB, episodesURL)
             # send new episodes to DB
             if ( len(newEpisodes)>0 ):
+                print("--> +",len(newEpisodes)," Episoden")
                 self.mDB.insertEpisodes(newEpisodes, self.mID)
 
 
@@ -278,7 +279,7 @@ class Podcast:
         isError = False
         eID = "{:0>4}".format(episode.episodeID)
         if (episode.episodeStatus==SQLs.episodestatus["new"]):
-            castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,eID,public_functions.f_replaceBadChars(episode.episodeName+self.getFileExtension(episode.episodeURL))))
+            castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,eID,public_functions.f_replaceBadCharsFiles(episode.episodeName+self.getFileExtension(episode.episodeURL))))
             episode.printName()
             isError = downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
         return isError
