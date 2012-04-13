@@ -24,6 +24,6 @@ class Episode:
     def printName(self):
         try:
             eID = "{:0>4}".format(self.episodeID)
-            print("-->", eID, " | ", self.episodeName.encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore')) 
+            print("----->", eID, " | ", self.episodeName.encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore')) 
         except:
             print("Problem bei der Darstellung von dem Podcast")
