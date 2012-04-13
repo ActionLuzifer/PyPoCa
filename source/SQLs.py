@@ -20,8 +20,8 @@ sqlUPDATEepisodes_episodeURL  = "UPDATE episodes SET episodeURL='{0}' WHERE cast
 sqlUPDATEepisodes_episodeNAME = "UPDATE episodes SET episodeNAME='{0}' WHERE castid={1} AND episodeid={2};"
 sqlUPDATEepisodes_episodeGUID  = "UPDATE episodes SET episodeGUID='{0}' WHERE castid={1} AND episodeid={2};"
 sqlUPDATEepisodes_status      = "UPDATE episodes SET status={0} WHERE castid={1} AND episodeid={2};"
-sqlDELETEepisodes = "DELETE episodes WHERE castid={0} AND episodesid={1};"
-sqlDELETEepisodesByCast = "DELETE episodes WHERE castid={0};"
+sqlDELETEepisodes = "DELETE FROM episodes WHERE castid={0} AND episodesid={1};"
+sqlDELETEepisodesByCast = "DELETE FROM episodes WHERE castid={0};"
 sqlSELECTepisodesByCast = "SELECT * FROM episodes WHERE castid={0};"
 
 episodestatus = {"new":1, "downloaded":2, "error":3, "incomplete":4}
@@ -42,5 +42,5 @@ sqlGETALLconfig = "SELECT * from config"
 sqlCREATEcastsAndEpisodes = "CREATE TABLE podcastsAndEpisodes (castID INTEGER NOT NULL, highestEpisodeID INTEGER NOT NULL, UNIQUE(castid, highestEpisodeID));"
 sqlINSERTcastsAndEpisodes = "INSERT INTO podcastsAndEpisodes VALUES ({0}, {1});"
 sqlUPDATEcastsAndEpisodes = "UPDATE podcastsAndEpisodes SET highestEpisodeID={1} WHERE castID={0};"
-sqlDELETEcastsAndEpisodes = "DELETE podcastsAndEpisodes WHERE castid={0}"
+sqlDELETEcastsAndEpisodes = "DELETE FROM podcastsAndEpisodes WHERE castID='{0}';"
 sqlSELECTcastsAndEpisodes = "SELECT highestEpisodeID FROM podcastsAndEpisodes WHERE castID='{0}'"
