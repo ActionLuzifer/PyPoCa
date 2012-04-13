@@ -74,13 +74,13 @@ class PyPoCa:
             castID = int(self.mConfig[self.STR_lastCastID]) + 1
             numberofcasts = int(self.mConfig[self.STR_numberOfCasts]) + 1
             
+            # Podcast-spezifische Daten in die DB schreiben
+            self.mDB.addPodcast(castID, name, _url, 1)
+            self.mDB.addEpisodeConfig(castID, 0)
+            
             # Podcast-spezifische Daten erstellen
             podcast = Podcast.Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
             podcast.updateName(name)
-            
-            # Podcast-spezifische Daten in die DB schreiben
-            self.mDB.addPodcast(castID, podcast.getName(), _url, 1)
-            self.mDB.addEpisodeConfig(castID, 0)
             
             # allgemeine Daten in die DB schreiben
             self.mDB.updateConfigLastCastID(castID)
@@ -101,9 +101,11 @@ class PyPoCa:
 
     def addPodcastByURL(self, _url):
         rss = RSS20.RSS20()
-        rssBody = rss.getRSSObject(Podcast.f_urlToString(_url))
-        name =  Podcast._getCastNameByRSS(rssBody)
-        self.addPodcast(name, _url)
+        rssString, isRSSstringOK = Podcast.f_urlToString(_url)
+        if isRSSstringOK:
+            rssBody = rss.getRSSObject(rssString)
+            name = Podcast._getCastNameByRSS(rssBody)
+            self.addPodcast(name, _url)
 
 
     def addPodcastByFile(self, _path):
@@ -154,6 +156,8 @@ class PyPoCa:
         for podcast in self.mPodcasts:
             status = int(podcast.getStatus())
             if status==1:
+                print()
+                podcast.printName()
                 podcast.download("intern")
 
 
