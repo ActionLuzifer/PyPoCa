@@ -300,6 +300,9 @@ class Podcast:
     def printName(self):
         try:
             eID = "{:0>4}".format(self.getID())
-            print("Cast: ", eID, " | ", self.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore')) 
+            try:
+                print("Cast: ", eID, " | ", self.getName())
+            except: 
+                print("Cast: ", eID, " | ", self.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore')) 
         except:
             print("Problem bei der Darstellung von dem Podcast")
