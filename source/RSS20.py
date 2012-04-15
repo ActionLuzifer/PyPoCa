@@ -102,6 +102,7 @@ class RSS20():
     def getRSSObject(self, rssString):
         index = 1
         item = RSSItem(0, "BODY", "")
+        root = item
         while(index>0):
             elem, index, isCDATAelem = self.getNextElem(rssString, index)
             elem = elem.lstrip().rstrip()
@@ -129,7 +130,7 @@ class RSS20():
                     content = elem[endNameIndex+1:elem.__len__()]
                     item = item.addItem(item, name, content)
                     
-        return item
+        return root
 
 
     def getNextCDATAelem(self, rssString, fromIndex):
@@ -242,7 +243,15 @@ class RSS20():
         
         print(emptyStr + "ANZAHL SUBITEMS: " + str(items.__len__()))
         for item in items:
-            print(emptyStr + item.getName() + " -> " + item.getContent())
+            try:
+                print(emptyStr + item.getName() + " -> " + item.getContent())
+            except:
+                try:
+                    import sys
+                    stdout_encoding = sys.stdout.encoding or sys.getfilesystemencoding()
+                    print(emptyStr + item.getName().encode(stdout_encoding, 'ignore').decode('utf-8','ignore') + " -> " + item.getContent().encode(stdout_encoding, 'ignore').decode('utf-8','ignore'))
+                except:
+                    print("FUCK OFF")
             self.debugItem(item, i+1)
 
 
