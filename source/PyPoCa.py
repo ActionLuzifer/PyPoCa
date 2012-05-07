@@ -27,13 +27,13 @@ class PyPoCa:
         self.STR_basepath = 'downloadpath'
 
 
-    def _openDatabase(self):
-        self.mDB = PyPoCaDB.PyPoCaDB()
+    def _openDatabase(self, dbname):
+        self.mDB = PyPoCaDB.PyPoCaDB(dbname)
 
 
     def loadConfig(self):
         # Config
-        self._openDatabase()
+        self._openDatabase("pypoca.sqlite")
         self.mConfig = {self.STR_lastCastID:"0", 
                         self.STR_numberOfCasts:"0",
                         self.STR_basepath:self.getDownloadpathInConfig()}
@@ -178,20 +178,35 @@ class PyPoCa:
                 print("Problem bei der Darstellung von einem Podcast")
 
 
-    def getDownloadpathInConfig(self):
+    def getConfigfileStr(self):
         # Datei einlesen
         myfileName = os.path.normpath("{0}/config.xml".format(os.getcwd()))
         myfile = open(myfileName, 'r')
         result = myfile.read()
         myfile.close()
+        return result
+
+
+    def getFindRegEx(self, searchstring, regexstring, groupname):
+        REprogramm = re.compile(regexstring);
+        foundObject = REprogramm.search(searchstring);
+        return foundObject.group(groupname)
+    
+    
+    def getDBnameInConfig(self):
+        result = self.getConfigfileStr()
         
         # Ausdruck finden
         bigRE = "(.)*<downloadpath>(?P<DownloadPath>(.)*)</downloadpath>(.)*";
-        REprogramm = re.compile(bigRE);
-        foundObject = REprogramm.search(result);
-        result = foundObject.group("DownloadPath")
+        return self.getFindRegEx(result, bigRE, "dbName")
+
+
+    def getDownloadpathInConfig(self):
+        result = self.getConfigfileStr()
         
-        return result
+        # Ausdruck finden
+        bigRE = "(.)*<downloadpath>(?P<DownloadPath>(.)*)</downloadpath>(.)*";
+        return self.getFindRegEx(result, bigRE, "DownloadPath")
 
 
     def printVersion(self):

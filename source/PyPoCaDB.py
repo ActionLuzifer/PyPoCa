@@ -14,10 +14,10 @@ import sys
 class PyPoCaDB:
     ''' dumme Klasse, sendet nur die Daten an die Datenbank wie sie sie uebergeben bekommt
     '''
-    def __init__(self):
+    def __init__(self, dbname=":memory:"):
         self.mDBopen = False
         try:
-            self.openDB()
+            self.openDB(dbname)
             self.mDBopen = True
             self.checkDB()
         except sqlite3.Error as e:
@@ -25,8 +25,8 @@ class PyPoCaDB:
             print("Fehler beim oeffnen der Datenbank")
 
 
-    def openDB(self):
-        self.mDBconnection = sqlite3.connect("pypoca.sqlite")
+    def openDB(self, dbname):
+        self.mDBconnection = sqlite3.connect(dbname)
         self.mDBcursor = self.mDBconnection.cursor()
         self.mDBcursor.row_factory = sqlite3.Row
 
