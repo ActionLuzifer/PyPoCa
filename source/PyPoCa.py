@@ -28,6 +28,8 @@ class PyPoCa:
         self.STR_lastCastID = 'lastCastID'
         self.STR_numberOfCasts = 'numberOfCasts'
         self.STR_basepath = 'downloadpath'
+        self.longestCastName = 0
+        self.longestCastURL = 0
 
 
     def _openDatabase(self, dbname):
@@ -46,7 +48,7 @@ class PyPoCa:
             
         # Podcasts
         self.mPodcasts = list()
-        self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
+        self.longestCastName, self.longestCastURL = self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
         
 
 
@@ -173,10 +175,11 @@ class PyPoCa:
 
     def list(self):
         anzahlStellen=len(repr(len(self.mPodcasts)))
-        formatStr = "{:0>"+repr(anzahlStellen)+"}"
         for podcast in self.mPodcasts:
             try:
-                print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore')+ "  |  "+podcast.getURL()) 
+                print("| {0:>{1}}".format(repr(podcast.getID()), anzahlStellen)
+                      +"  |  {0:{1}}".format(podcast.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore'), self.longestCastName)
+                      +"  |  {0:{1}}".format(podcast.getURL(), self.longestCastURL)+" | ") 
             except:
                 print("Problem bei der Darstellung von einem Podcast")
 
