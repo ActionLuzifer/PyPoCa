@@ -33,7 +33,7 @@ class PyPoCa:
 
     def loadConfig(self):
         # Config
-        self._openDatabase("pypoca.sqlite")
+        self._openDatabase(self.getDBnameInConfig())
         self.mConfig = {self.STR_lastCastID:"0", 
                         self.STR_numberOfCasts:"0",
                         self.STR_basepath:self.getDownloadpathInConfig()}
@@ -197,7 +197,7 @@ class PyPoCa:
         result = self.getConfigfileStr()
         
         # Ausdruck finden
-        bigRE = "(.)*<downloadpath>(?P<DownloadPath>(.)*)</downloadpath>(.)*";
+        bigRE = "(.)*<dbName>(?P<dbName>(.)*)</dbName>(.)*";
         return self.getFindRegEx(result, bigRE, "dbName")
 
 
