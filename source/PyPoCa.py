@@ -21,7 +21,10 @@ class PyPoCa:
     
     stdout_encoding = sys.stdout.encoding or sys.getfilesystemencoding()
     
-    def __init__(self):
+    def __init__(self, configxml=os.path.normpath("{0}/config.xml".format(os.getcwd()))):
+        self.STR_CONFIG_RegExTemplateKey = "$KEY"
+        self.STR_CONFIG_RegExTemplate = "(.)*<"+self.STR_CONFIG_RegExTemplateKey+">(?P<"+self.STR_CONFIG_RegExTemplateKey+">(.)*)</"+self.STR_CONFIG_RegExTemplateKey+">(.)*"
+        self.STR_configxmlFilename = configxml
         self.STR_lastCastID = 'lastCastID'
         self.STR_numberOfCasts = 'numberOfCasts'
         self.STR_basepath = 'downloadpath'
@@ -180,7 +183,7 @@ class PyPoCa:
 
     def getConfigfileStr(self):
         # Datei einlesen
-        myfileName = os.path.normpath("{0}/config.xml".format(os.getcwd()))
+        myfileName = self.STR_configxmlFilename
         myfile = open(myfileName, 'r')
         result = myfile.read()
         myfile.close()
@@ -197,16 +200,16 @@ class PyPoCa:
         result = self.getConfigfileStr()
         
         # Ausdruck finden
-        bigRE = "(.)*<dbName>(?P<dbName>(.)*)</dbName>(.)*";
-        return self.getFindRegEx(result, bigRE, "dbName")
+        key = "dbName"
+        return self.getFindRegEx(result, self.STR_CONFIG_RegExTemplate.replace(self.STR_CONFIG_RegExTemplateKey, key), key)
 
 
     def getDownloadpathInConfig(self):
         result = self.getConfigfileStr()
         
         # Ausdruck finden
-        bigRE = "(.)*<downloadpath>(?P<DownloadPath>(.)*)</downloadpath>(.)*";
-        return self.getFindRegEx(result, bigRE, "DownloadPath")
+        key = "downloadpath"
+        return self.getFindRegEx(result, self.STR_CONFIG_RegExTemplate.replace(self.STR_CONFIG_RegExTemplateKey, key), key)
 
 
     def printVersion(self):
