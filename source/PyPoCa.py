@@ -285,7 +285,7 @@ class PyPoCa:
  (list OPTION   shows all podcasts) not yet implemented\n\
  add URL        add a new podcast from internet (per http(s))\n\
  addf FILE      add a new podcast from a file\n\
- removeI ID     removes the podcast with this ID\n\
- removeN NAME   remove the podcast with this NAME\n\
+ remove ID      removes the podcast with this ID\n\
+ (removeN NAME  remove the podcast with this NAME) not yet implemented\n\
  enable ID      enables the podcast with this ID\n\
  disable ID     disables the podcast with this ID")
