@@ -235,34 +235,42 @@ class Podcast:
 
     def download(self, downloadMethod):
         if self.checkDownloadPath():
-            episoden = self.mDB.getAllEpisodesByCastID(self.mID)
-            for episode in episoden:
-                isError = False
-                if not episode.episodeStatus == SQLs.episodestatus["downloaded"]:
-                    try:                        
-                        try:
-                            if downloadMethod=="wget":
-                                downloader = False
-                            elif downloadMethod=="curl":
-                                downloader = False                                
-                            elif downloadMethod=="intern":
-                                downloader = DownIntern(self)
-                                
-                            isError = self.downloadEpisode(downloader, episode)
-                        finally:
-                            if not isError:
-                                self.mDB.updateEpisodeStatus(episode, "downloaded")
-                            else:
+            try:
+                episoden = self.mDB.getAllEpisodesByCastID(self.mID)
+                for episode in episoden:
+                    isError = False
+                    if not episode.episodeStatus == SQLs.episodestatus["downloaded"]:
+                        try:                        
+                            try:
+                                if downloadMethod=="wget":
+                                    downloader = False
+                                elif downloadMethod=="curl":
+                                    downloader = False                                
+                                elif downloadMethod=="intern":
+                                    downloader = DownIntern(self)
+                                    
+                                isError = self.downloadEpisode(downloader, episode)
+                            finally:
+                                if not isError:
+                                    self.mDB.updateEpisodeStatus(episode, "downloaded")
+                                else:
+                                    self.mDB.updateEpisodeStatus(episode, "error")
+                                self.mDB.writeChanges()
+                        except (KeyboardInterrupt, SystemExit):
+                            self.mDB.updateEpisodeStatus(episode, "incomplete")
+                            raise
+                        except urllib.error.URLError as e:
+                            print("Podcast@download(self, downloadMethod):")
+                            print("ERROR: ", e.args[0])
+                            print("method:   ", downloadMethod)
+                            try:
                                 self.mDB.updateEpisodeStatus(episode, "error")
-                            self.mDB.writeChanges()
-                    except urllib.error.URLError as e:
-                        print("Podcast@download(self, downloadMethod):")
-                        print("ERROR: ", e.args[0])
-                        print("method:   ", downloadMethod)
-                        try:
-                            self.mDB.updateEpisodeStatus(episode, "error")
-                        except:
-                            print("ERROR: can't write ERROR to Database")
+                            except:
+                                print("ERROR: can't write ERROR to Database")
+            except (KeyboardInterrupt, SystemExit):
+                self.mDB.writeChanges()
+                raise
+                    
             self.mDB.writeChanges()
 
 

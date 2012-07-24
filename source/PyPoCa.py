@@ -75,24 +75,31 @@ class PyPoCa:
 
     def addPodcast(self, name, _url):
         try:
-            # allgemeine Daten holen
-            castID = int(self.mConfig[self.STR_lastCastID]) + 1
-            numberofcasts = int(self.mConfig[self.STR_numberOfCasts]) + 1
+            try:
+                # allgemeine Daten holen
+                castID = int(self.mConfig[self.STR_lastCastID]) + 1
+                numberofcasts = int(self.mConfig[self.STR_numberOfCasts]) + 1
+                
+                # Podcast-spezifische Daten in die DB schreiben
+                self.mDB.addPodcast(castID, name, _url, 1)
+                self.mDB.addEpisodeConfig(castID, 0)
+                
+                # Podcast-spezifische Daten erstellen
+                podcast = Podcast.Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
+                podcast.updateName(name)
+
+                # allgemeine Daten in die DB schreiben
+                self.mDB.updateConfigLastCastID(castID)
+                self.mDB.updateConfigNumberOfCasts(numberofcasts)
             
-            # Podcast-spezifische Daten in die DB schreiben
-            self.mDB.addPodcast(castID, name, _url, 1)
-            self.mDB.addEpisodeConfig(castID, 0)
+                self.mConfig[self.STR_lastCastID] = str(castID)
+                self.mConfig[self.STR_numberOfCasts] = str(numberofcasts)
+            except (KeyboardInterrupt, SystemExit):
+                raise
+            except:
+                raise
             
-            # Podcast-spezifische Daten erstellen
-            podcast = Podcast.Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
-            podcast.updateName(name)
-            
-            # allgemeine Daten in die DB schreiben
-            self.mDB.updateConfigLastCastID(castID)
-            self.mDB.updateConfigNumberOfCasts(numberofcasts)
-        
-            self.mConfig[self.STR_lastCastID] = str(castID)
-            self.mConfig[self.STR_numberOfCasts] = str(numberofcasts)
+            # wenn keine Fehler kamen, dann bitte jetzt in DB schreiben
             self.mDB.writeChanges()
         except:
             print("ERROR@PyPoCa::addPodcast(self, _url)")
@@ -105,19 +112,30 @@ class PyPoCa:
 
 
     def addPodcastByURL(self, _url):
-        rss = RSS20.RSS20()
-        rssString, isRSSstringOK = Podcast.f_urlToString(_url)
+        try:
+            rss = RSS20.RSS20()
+            rssString, isRSSstringOK = Podcast.f_urlToString(_url)
+            if isRSSstringOK:
+                rssBody = rss.getRSSObject(rssString)
+                name = Podcast._getCastNameByRSS(rssBody)
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except:
+            raise 
         if isRSSstringOK:
-            rssBody = rss.getRSSObject(rssString)
-            name = Podcast._getCastNameByRSS(rssBody)
             self.addPodcast(name, _url)
 
 
     def addPodcastByFile(self, _path):
-        _url = os.path.normpath(_path)
-        rss = RSS20.RSS20()
-        rssBody = rss.getRSSObject(Podcast.f_fileToString(_url))
-        name =  Podcast._getCastNameByRSS(rssBody)
+        try:
+            _url = os.path.normpath(_path)
+            rss = RSS20.RSS20()
+            rssBody = rss.getRSSObject(Podcast.f_fileToString(_url))
+            name =  Podcast._getCastNameByRSS(rssBody)
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except:
+            raise
         self.addPodcast(name, _path)
 
 
@@ -141,55 +159,75 @@ class PyPoCa:
 
         
     def update(self):
-        for podcast in self.mPodcasts:
-            if int(podcast.getStatus())==1:
-                try:
-                    self.printPodcastName(podcast)
-                    podcast.update(False)
-                except:
-                    print("Ups")
+        try:
+            for podcast in self.mPodcasts:
+                if int(podcast.getStatus())==1:
+                    try:
+                        self.printPodcastName(podcast)
+                        podcast.update(False)
+                        self.mDB.writeChanges()
+                    except:
+                        print("Ups")
+        except (KeyboardInterrupt, SystemExit):
+            raise
 
-        
+
     def updateID(self, castID):
-        podcast = self.getPodcastByID(castID)
-        if podcast:
-            self.printPodcastName(podcast)
-            podcast.update(False)
-
+        try:
+            podcast = self.getPodcastByID(castID)
+            if podcast:
+                self.printPodcastName(podcast)
+                podcast.update(False)
+        except (KeyboardInterrupt, SystemExit):
+            raise
+            
 
     def download(self):
-        for podcast in self.mPodcasts:
-            status = int(podcast.getStatus())
-            if status==1:
-                print()
-                podcast.printName()
-                podcast.download("intern")
+        try:
+            for podcast in self.mPodcasts:
+                status = int(podcast.getStatus())
+                if status==1:
+                    print()
+                    podcast.printName()
+                    podcast.download("intern")
+        except (KeyboardInterrupt, SystemExit):
+            raise
+                        
 
 
     def downloadID(self, castID):
-        podcast = self.getPodcastByID(castID)
-        if podcast:
-            self.printPodcastName(podcast)
-            podcast.download("intern")
+        try:
+            podcast = self.getPodcastByID(castID)
+            if podcast:
+                self.printPodcastName(podcast)
+                podcast.download("intern")
+        except (KeyboardInterrupt, SystemExit):
+            raise
+
 
 
     def list(self):
-        anzahlStellen=len(repr(len(self.mPodcasts)))
-        for podcast in self.mPodcasts:
-            try:
-                print("| {0:>{1}}".format(repr(podcast.getID()), anzahlStellen)
-                      +"  |  {0:{1}}".format(podcast.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore'), self.longestCastName)
-                      +"  |  {0:{1}}".format(podcast.getURL(), self.longestCastURL)+" | ") 
-            except:
-                print("Problem bei der Darstellung von einem Podcast")
+        try:
+            anzahlStellen=len(repr(len(self.mPodcasts)))
+            for podcast in self.mPodcasts:
+                try:
+                    print("| {0:>{1}}".format(repr(podcast.getID()), anzahlStellen)
+                          +"  |  {0:{1}}".format(podcast.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore'), self.longestCastName)
+                          +"  |  {0:{1}}".format(podcast.getURL(), self.longestCastURL)+" | ") 
+                except:
+                    print("Problem bei der Darstellung von einem Podcast")
+        except (KeyboardInterrupt, SystemExit):
+            raise
 
 
     def getConfigfileStr(self):
         # Datei einlesen
-        myfileName = self.STR_configxmlFilename
-        myfile = open(myfileName, 'r')
-        result = myfile.read()
-        myfile.close()
+        try:
+            myfileName = self.STR_configxmlFilename
+            myfile = open(myfileName, 'r')
+            result = myfile.read()
+        finally:
+            myfile.close()
         return result
 
 
@@ -216,7 +254,7 @@ class PyPoCa:
 
 
     def printVersion(self):
-        print("0.0.1.7")
+        print("0.0.1.8")
         
         
     def rsstest(self):
