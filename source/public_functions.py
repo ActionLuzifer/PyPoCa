@@ -73,10 +73,13 @@ def f_replaceBadCharsPath(mf_executeStr):
     mf_executeStr = mf_executeStr.replace("&#255;", "ÿ")  #     y Umlaut     &yuml;     &#255;
     mf_executeStr = mf_executeStr.replace("&yuml;", "ÿ")  #     y Umlaut     &yuml;     &#255;
     mf_executeStr = mf_executeStr.replace('"', "'")
-    
+    mf_executeStr = mf_executeStr.replace('&#8211;', "-")  #     Unicode Character 'EN DASH' (U+2013) - http://www.fileformat.info/info/unicode/char/2013/index.htm
+    mf_executeStr = mf_executeStr.replace('&#8212;', "-")  #     Unicode Character 'EM DASH' (U+2014) - http://www.fileformat.info/info/unicode/char/2014/index.htm
+    mf_executeStr = mf_executeStr.replace('&quot;', "'")
+        
     if sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
-        mf_executeStr = mf_executeStr.replace(":", "-")
         mf_executeStr = mf_executeStr.replace("?", "_")
+        mf_executeStr = mf_executeStr.replace(":", "-")
     return mf_executeStr
 
 

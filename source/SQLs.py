@@ -22,7 +22,7 @@ sqlUPDATEepisodes_episodeGUID  = "UPDATE episodes SET episodeGUID='{0}' WHERE ca
 sqlUPDATEepisodes_status      = "UPDATE episodes SET status={0} WHERE castid={1} AND episodeid={2};"
 sqlDELETEepisodes = "DELETE FROM episodes WHERE castid={0} AND episodesid={1};"
 sqlDELETEepisodesByCast = "DELETE FROM episodes WHERE castid={0};"
-sqlSELECTepisodesByCast = "SELECT * FROM episodes WHERE castid={0};"
+sqlSELECTepisodesByCast = "SELECT * FROM episodes WHERE castid={0} ORDER BY episodeid;"
 
 episodestatus = {"new":1, "downloaded":2, "error":3, "incomplete":4}
 

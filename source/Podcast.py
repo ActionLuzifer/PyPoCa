@@ -284,12 +284,10 @@ class Podcast:
 
 
     def downloadEpisode(self, downloader, episode):
-        isError = False
         eID = "{:0>4}".format(episode.episodeID)
-        if (episode.episodeStatus==SQLs.episodestatus["new"]):
-            castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,eID,public_functions.f_replaceBadCharsFiles(episode.episodeName+self.getFileExtension(episode.episodeURL))))
-            episode.printName()
-            isError = downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
+        castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,eID,public_functions.f_replaceBadCharsFiles(episode.episodeName+self.getFileExtension(episode.episodeURL))))
+        episode.printName()
+        isError = downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
         return isError
 
 
