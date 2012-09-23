@@ -258,9 +258,12 @@ class PyPoCa:
         
         
     def rsstest(self):
-        rssHtml = Podcast.f_urlToString("http://www.dradio.de/rss/podcast/sendungen/breitband")
-        rss = RSS20.RSS20()
-        rss.getRSSObject(rssHtml)
+        rssHtml, allright = Podcast.f_urlToString("http://feeds.feedburner.com/wrint/wrint")
+        #rssHtml = Podcast.f_urlToString("http://www.dradio.de/rss/podcast/sendungen/breitband")
+        if allright:
+            rss = RSS20.RSS20()
+            rssobject = rss.getRSSObject(rssHtml)
+            rss.debugItem2(rssobject)
 
 
     def printPodcastName(self, podcast):

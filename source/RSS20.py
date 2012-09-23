@@ -68,11 +68,16 @@ class RSSItem():
 
 class RSS20():
     
-    def addSelfClosedItem(self, item, itemString):
-        index=1
-        item = item.addItem(item, itemString[0:str.find(itemString, " ", index)], "")
-        while(index>0):
-            nextSpaceBegin = str.find(itemString, " ", index)
+    def addItem(self, item, itemString, content):
+        itemString = (itemString.replace("\n", " ")).strip()
+        leerzeichenIndex = str.find(itemString, " ", 1)
+        if leerzeichenIndex>0:
+            name = itemString[0:leerzeichenIndex]
+        else:
+            name = itemString
+        item = item.addItem(item, name, content)
+        while(leerzeichenIndex>0):
+            nextSpaceBegin = str.find(itemString, " ", leerzeichenIndex)
             nextSpaceEnd   = str.find(itemString, " ", nextSpaceBegin+1)
             if ( str.find(itemString, '"', nextSpaceBegin) < nextSpaceEnd ) :
                 # find next SpaceChar after the next Two Gaensefuesschen
@@ -80,7 +85,9 @@ class RSS20():
                 nextSecond = str.find(itemString, '"', nextOne+1)
                 nextSpaceEnd = str.find(itemString, " ", nextSecond)
             
-            if (nextSpaceBegin < nextSpaceEnd) and nextSpaceBegin > 0: 
+            if nextSpaceBegin > 0:
+                if not (nextSpaceBegin < nextSpaceEnd):
+                    nextSpaceEnd = len(itemString)
                 pattern = "="
                 matcher = re.search(pattern, itemString[nextSpaceBegin+1:nextSpaceEnd])
                 if ( matcher != None):
@@ -89,12 +96,15 @@ class RSS20():
                     content = itemString[nextSpaceBegin+delimiter[1]+2:nextSpaceEnd-1]
                     item = item.addItem(item, name, content)
                     item = item.closeItem()
-    
-                    
                 else:
                     print("bloed gelaufen bei: " + itemString[nextSpaceBegin+1:nextSpaceEnd])
-            index = nextSpaceEnd
+                    
+            leerzeichenIndex = str.find(itemString, " ", nextSpaceEnd)
+        return item
 
+    
+    def addSelfClosedItem(self, item, itemString, content):
+        item = self.addItem(item, itemString, content)
         item = item.closeItem()
         return item
 
@@ -119,16 +129,17 @@ class RSS20():
                     name = elem[1:endNameIndex]
                     content = ""
                     
-                    item = self.addSelfClosedItem(item, name)
+                    item = self.addSelfClosedItem(item, name, content)
                 else:
                     if (isCDATAelem == False):
+                        #TODO: beide Male das gleiche?
                         endNameIndex = str.find(elem, ">", 1)
                     else:
                         endNameIndex = str.find(elem, ">", 1)
                 
                     name = elem[1:endNameIndex]
                     content = elem[endNameIndex+1:elem.__len__()]
-                    item = item.addItem(item, name, content)
+                    item = self.addItem(item, name, content)
                     
         return root
 
@@ -269,12 +280,15 @@ class RSS20():
             for rssitem in items:
                 titleitem = rssitem.getSubitemWithName("title")
                 linkitem  = rssitem.getSubitemWithName("link")
+                guiditem  = rssitem.getSubitemWithName("guid")
                 enclosureitem  = rssitem.getSubitemWithName("enclosure")
-                if (titleitem and linkitem and enclosureitem):
+                enclosureurl   = enclosureitem.getSubitemWithName("url")
+                if (titleitem and linkitem and guiditem and enclosureurl):
                     try:
                         print("|--TITLE: "+titleitem.getContent())
                         print("|--LINK:  " + linkitem.getContent())
-                        print("|--ENCL:  " + enclosureitem.getContent())
+                        print("|--ENCL:  " + enclosureurl.getContent())
+                        print("|--GUID:  " + guiditem.getContent())
                         print("|")
                     except:
                         print("error: kann etwas nicht darstellen_2")
