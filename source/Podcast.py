@@ -223,7 +223,8 @@ class Podcast:
             for episodeurl in episodesURL:
                 found = False
                 for episodedb in episodesDB:
-                    if episodeurl.episodeGUID == episodedb.episodeGUID:
+                    # TODO: Datenbank cleanen und url == url wieder entfernen
+                    if (episodeurl.episodeGUID == episodedb.episodeGUID) or (episodeurl.episodeURL  == episodedb.episodeURL):
                         found = True
                         break 
                 if not found:
