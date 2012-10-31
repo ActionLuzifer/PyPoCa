@@ -290,6 +290,7 @@ class PyPoCa:
         for episode in downloadedEpisodes:
             file.write(episode+"\n")
         file.close()
+        print("Playlist geschrieben: "+playlistname)
         
 
     def printHelp(self):
