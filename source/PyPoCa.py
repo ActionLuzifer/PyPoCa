@@ -43,8 +43,6 @@ class PyPoCa:
                         self.STR_numberOfCasts:"0",
                         self.STR_basepath:self.getDownloadpathInConfig()}
         self.mDB.getConfig(self.mConfig)
-        for config in self.mConfig:
-            print(str(config)+" - "+str(self.mConfig[config]))
             
         # Podcasts
         self.mPodcasts = list()
@@ -53,7 +51,6 @@ class PyPoCa:
 
 
     def saveConfig(self):
-        print()
         self.mDB.updateConfig(self.mConfig[self.STR_lastCastID], self.mConfig[self.STR_numberOfCasts])
         self.mDB.writeChanges()
         
