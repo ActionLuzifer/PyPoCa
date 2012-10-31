@@ -90,14 +90,25 @@ class RSS20():
                     nextSpaceEnd = len(itemString)
                 pattern = "="
                 matcher = re.search(pattern, itemString[nextSpaceBegin+1:nextSpaceEnd])
-                if ( matcher != None):
-                    delimiter = matcher.span()
-                    name    = itemString[nextSpaceBegin+1:nextSpaceBegin+delimiter[0]+1]
-                    content = itemString[nextSpaceBegin+delimiter[1]+2:nextSpaceEnd-1]
-                    item = item.addItem(item, name, content)
-                    item = item.closeItem()
-                else:
-                    print("bloed gelaufen bei: #" + itemString[nextSpaceBegin+1:nextSpaceEnd]+"#")
+                try:
+                    if type(matcher) is not type(None):
+                        delimiter = matcher.span()
+                        name    = itemString[nextSpaceBegin+1:nextSpaceBegin+delimiter[0]+1]
+                        content = itemString[nextSpaceBegin+delimiter[1]+2:nextSpaceEnd-1]
+                        item = item.addItem(item, name, content)
+                        item = item.closeItem()
+                    else:
+                        if len(itemString[nextSpaceBegin+1:nextSpaceEnd])>0:
+                            print("bloed gelaufen bei: #" + itemString[nextSpaceBegin+1:nextSpaceEnd]+"#")
+
+                except:
+                    print("ERROR@PyPoCa::addPodcast(self, _url)")
+                    import sys
+                    exctype, value = sys.exc_info()[:2]
+                    print("ERROR: "+repr(exctype))
+                    print("       "+repr(value))
+                    raise exctype
+
                     
             leerzeichenIndex = str.find(itemString, " ", nextSpaceEnd)
         return item
