@@ -235,6 +235,7 @@ class Podcast:
 
 
     def download(self, downloadMethod):
+        downloadedEpisodes = []
         if self.checkDownloadPath():
             try:
                 episoden = self.mDB.getAllEpisodesByCastID(self.mID)
@@ -250,10 +251,11 @@ class Podcast:
                                 elif downloadMethod=="intern":
                                     downloader = DownIntern(self)
                                     
-                                isError = self.downloadEpisode(downloader, episode)
+                                isError, castFileNames = self.downloadEpisode(downloader, episode)
                             finally:
                                 if not isError:
                                     self.mDB.updateEpisodeStatus(episode, "downloaded")
+                                    downloadedEpisodes.append(castFileNames)
                                 else:
                                     self.mDB.updateEpisodeStatus(episode, "error")
                                 self.mDB.writeChanges()
@@ -273,6 +275,7 @@ class Podcast:
                 raise
                     
             self.mDB.writeChanges()
+            return downloadedEpisodes
 
 
     def getFileExtension(self, url):
@@ -289,7 +292,7 @@ class Podcast:
         castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,eID,public_functions.f_replaceBadCharsFiles(episode.episodeName+self.getFileExtension(episode.episodeURL))))
         episode.printName()
         isError = downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
-        return isError
+        return isError, castFileName
 
 
     def checkDownloadPath(self):

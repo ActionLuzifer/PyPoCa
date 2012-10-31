@@ -97,7 +97,7 @@ class RSS20():
                     item = item.addItem(item, name, content)
                     item = item.closeItem()
                 else:
-                    print("bloed gelaufen bei: " + itemString[nextSpaceBegin+1:nextSpaceEnd])
+                    print("bloed gelaufen bei: #" + itemString[nextSpaceBegin+1:nextSpaceEnd]+"#")
                     
             leerzeichenIndex = str.find(itemString, " ", nextSpaceEnd)
         return item

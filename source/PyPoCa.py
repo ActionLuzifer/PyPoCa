@@ -163,7 +163,7 @@ class PyPoCa:
             for podcast in self.mPodcasts:
                 if int(podcast.getStatus())==1:
                     try:
-                        self.printPodcastName(podcast)
+                        podcast.printName()
                         podcast.update(False)
                         self.mDB.writeChanges()
                     except:
@@ -176,37 +176,45 @@ class PyPoCa:
         try:
             podcast = self.getPodcastByID(castID)
             if podcast:
-                self.printPodcastName(podcast)
+                podcast.printName()
                 podcast.update(False)
         except (KeyboardInterrupt, SystemExit):
             raise
-            
 
-    def download(self):
+
+    def download(self, podcast):
+        podcast.printName()
+        return podcast.download("intern")
+
+
+    def downloadAll(self):
+        downloadedEpisodes = []
         try:
             for podcast in self.mPodcasts:
                 status = int(podcast.getStatus())
                 if status==1:
-                    print()
-                    podcast.printName()
-                    podcast.download("intern")
+                    tmpDownloadedEpisodes = self.download(podcast)
+                    for episode in tmpDownloadedEpisodes:
+                        downloadedEpisodes.append(episode)
         except (KeyboardInterrupt, SystemExit):
             raise
+        return downloadedEpisodes
                         
 
 
     def downloadID(self, castID):
+        downloadedEpisodes = []
         try:
             podcast = self.getPodcastByID(castID)
             if podcast:
-                self.printPodcastName(podcast)
-                podcast.download("intern")
+                downloadedEpisodes = self.download(podcast)
         except (KeyboardInterrupt, SystemExit):
             raise
+        return downloadedEpisodes
 
 
 
-    def list(self):
+    def showList(self):
         try:
             anzahlStellen=len(repr(len(self.mPodcasts)))
             for podcast in self.mPodcasts:
@@ -254,7 +262,7 @@ class PyPoCa:
 
 
     def printVersion(self):
-        print("0.0.1.8")
+        print("0.0.2.0")
         
         
     def rsstest(self):
@@ -266,14 +274,19 @@ class PyPoCa:
             rss.debugItem2(rssobject)
 
 
-    def printPodcastName(self, podcast):
-        try:
-            anzahlStellen=len(repr(len(self.mPodcasts)))
-            formatStr = "{:0>"+repr(anzahlStellen)+"}"
-            print(formatStr.format(repr(podcast.getID()))+"  |  "+podcast.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore')) 
-        except:
-            print("Problem bei der Darstellung von einem Podcast")
+    def getPlaylistFilename(self):
+        import time
+        now    = time.localtime()
+        nowStr = "{:0>4}-{:0>2}-{:0>2}_{:0>2}-{:0>2}-{:0>2}".format(now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
+        return os.path.normpath("{0}/{1}.pls".format(self.mConfig[self.STR_basepath], nowStr))
 
+
+    def writePlaylist(self, downloadedEpisodes, playlistname):
+        file = open(playlistname, 'a')
+        for episode in downloadedEpisodes:
+            file.write(episode+"\n")
+        file.close()
+        
 
     def printHelp(self):
         self.printVersion()

@@ -29,11 +29,19 @@ def starten():
                     pypoca.updateID(sys.argv[i+1])
                     i+=1
             elif commandStr=="download":
-                pypoca.download()
+                downloadedEpisodes = pypoca.downloadAll()
+                for episode in downloadedEpisodes:
+                    print(episode)
+                pypoca.writePlaylist(downloadedEpisodes, pypoca.getPlaylistFilename())
             elif commandStr=="downloadID":
                 if anzArguments > i+1:
-                    pypoca.downloadID(sys.argv[i+1])
-                    i+=1
+                    downloadedEpisodes = pypoca.downloadID(sys.argv[i+1])
+                    for episode in downloadedEpisodes:
+                        print(episode)
+
+                pypoca.writePlaylist(downloadedEpisodes, pypoca.getPlaylistFilename())
+
+                i+=1
             elif commandStr=="add":
                 pypoca.addPodcastByURL(sys.argv[i+1])
                 pypoca.saveConfig()
@@ -52,11 +60,11 @@ def starten():
             elif commandStr=="--help" or commandStr=="-h":
                 pypoca.printHelp()
             elif commandStr=="list":
-                pypoca.list()
+                pypoca.showList()
             elif commandStr=="rss":
                 pypoca.rsstest()
     else:
-        pypoca.list()
+        pypoca.showList()
 
 
 if __name__ == '__main__':
