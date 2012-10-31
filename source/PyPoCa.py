@@ -157,17 +157,20 @@ class PyPoCa:
         self.mDB.updateStatusOfPodcast(_id, 0)
         self.mDB.writeChanges()
 
-        
-    def update(self):
+
+    def update(self, podcast):
+        try:
+            podcast.printName()
+            podcast.update(False)
+            self.mDB.writeChanges()
+        except:
+            print("Ups")
+
+    def updateAll(self):
         try:
             for podcast in self.mPodcasts:
                 if int(podcast.getStatus())==1:
-                    try:
-                        podcast.printName()
-                        podcast.update(False)
-                        self.mDB.writeChanges()
-                    except:
-                        print("Ups")
+                    self.update(podcast)
         except (KeyboardInterrupt, SystemExit):
             raise
 
@@ -176,8 +179,7 @@ class PyPoCa:
         try:
             podcast = self.getPodcastByID(castID)
             if podcast:
-                podcast.printName()
-                podcast.update(False)
+                self.update(podcast)
         except (KeyboardInterrupt, SystemExit):
             raise
 

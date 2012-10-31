@@ -23,7 +23,7 @@ def starten():
             print(anzArguments)
             print(commandStr)
             if commandStr=="update":
-                pypoca.update()
+                pypoca.updateAll()
             if commandStr=="updateID":
                 if anzArguments > i+1:
                     pypoca.updateID(sys.argv[i+1])
