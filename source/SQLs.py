@@ -31,8 +31,10 @@ sqlCREATEconfig = "CREATE TABLE config (confid CONSTRAINT primkey PRIMARY KEY, c
 sqlINSERTconfig = "INSERT INTO config VALUES ({0}, '{1}', '{2}');"
 sqlINSERTconfig_lastCastID    = sqlINSERTconfig.format(0, 'lastCastID', 0)
 sqlINSERTconfig_numberOfCasts = sqlINSERTconfig.format(1, 'numberOfCasts', 0)
+sqlINSERTconfig_lastused      = sqlINSERTconfig.format(2, 'lastused', 0)
 sqlUPDATEconfig_lastCastID    = "UPDATE config SET confdata={0} WHERE confid=0;"
 sqlUPDATEconfig_numberOfCasts = "UPDATE config SET confdata={0} WHERE confid=1;"
+sqlUPDATEconfig_lastused      = "UPDATE config SET confdata={0} WHERE confid=2;"
 
 
 sqlgetAllTables = "SELECT name, sql FROM sqlite_master WHERE type='table' ;"

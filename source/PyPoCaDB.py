@@ -10,26 +10,56 @@ import sqlite3
 import Podcast
 import SQLs
 import sys
-
+import time
+        
 class PyPoCaDB:
     ''' dumme Klasse, sendet nur die Daten an die Datenbank wie sie sie uebergeben bekommt
     '''
-    def __init__(self, dbname=":memory:"):
+    def __init__(self):
         self.mDBopen = False
-        try:
-            self.openDB(dbname)
-            self.mDBopen = True
-            self.checkDB()
-        except sqlite3.Error as e:
-            print("An error occurred:", e.args[0])
-            print("Fehler beim oeffnen der Datenbank")
 
 
-    def openDB(self, dbname):
+    def openDB(self, dbname=":memory:"):
         self.mDBconnection = sqlite3.connect(dbname)
         self.mDBcursor = self.mDBconnection.cursor()
         self.mDBcursor.row_factory = sqlite3.Row
+        result = self.writeCheck()
+        if result < 2:
+            self.mDBopen = True
+            if result < 1:
+                self.checkDB()
 
+        return result
+
+
+    def writeCheck(self):
+        result = 0
+        try:
+            self._executeCommand(SQLs.sqlUPDATEconfig_lastused.format(int(time.time())))
+            self.writeChanges()
+
+        except sqlite3.OperationalError as e:
+            if e.args[0] == "database is locked":
+                result = 1
+            else:
+                result = 2
+
+        except sqlite3.Error as e:
+            print("An error occurred:", e.args[0])
+            print("Fehler beim oeffnen der Datenbank")
+            print()                    
+            result = 2
+
+        except:
+            print("ERROR@PyPoCaDB::writeCheck(self):")
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR: "+repr(exctype))
+            print("       "+repr(value))
+            print()
+            raise exctype
+            result = 2
+
+        return result
 
     def checkDB(self):
         if self.mDBopen:
@@ -64,6 +94,7 @@ class PyPoCaDB:
         self._executeCommand(SQLs.sqlCREATEconfig)
         self._executeCommand(SQLs.sqlINSERTconfig_lastCastID)
         self._executeCommand(SQLs.sqlINSERTconfig_numberOfCasts)
+        self._executeCommand(SQLs.sqlINSERTconfig_lastused.format(int(time.time())))
 
 
     def createTablePodcasts(self):
@@ -140,21 +171,23 @@ class PyPoCaDB:
 
     def _executeCommand(self, command):
         try:
-            try:
-                self.mDBcursor.execute(command)
-                return self.mDBcursor.fetchall()
-            except sqlite3.Error as e:
-                print("PyPoCaDB@_executeCommand(self, command):")
-                print("ERROR: ", e.args[0])
-                print("SQL:   ", command)
-                print("type: "+str(type(command)))
-                return 0
+            #try:
+            self.mDBcursor.execute(command)
+            return self.mDBcursor.fetchall()
+        except sqlite3.Error as e:
+            print("PyPoCaDB@_executeCommand(self, command):")
+            print("ERROR: ", e.args[0])
+            print("SQL:   ", command)
+            print("type: "+str(type(command)))
+            print()
+            raise
         except:
             print("PyPoCaDB@_executeCommand(self, command):")
             print("ERROR: UNKNOWN")
             print("SQL:   ", command)
             print("type: "+str(type(command)))
-            return 2
+            print()
+            raise
         return 0
 
 
@@ -182,8 +215,9 @@ class PyPoCaDB:
         except:
             exctype, value = sys.exc_info()[:2]
             print("ERROR@PyPoCaDB::removeAllEpisodesOfCast(self,id)")
-            print("Typ:  "+exctype)
-            print("Wert: "+value)
+            print("Typ:  "+repr(exctype))
+            print("Wert: "+repr(value))
+            print()
             return False
         return True
 
@@ -199,8 +233,9 @@ class PyPoCaDB:
         except:
             exctype, value = sys.exc_info()[:2]
             print("ERROR@PyPoCaDB::removeAllEpisodesOfCast(self,id)")
-            print("Typ:  "+exctype)
-            print("Wert: "+value)
+            print("Typ:  "+repr(exctype))
+            print("Wert: "+repr(value))
+            print()
             return False
         return True
 
