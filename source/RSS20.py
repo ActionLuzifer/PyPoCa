@@ -223,9 +223,8 @@ class RSS20():
             if (badstring==elemStr):
                 return self.getNextElem(rssString, elemEnd)
         # Test auf ungewuenschte HTML-Codierungsstrings_v2
-        if (elemStr[0:9]=="<![CDATA["):
-            print ("CDATA an prominenter Stelle")
-            return self.getNextElem(rssString, self.getNextIndexAfterCDATA(rssString, elemBegin))
+        if isCDATAelem:
+            elemStr = elemStr.replace("<![CDATA[", "").replace("]]","")
         if (elemStr[0:3]=="<p>"):
             # TODO:
             print("TODO: REMOVE '<p>")
