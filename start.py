@@ -30,17 +30,11 @@ def starten():
                     i+=1
             elif commandStr=="download":
                 downloadedEpisodes = pypoca.downloadAll()
-                for episode in downloadedEpisodes:
-                    print(episode)
                 pypoca.writePlaylist(downloadedEpisodes, pypoca.getPlaylistFilename())
             elif commandStr=="downloadID":
                 if anzArguments > i+1:
                     downloadedEpisodes = pypoca.downloadID(sys.argv[i+1])
-                    for episode in downloadedEpisodes:
-                        print(episode)
-
-                pypoca.writePlaylist(downloadedEpisodes, pypoca.getPlaylistFilename())
-
+                    pypoca.writePlaylist(downloadedEpisodes, pypoca.getPlaylistFilename())
                 i+=1
             elif commandStr=="add":
                 pypoca.addPodcastByURL(sys.argv[i+1])
