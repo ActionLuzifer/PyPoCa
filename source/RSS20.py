@@ -175,7 +175,6 @@ class RSS20():
 
 
     def extractCDATA(self, rssString, fromIndex):
-        i = fromIndex
         fromIndex =  str.find(rssString, "[", fromIndex)
         countBrackets = 0
         while (fromIndex > 0):
