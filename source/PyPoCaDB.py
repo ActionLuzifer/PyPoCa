@@ -118,8 +118,8 @@ class PyPoCaDB:
         self._executeCommand(SQLs.sqlUPDATEpodcasts_status.format(_id, _status))
 
 
-    def updateConfigLastCastID(self, id):
-        self._executeCommand(SQLs.sqlUPDATEconfig_lastCastID.format(id))
+    def updateConfigLastCastID(self, _id):
+        self._executeCommand(SQLs.sqlUPDATEconfig_lastCastID.format(_id))
 
 
     def updateConfigNumberOfCasts(self, number):
