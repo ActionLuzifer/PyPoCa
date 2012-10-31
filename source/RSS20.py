@@ -195,7 +195,6 @@ class RSS20():
 
 
     def getNextElem(self, rssString, indexStart):
-        badStrings = ["<br>"]
         isCDATAelem = False
         elemBegin = str.find(rssString, "<", indexStart)
         elemEnd1    = str.find(rssString, "<", elemBegin+1)
@@ -219,10 +218,6 @@ class RSS20():
                     
         elemStr = rssString[elemBegin:elemEnd]
         # Test auf ungewuenschte HTML-Codierungsstrings
-        for badstring in badStrings:
-            if (badstring==elemStr):
-                return self.getNextElem(rssString, elemEnd)
-        # Test auf ungewuenschte HTML-Codierungsstrings_v2
         if isCDATAelem:
             elemStr = elemStr.replace("<![CDATA[", "").replace("]]","")
         if (elemStr[0:3]=="<p>"):
