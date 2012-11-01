@@ -282,7 +282,7 @@ class PyPoCa:
         import time
         now    = time.localtime()
         nowStr = "{:0>4}-{:0>2}-{:0>2}_{:0>2}-{:0>2}-{:0>2}".format(now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
-        return os.path.normpath("{0}/{1}.pls".format(self.mConfig[self.STR_basepath], nowStr))
+        return os.path.normpath("{0}/{1}.m3u".format(self.mConfig[self.STR_basepath], nowStr))
 
 
     def writePlaylist(self, downloadedEpisodes, playlistname):
