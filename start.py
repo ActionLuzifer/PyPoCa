@@ -45,22 +45,27 @@ def starten():
                     continue
                 elif commandStr=="add":
                     pypoca.addPodcastByURL(sys.argv[i+1])
+                    i+=1
                     pypoca.saveConfig()
                     continue
                 elif commandStr=="addf":
                     continue
                     pypoca.addPodcastByFile(sys.argv[i+1])
+                    i+=1
                     pypoca.saveConfig()
                     continue
                 elif commandStr=="remove":
                     pypoca.removePodcastByID(sys.argv[i+1])
+                    i+=1
                     pypoca.saveConfig()
                     continue
                 elif commandStr=="enable":
                     pypoca.enablePodcastByID(sys.argv[i+1])
+                    i+=1
                     continue
                 elif commandStr=="disable":
                     pypoca.disablePodcastByID(sys.argv[i+1])
+                    i+=1
                     continue
 
             if dbstatus < 2:
@@ -81,7 +86,8 @@ def starten():
             print("  FEHLER: ")
             print("    Entweder konnte die Datenbank nicht geöffnet werden,")
             print("     oder der eingegebene Befehl ist falsch geschrieben!")
-            print()                    
+            print()
+            print("  Datenbankstatus: "+str(dbstatus))
 
     else:
         if pypoca.loadConfig() < 2:
