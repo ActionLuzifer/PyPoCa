@@ -163,6 +163,17 @@ class Podcast:
         return self.mStatus
 
 
+    def getStatusStr(self):
+        result = ""
+        if self.mStatus == "0":
+            result = "-"
+        elif self.mStatus == "1":
+            result = "+"
+        else:
+            result = "?"
+        return result
+
+
     def update(self, byFile):
         # catch the url
         htmlpage = ""
