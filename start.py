@@ -24,6 +24,7 @@ def starten():
             print("commandStr:   "+str(commandStr))
             print()
             if dbstatus < 1:
+                # db is fine
                 if commandStr=="update":
                     pypoca.updateAll()
                     continue
