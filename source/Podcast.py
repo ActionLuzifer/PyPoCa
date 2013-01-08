@@ -188,7 +188,19 @@ class Podcast:
             episodesDB = self.mDB.getAllEpisodesByCastID(self.mID)
             # getEpisodesFromURL
             episodesURL = self.getEpisodesByHTML(htmlpage)
+
             # make a diff
+            changedEpisodes = self.getChangedEpisodes(episodesDB, episodesURL)
+            if len(changedEpisodes)>0:
+                for newEpisode in changedEpisodes:
+                    oldEpisode = self.getEpisodeByGUID(newEpisode.episodeGUID)
+                    if newEpisode.episodeURL is not oldEpisode.episodeURL:
+                        self.mDB.updateEpisodeURL(self.getID(), newEpisode.episodeID, newEpisode.episodeURL)  
+                    if newEpisode.episodeName is not oldEpisode.episodeName:
+                        self.mDB.updateEpisodeName(self.getID(), newEpisode.episodeID, newEpisode.episodeName)
+                self.mDB.writeChanges()
+
+            # check for new episodes  
             newEpisodes = self.getNewEpisodes(episodesDB, episodesURL)
             # send new episodes to DB
             if ( len(newEpisodes)>0 ):
@@ -221,6 +233,25 @@ class Podcast:
                         episoden.insert(0, episode)
         
         return episoden
+
+
+    def getChangedEpisodes(self, episodesDB, episodesURL):
+        ''' gleicht die vorhandenen Episoden mit denen vom Feed auf Änderungen ab '''
+        changedEpisodes = []
+        if len(episodesDB):
+            for episodeurl in episodesURL:
+                found = False
+                for episodedb in episodesDB:
+                    if (episodeurl.episodeGUID == episodedb.episodeGUID):
+                        if episodeurl.episodeURL is not episodedb.episodeURL:
+                            found = True
+                        if episodeurl.episodeName is not episodedb.episodeName:
+                            found = True
+                        break 
+                if found:
+                    changedEpisodes.insert(0,episodeurl)
+        return changedEpisodes
+
 
 
     def getNewEpisodes(self, episodesDB, episodesURL):

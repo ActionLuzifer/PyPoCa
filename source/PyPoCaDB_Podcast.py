@@ -59,6 +59,14 @@ class PyPoCaDB_Podcast():
             self.writeChanges()
 
 
+    def updateEpisodeURL(self, castID, episodeID, newURL):
+        self.executeCommand(SQLs.sqlUPDATEepisodes_episodeURL.format(newURL, castID, episodeID))
+
+
+    def updateEpisodeName(self, castID, episodeID, newName):
+        self.executeCommand(SQLs.sqlUPDATEepisodes_episodeNAME.format(newName, castID, episodeID))
+
+
     def episodes_SELECTbyCast(self, castID):
         sql = SQLs.sqlSELECTepisodesByCast.format(castID)
         return self.executeCommand(sql)
