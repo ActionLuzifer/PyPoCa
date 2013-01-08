@@ -7,8 +7,7 @@ Created on 2011-09-24
 '''
 
 import sys
-sys.path.append("source");
-import PyPoCa
+import source.PyPoCa as PyPoCa
 
 
 def starten():
