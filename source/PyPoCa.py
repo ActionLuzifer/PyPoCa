@@ -7,13 +7,13 @@ Created on 2011-09-24
 @author: actionluzifer
 '''
 
-import PyPoCaDB
-import Podcast
+import source.PyPoCaDB as PyPoCaDB
+import source.Podcast as Podcast
 #from Podcast.Podcast import Podcast as Podcast
 #from Downloader.Intern import Intern as DownIntern
 import os
 import re
-import RSS20
+import source.RSS20 as RSS20
 import sys
 
 
