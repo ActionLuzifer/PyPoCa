@@ -39,19 +39,23 @@ class PyPoCa:
 
 
     def loadConfig(self):
-        # Config
         result = self._openDatabase(self.getDBnameInConfig())
         if result < 2:
+            # Config
             self.mConfig = {self.STR_lastCastID:"0", 
                             self.STR_numberOfCasts:"0",
                             self.STR_basepath:self.getDownloadpathInConfig(),
                             self.STR_lastused:"0"}
             self.mDB.getConfig(self.mConfig)
             
-        # Podcasts
+            # Podcasts
+            self.longestCastName, self.longestCastURL = self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
+        else:
+            self.longestCastName = 0
+            self.longestCastURL = 0
+
         self.mPodcasts = list()
-        self.longestCastName, self.longestCastURL = self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
-        
+
         return result
 
 
