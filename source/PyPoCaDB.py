@@ -213,11 +213,11 @@ class PyPoCaDB:
             self._executeCommand(SQLs.sqlINSERTepisodes.format(episode[0], episode[1], episode[2], episode[3], episode[4], episode[5]))
 
 
-    def removeAllEpisodesOfCast(self, id):
+    def removeAllEpisodesOfCast(self, _id):
         ''' erwartet die ID des Podcasts
         '''
         try:
-            self._executeCommand(SQLs.sqlDELETEepisodesByCast.format(id))
+            self._executeCommand(SQLs.sqlDELETEepisodesByCast.format(_id))
         except:
             exctype, value = sys.exc_info()[:2]
             print("ERROR@PyPoCaDB::removeAllEpisodesOfCast(self,id)")
@@ -228,14 +228,14 @@ class PyPoCaDB:
         return True
 
 
-    def removeCast(self, id):
+    def removeCast(self, _id):
         ''' erwartet die ID des Podcasts
         '''
         try:
-            if not self.removeAllEpisodesOfCast(id):
+            if not self.removeAllEpisodesOfCast(_id):
                 print("Fehler: konnte nicht alle Episoden aus der Datenbank entfernen")
-            self._executeCommand(SQLs.sqlDELETEcastsAndEpisodes.format(id))
-            self._executeCommand(SQLs.sqlDELETEpodcasts.format(id))
+            self._executeCommand(SQLs.sqlDELETEcastsAndEpisodes.format(_id))
+            self._executeCommand(SQLs.sqlDELETEpodcasts.format(_id))
         except:
             exctype, value = sys.exc_info()[:2]
             print("ERROR@PyPoCaDB::removeAllEpisodesOfCast(self,id)")

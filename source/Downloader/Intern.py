@@ -12,7 +12,7 @@ import sys
 class Intern(BasisDownloader.Downloader):
     '''Downloadklasse die mithilfe von den Pythonklassen die Dateien herunterlaedt'''
    
-    def download(self, id, castFileName, url, status):
+    def download(self, _id, castFileName, url, status):
         isError = False
         fileOptions = ''
         # Datei NEU oder beim letzten Versuch nen Fehler jehabt?
