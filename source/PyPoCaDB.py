@@ -254,6 +254,10 @@ class PyPoCaDB:
         self._executeCommand(SQLs.sqlUPDATEpodcasts_name.format(_newName, _podcastID))
 
 
+    def changeURLofPodcast(self, _podcastID, _newURL):
+        self._executeCommand(SQLs.sqlUPDATEpodcasts_url.format(_newURL, _podcastID))
+
+
     def updateConfig(self, lastCastID, numberOfCasts):
         print()
         self.updateConfigLastCastID(lastCastID)

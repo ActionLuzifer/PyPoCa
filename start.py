@@ -71,6 +71,10 @@ def starten():
                     pypoca.renamePodcast(sys.argv[i+1], sys.argv[i+2])
                     i+=2
                     continue
+                elif commandStr=="changeURL":
+                    pypoca.changeURLofPodcast(sys.argv[i+1], sys.argv[i+2])
+                    i+=2
+                    continue
 
             if dbstatus < 2:
                 if commandStr=="--version" or commandStr=="-v":
