@@ -265,6 +265,43 @@ class PyPoCa:
             raise
 
 
+    def showListEpisodes(self):
+        try:
+            anzahlStellen=len(repr(len(self.mPodcasts)))
+            if self.longestCastURL < len("Url"):
+                self.longestCastURL = len("Url")
+            if self.longestCastName < len("Name"):
+                self.longestCastName = len("Name")
+            print("| {0:>{1}}".format("ID", anzahlStellen)
+                  +" |{0:>{1}}".format(" Stat", 1)
+                  +"| {0:{1}}".format("Name", self.longestCastName)
+                  +" | {0:{1}}".format("URL", self.longestCastURL)+" | ")
+            print("|-{0:->{1}}".format("--", anzahlStellen)
+                  +"-|{0:->{1}}".format("-----", 1)
+                  +"|-{0:->{1}}".format("----", self.longestCastName)
+                  +"-|-{0:->{1}}".format("----", self.longestCastURL)+" | ")
+            #print("{0:#>{1}}".format("", anzahlStellen+self.longestCastName+self.longestCastURL))
+            for podcast in self.mPodcasts:
+                try:
+                    print("| {0:>{1}}".format(repr(podcast.getID()), anzahlStellen)
+                          +" |  {0:>{1}}".format(podcast.getStatusStr(), 1)
+                          +"  | {0:{1}}".format(podcast.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore'), self.longestCastName)
+                          +" | {0:{1}}".format(podcast.getURL(), self.longestCastURL)+" | ")
+                    for episode in podcast.getEpisodes():
+                        try:
+                            episode.printName()
+                        except:
+                            print("Problem bei der Darstellung von einer Episode")
+                except:
+                    print("Problem bei der Darstellung von einem Podcast")
+                    print("ERROR@PyPoCa::showListEpisodes(self)")
+                    exctype, value = sys.exc_info()[:2]
+                    print("ERROR: "+repr(exctype))
+                    print("       "+repr(value))
+        except (KeyboardInterrupt, SystemExit):
+            raise
+
+
     def getConfigfileStr(self):
         # Datei einlesen
         try:

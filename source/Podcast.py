@@ -208,6 +208,10 @@ class Podcast:
                 self.mDB.insertEpisodes(newEpisodes, self.mID)
 
 
+    def getEpisodes(self):
+        return self.mDB.getAllEpisodesByCastID(self.mID)
+
+
     def getEpisodesByHTML(self, htmlpage):
         ''' zieht aus der html-datei die einzelnen Episoden-Urls
         '''

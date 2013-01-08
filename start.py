@@ -86,6 +86,9 @@ def starten():
                 elif commandStr=="list":
                     pypoca.showList()
                     continue
+                elif commandStr=="listEpisodes":
+                    pypoca.showListEpisodes()
+                    continue
                 elif commandStr=="rss":
                     pypoca.rsstest()
                     continue
