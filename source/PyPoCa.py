@@ -29,8 +29,8 @@ class PyPoCa:
         self.STR_numberOfCasts = 'numberOfCasts'
         self.STR_basepath = 'downloadpath'
         self.STR_lastused = 'lastused'
-        self.longestCastName = 0
-        self.longestCastURL = 0
+        self.longestCastName = 1
+        self.longestCastURL = 1
 
 
     def _openDatabase(self, dbname):
@@ -40,6 +40,7 @@ class PyPoCa:
 
     def loadConfig(self):
         result = self._openDatabase(self.getDBnameInConfig())
+        self.mPodcasts = list()
         if result < 2:
             # Config
             self.mConfig = {self.STR_lastCastID:"0", 
@@ -51,10 +52,8 @@ class PyPoCa:
             # Podcasts
             self.longestCastName, self.longestCastURL = self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
         else:
-            self.longestCastName = 0
-            self.longestCastURL = 0
-
-        self.mPodcasts = list()
+            self.longestCastName = 1
+            self.longestCastURL = 1
 
         return result
 
@@ -225,6 +224,10 @@ class PyPoCa:
     def showList(self):
         try:
             anzahlStellen=len(repr(len(self.mPodcasts)))
+            if self.longestCastURL < len("Url"):
+                self.longestCastURL = len("Url")
+            if self.longestCastName < len("Name"):
+                self.longestCastName = len("Name")
             print("| {0:>{1}}".format("ID", anzahlStellen)
                   +" |{0:>{1}}".format(" Stat", 1)
                   +"| {0:{1}}".format("Name", self.longestCastName)

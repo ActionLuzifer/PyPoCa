@@ -23,28 +23,31 @@ class PyPoCaDB:
         self.mDBconnection = sqlite3.connect(dbname)
         self.mDBcursor = self.mDBconnection.cursor()
         self.mDBcursor.row_factory = sqlite3.Row
-        result = self.writeCheck()
-        if result < 2:
+        result, errorMsg = self.writeCheck()
+        if result < 2 or 'no such table:' in errorMsg:
             self.mDBopen = True
-            if result < 1:
-                self.checkDB()
+            if result < 1 or  'no such table:' in errorMsg:
+                result = self.checkDB()
 
         return result
 
 
     def writeCheck(self):
         result = 0
+        errorMsg = ""
         try:
             self._executeCommand(SQLs.sqlUPDATEconfig_lastused.format(int(time.time())))
             self.writeChanges()
 
         except sqlite3.OperationalError as e:
+            errorMsg = e.args[0]
             if e.args[0] == "database is locked":
                 result = 1
             else:
                 result = 2
 
         except sqlite3.Error as e:
+            errorMsg = e.args[0]
             print("An error occurred:", e.args[0])
             print("Fehler beim oeffnen der Datenbank")
             print()                    
@@ -56,10 +59,11 @@ class PyPoCaDB:
             print("ERROR: "+repr(exctype))
             print("       "+repr(value))
             print()
-            raise exctype
+            errorMsg = exctype
             result = 2
+            raise exctype
 
-        return result
+        return result, errorMsg
 
     def checkDB(self):
         if self.mDBopen:
@@ -80,6 +84,8 @@ class PyPoCaDB:
                 if not self.mtablesArray['podcastsAndEpisodes']:
                     self.createTablepodcastsAndEpisodes()
                 self.writeChanges()
+            return 0
+        
 
 
     def createDB(self):
@@ -242,6 +248,10 @@ class PyPoCaDB:
 
     def updateStatusOfPodcast(self, _id, _status):
         self._executeCommand(SQLs.sqlUPDATEpodcasts_status.format(_status, _id))
+
+
+    def renamePodcast(self, _podcastID, _newName):
+        self._executeCommand(SQLs.sqlUPDATEpodcasts_name.format(_newName, _podcastID))
 
 
     def updateConfig(self, lastCastID, numberOfCasts):
