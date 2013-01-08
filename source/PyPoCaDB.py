@@ -7,8 +7,8 @@ Created on 2011-09-24
 '''
 
 import sqlite3
-import Podcast
-import SQLs
+import source.Podcast as Podcast
+import source.SQLs as SQLs
 import sys
 import time
         

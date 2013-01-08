@@ -5,16 +5,15 @@ Created on 25.09.2011
 @author: DuncanMCLeod
 '''
 
-import re
 import io
 import os
-import PyPoCaDB_Podcast
+import source.PyPoCaDB_Podcast as PyPoCaDB_Podcast
 import urllib.request
-import SQLs
-from Downloader.Intern import Intern as DownIntern
-import RSS20
-import Episode
-import public_functions
+import source.SQLs as SQLs
+from source.Downloader.Intern import Intern as DownIntern
+import source.RSS20 as RSS20
+import source.Episode as Episode
+import source.public_functions as public_functions
 
 
 def f_decodeCastReader(reader):
