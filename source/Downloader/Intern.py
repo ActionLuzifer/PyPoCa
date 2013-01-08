@@ -4,12 +4,12 @@ Created on 05.11.2011
 @author: DuncanMCLeod
 '''
 
-import Downloader.BasisDownloader
+import source.Downloader.BasisDownloader as BasisDownloader
 import urllib.request
-import SQLs
+import source.SQLs as SQLs
 import sys
 
-class Intern(Downloader.BasisDownloader.Downloader):
+class Intern(BasisDownloader.Downloader):
     '''Downloadklasse die mithilfe von den Pythonklassen die Dateien herunterlaedt'''
    
     def download(self, id, castFileName, url, status):

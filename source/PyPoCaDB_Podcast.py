@@ -4,10 +4,10 @@ Created on 27.09.2011
 @author: DuncanMCLeod
 '''
 
-import SQLs
+import source.SQLs as SQLs
 import sys
-import Episode
-import public_functions
+import source.Episode as Episode
+import source.public_functions as public_functions
 
 class PyPoCaDB_Podcast():
     
