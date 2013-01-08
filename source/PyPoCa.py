@@ -163,6 +163,14 @@ class PyPoCa:
         self.mDB.writeChanges()
 
 
+    def renamePodcast(self, _podcastID, _newName):
+        ''' renames the podcast with this ID '''
+        podcast = self.getPodcastByID(_podcastID)
+        podcast.setName(_newName)
+        self.mDB.renamePodcast(_podcastID, _newName)
+        self.mDB.writeChanges() 
+
+
     def update(self, podcast):
         try:
             podcast.printName()

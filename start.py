@@ -67,6 +67,10 @@ def starten():
                     pypoca.disablePodcastByID(sys.argv[i+1])
                     i+=1
                     continue
+                elif commandStr=="rename":
+                    pypoca.renamePodcast(sys.argv[i+1], sys.argv[i+2])
+                    i+=2
+                    continue
 
             if dbstatus < 2:
                 if commandStr=="--version" or commandStr=="-v":
