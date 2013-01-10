@@ -194,10 +194,11 @@ class Podcast:
             if len(changedEpisodes)>0:
                 for newEpisode in changedEpisodes:
                     oldEpisode = self.getEpisodeByGUID(newEpisode.episodeGUID)
-                    if newEpisode.episodeURL is not oldEpisode.episodeURL:
-                        self.mDB.updateEpisodeURL(self.getID(), newEpisode.episodeID, newEpisode.episodeURL)  
-                    if newEpisode.episodeName is not oldEpisode.episodeName:
-                        self.mDB.updateEpisodeName(self.getID(), newEpisode.episodeID, newEpisode.episodeName)
+                    if oldEpisode is not None:
+                        if newEpisode.episodeURL != oldEpisode.episodeURL:
+                            self.mDB.updateEpisodeURL(self.getID(), oldEpisode.episodeID, newEpisode.episodeURL)  
+                        if newEpisode.episodeName != oldEpisode.episodeName:
+                            self.mDB.updateEpisodeName(self.getID(), oldEpisode.episodeID, newEpisode.episodeName)
                 self.mDB.writeChanges()
 
             # check for new episodes  
@@ -210,6 +211,15 @@ class Podcast:
 
     def getEpisodes(self):
         return self.mDB.getAllEpisodesByCastID(self.mID)
+    
+    
+    def getEpisodeByGUID(self, _GUID):
+        result = None
+        for episode in self.getEpisodes():
+            if episode.episodeGUID == _GUID:
+                result = episode
+                break
+        return result
 
 
     def getEpisodesByHTML(self, htmlpage):
@@ -247,9 +257,9 @@ class Podcast:
                 found = False
                 for episodedb in episodesDB:
                     if (episodeurl.episodeGUID == episodedb.episodeGUID):
-                        if episodeurl.episodeURL is not episodedb.episodeURL:
+                        if episodeurl.episodeURL != episodedb.episodeURL:
                             found = True
-                        if episodeurl.episodeName is not episodedb.episodeName:
+                        if episodeurl.episodeName != episodedb.episodeName:
                             found = True
                         break 
                 if found:
