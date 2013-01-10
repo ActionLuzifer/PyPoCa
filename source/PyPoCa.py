@@ -185,7 +185,11 @@ class PyPoCa:
             podcast.update(False)
             self.mDB.writeChanges()
         except:
-            print("Ups")
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR@PyPoCa::update(self, podcast)")
+            print("Typ:  "+repr(exctype))
+            print("Wert: "+repr(value))
+            print()
 
     def updateAll(self):
         try:
@@ -291,7 +295,7 @@ class PyPoCa:
                         try:
                             episode.printName()
                         except:
-                            print("Problem bei der Darstellung von einer Episode")
+                            print("Problem bei der Darstellung einer Episode")
                 except:
                     print("Problem bei der Darstellung von einem Podcast")
                     print("ERROR@PyPoCa::showListEpisodes(self)")
