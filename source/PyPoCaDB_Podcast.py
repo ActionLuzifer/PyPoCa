@@ -16,24 +16,24 @@ class PyPoCaDB_Podcast():
 
 
     def getPodcastInfosByCastID(self, castID):
-        result = self.executeCommand(SQLs.sqlSELECTpodcasts.format(castID))
+        result = self.executeCommand(SQLs.sqlSELECTpodcasts, (castID,), True)
         return result[0]
 
 
     def getHighestEpisodeIDByCastID(self, castID):
         # TODO: was wenn numbersQuery leer ist?
-        numbersQuery = self.executeCommand(SQLs.sqlSELECTcastsAndEpisodes.format(castID))
+        numbersQuery = self.executeCommand(SQLs.sqlSELECTcastsAndEpisodes, (castID,), True)
         for number in numbersQuery:
             return number[0]
 
 
     def setHighestEpisodeIDByCastID(self, castID, episodeID):
-        self.executeCommand(SQLs.sqlUPDATEcastsAndEpisodes.format(castID, episodeID))
+        self.executeCommand(SQLs.sqlUPDATEcastsAndEpisodes, (castID, episodeID), True)
 
 
     def episodes_INSERT(self, castID, episodeID, episodeURL, episodeName, episodeGUID):
-        sql = SQLs.sqlINSERTepisodes.format(castID, episodeID, episodeURL, episodeName, episodeGUID, 1)
-        return self.executeCommand(sql)
+        sql = SQLs.sqlINSERTepisodes
+        return self.executeCommand(sql, (castID, episodeID, episodeURL, episodeName, episodeGUID, 1), True)
 
 
     def insertEpisodes(self, episodes, castID):
@@ -60,20 +60,20 @@ class PyPoCaDB_Podcast():
 
 
     def updateEpisodeURL(self, castID, episodeID, newURL):
-        self.executeCommand(SQLs.sqlUPDATEepisodes_episodeURL.format(newURL, castID, episodeID))
+        self.executeCommand(SQLs.sqlUPDATEepisodes_episodeURL, (newURL, castID, episodeID), True)
 
 
     def updateEpisodeName(self, castID, episodeID, newName):
-        self.executeCommand(SQLs.sqlUPDATEepisodes_episodeNAME.format(newName, castID, episodeID))
+        self.executeCommand(SQLs.sqlUPDATEepisodes_episodeNAME, (newName, castID, episodeID), True)
 
 
     def episodes_SELECTbyCast(self, castID):
-        sql = SQLs.sqlSELECTepisodesByCast.format(castID)
-        return self.executeCommand(sql)
+        sql = SQLs.sqlSELECTepisodesByCast
+        return self.executeCommand(sql, (castID, ), True)
 
 
-    def executeCommand(self, command):
-        return self.mDB._executeCommand(command)
+    def executeCommand(self, command, args=None, hasArgs=False):
+        return self.mDB._executeCommand(command, args, hasArgs)
     
     
     def getAllEpisodesByCastID(self, castID):
@@ -87,8 +87,8 @@ class PyPoCaDB_Podcast():
 
 
     def episodes_UPDATEstatus(self, castID, episodeID, status):
-        sql = SQLs.sqlUPDATEepisodes_status.format(SQLs.episodestatus[status], castID, episodeID)
-        return self.executeCommand(sql)
+        sql = SQLs.sqlUPDATEepisodes_status
+        return self.executeCommand(sql, (SQLs.episodestatus[status], castID, episodeID), True)
 
     
     def updateEpisodeStatus(self, episode, status):
