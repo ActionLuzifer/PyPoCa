@@ -164,9 +164,9 @@ class Podcast:
 
     def getStatusStr(self):
         result = ""
-        if self.mStatus == "0":
+        if self.mStatus == 0:
             result = "-"
-        elif self.mStatus == "1":
+        elif self.mStatus == 1:
             result = "+"
         else:
             result = "?"

@@ -4,7 +4,7 @@ Created on 27.09.2011
 @author: DuncanMCLeod
 '''
 
-sqlCREATEpodcasts = "CREATE TABLE podcasts (castid CONSTRAINT primkey PRIMARY KEY, castname, casturl, status);"
+sqlCREATEpodcasts = "CREATE TABLE podcasts (castid INTEGER CONSTRAINT primkey PRIMARY KEY, castname TEXT NOT NULL, casturl TEXT NOT NULL, status INTEGER NOT NULL);"
 sqlINSERTpodcasts = "INSERT INTO podcasts VALUES (?, ?, ?, ?);"
 sqlUPDATEpodcasts_name    = "UPDATE podcasts SET castname=? WHERE castid=?;"
 sqlUPDATEpodcasts_url     = "UPDATE podcasts SET casturl=? WHERE castid=?;"
@@ -14,7 +14,7 @@ sqlSELECTpodcasts = "SELECT * FROM podcasts WHERE castid=?"
 
 #hpodder:
 #CREATE TABLE "episodes" (castid INTEGER NOT NULL,episodeid INTEGER NOT NULL,title TEXT NOT NULL,epurl TEXT NOT NULL,enctype TEXT NOT NULL,status TEXT NOT NULL,eplength INTEGER NOT NULL DEFAULT 0,epfirstattempt INTEGER,eplastattempt INTEGER,epfailedattempts INTEGER NOT NULL DEFAULT 0,epguid TEXT,UNIQUE(castid, epurl),UNIQUE(castid, episodeid),UNIQUE(castid, epguid))
-sqlCREATEepisodes = "CREATE TABLE episodes (castid INTEGER NOT NULL, episodeid INTEGER NOT NULL, episodeURL TEXT NOT NULL, episodeNAME TEXT NOT NULL, episodeGUID TEXT NOT NULL, status INT NOT NULL, UNIQUE(castid, episodeid), UNIQUE(castid, episodeURL));"
+sqlCREATEepisodes = "CREATE TABLE episodes (castid INTEGER NOT NULL, episodeid INTEGER NOT NULL, episodeURL TEXT NOT NULL, episodeNAME TEXT NOT NULL, episodeGUID TEXT NOT NULL, status INT NOT NULL, UNIQUE(castid, episodeid));"
 sqlINSERTepisodes = "INSERT INTO episodes VALUES (?, ?, ?, ?, ?, ?);"
 sqlUPDATEepisodes_episodeURL  = "UPDATE episodes SET episodeURL=? WHERE castid=? AND episodeid=?;"
 sqlUPDATEepisodes_episodeNAME = "UPDATE episodes SET episodeNAME=? WHERE castid=? AND episodeid=?;"
@@ -27,7 +27,7 @@ sqlSELECTepisodesByCast = "SELECT * FROM episodes WHERE castid=? ORDER BY episod
 episodestatus = {"new":1, "downloaded":2, "error":3, "incomplete":4}
 
 
-sqlCREATEconfig = "CREATE TABLE config (confid CONSTRAINT primkey PRIMARY KEY, confname, confdata);"
+sqlCREATEconfig = "CREATE TABLE config (confid INTEGER CONSTRAINT primkey PRIMARY KEY, confname TEXT NOT NULL, confdata TEXT NOT NULL);"
 sqlINSERTconfig = "INSERT INTO config VALUES (?, ?, ?);"
 sqlINSERTconfig_lastCastID    = sqlINSERTconfig.format(0, 'lastCastID', 0)
 sqlINSERTconfig_numberOfCasts = sqlINSERTconfig.format(1, 'numberOfCasts', 0)

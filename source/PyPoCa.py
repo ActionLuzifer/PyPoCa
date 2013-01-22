@@ -178,7 +178,7 @@ class PyPoCa:
         podcast = self.getPodcastByID(_podcastID)
         podcast.setName(_newName)
         self.mDB.renamePodcast(_podcastID, _newName)
-        self.mDB.writeChanges() 
+        self.mDB.writeChanges()
 
 
     def changeURLofPodcast(self, _podcastID, _newURL):
