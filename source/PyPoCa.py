@@ -22,6 +22,7 @@ class PyPoCa:
     stdout_encoding = sys.stdout.encoding or sys.getfilesystemencoding()
     
     def __init__(self, configxml=os.path.normpath("{0}/config.xml".format(os.getcwd()))):
+        self.check4configfile(configxml)
         self.STR_CONFIG_RegExTemplateKey = "$KEY"
         self.STR_CONFIG_RegExTemplate = "(.)*<"+self.STR_CONFIG_RegExTemplateKey+">(?P<"+self.STR_CONFIG_RegExTemplateKey+">(.)*)</"+self.STR_CONFIG_RegExTemplateKey+">(.)*"
         self.STR_configxmlFilename = configxml
@@ -31,6 +32,15 @@ class PyPoCa:
         self.STR_lastused = 'lastused'
         self.longestCastName = 1
         self.longestCastURL = 1
+
+
+    def check4configfile(self, configxml):
+        if os.path.exists(configxml):
+            return
+        newfile = open(configxml, 'w')
+        newfile.write("<downloadpath>podcasts</downloadpath>\r\n")
+        newfile.write("<dbName>pypoca.sqlite</dbName>\r\n")
+        newfile.close()
 
 
     def _openDatabase(self, dbname):
