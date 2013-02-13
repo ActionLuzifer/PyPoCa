@@ -12,7 +12,7 @@ class Console(GUI):
     '''
 
 
-    def __init__(selfparams):
+    def __init__(self, params):
         '''
         Constructor
         '''
