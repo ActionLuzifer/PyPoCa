@@ -8,10 +8,12 @@ Created on 2011-09-24
 
 import sys
 import source.PyPoCa as PyPoCa
-
+import source.GUI.Console as Console
 
 def starten():
     pypoca = PyPoCa.PyPoCa()
+    gui = Console.Console()
+    gui.register()
     anzArguments = len(sys.argv)
     print("anzArguments: "+str(anzArguments))
     print()
