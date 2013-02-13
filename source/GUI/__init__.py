@@ -14,4 +14,8 @@ class GUI(object):
         '''
         Constructor
         '''
+
+
+    def receiveErrorAddPodcast(self, sender, name, _url, exctype, value):
+        pass
         
