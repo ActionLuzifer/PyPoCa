@@ -13,7 +13,7 @@ import source.GUI.Console as Console
 def starten():
     pypoca = PyPoCa.PyPoCa()
     gui = Console.Console()
-    gui.register()
+    gui.register(pypoca)
     anzArguments = len(sys.argv)
     print("anzArguments: "+str(anzArguments))
     print()

@@ -406,5 +406,5 @@ class PyPoCa:
             e.receiveErrorAddPodcast(self, name, _url, exctype, value)
     
     def registersendErrorAddPodcast(self, gui):
-        self.registeredsendErrorAddPodcast.add(gui)
+        self.registeredsendErrorAddPodcast.append(gui)
 

@@ -4,13 +4,13 @@ Created on 08.02.2013
 @author: DuncanMCLeod
 '''
 
-class GUI(object):
+class GUI():
     '''
     classdocs
     '''
 
 
-    def __init__(self, params):
+    def __init__(self):
         '''
         Constructor
         '''
@@ -19,3 +19,7 @@ class GUI(object):
     def receiveErrorAddPodcast(self, sender, name, _url, exctype, value):
         pass
         
+
+    def register(self):
+        raise
+
