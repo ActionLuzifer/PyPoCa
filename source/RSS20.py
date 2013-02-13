@@ -218,7 +218,7 @@ class RSS20():
         elemStr = rssString[elemBegin:elemEnd]
         # Test auf ungewuenschte HTML-Codierungsstrings
         if isCDATAelem:
-            elemStr = elemStr.replace("<![CDATA[", "").replace("]]","")
+            elemStr = elemStr.replace("<![CDATA[", "").replace("]]>","")
         if (elemStr[0:3]=="<p>"):
             # TODO:
             print("TODO: REMOVE '<p>")
