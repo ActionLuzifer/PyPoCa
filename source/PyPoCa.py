@@ -22,6 +22,7 @@ class PyPoCa:
     stdout_encoding = sys.stdout.encoding or sys.getfilesystemencoding()
     
     def __init__(self, configxml=os.path.normpath("{0}/config.xml".format(os.getcwd()))):
+        self.createRegisterLists()
         self.check4configfile(configxml)
         self.STR_CONFIG_RegExTemplateKey = "$KEY"
         self.STR_CONFIG_RegExTemplate = "(.)*<"+self.STR_CONFIG_RegExTemplateKey+">(?P<"+self.STR_CONFIG_RegExTemplateKey+">(.)*)</"+self.STR_CONFIG_RegExTemplateKey+">(.)*"
@@ -117,8 +118,9 @@ class PyPoCa:
             # wenn keine Fehler kamen, dann bitte jetzt in DB schreiben
             self.mDB.writeChanges()
         except:
-            print("ERROR@PyPoCa::addPodcast(self, _url)")
             exctype, value = sys.exc_info()[:2]
+            self.sendErrorAddPodcast(name, _url, exctype, value)
+            print("ERROR@PyPoCa::addPodcast(self, _url)")
             print("ERROR: "+repr(exctype))
             print("       "+repr(value))
             raise exctype
@@ -394,3 +396,15 @@ class PyPoCa:
  (removeN NAME  remove the podcast with this NAME) not yet implemented\n\
  enable ID      enables the podcast with this ID\n\
  disable ID     disables the podcast with this ID")
+
+
+    def createRegisterLists(self):
+        self.registeredsendErrorAddPodcast = []
+
+    def sendErrorAddPodcast(self, name, _url, exctype, value):
+        for e in self.registeredsendErrorAddPodcast: 
+            e.receiveErrorAddPodcast(self, name, _url, exctype, value)
+    
+    def registersendErrorAddPodcast(self, gui):
+        self.registeredsendErrorAddPodcast.add(gui)
+

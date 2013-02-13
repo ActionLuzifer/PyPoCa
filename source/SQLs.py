@@ -24,7 +24,7 @@ sqlDELETEepisodes = "DELETE FROM episodes WHERE castid=? AND episodesid=?;"
 sqlDELETEepisodesByCast = "DELETE FROM episodes WHERE castid=?;"
 sqlSELECTepisodesByCast = "SELECT * FROM episodes WHERE castid=? ORDER BY episodeid;"
 
-episodestatus = {"new":1, "downloaded":2, "error":3, "incomplete":4}
+episodestatus = {"new":1, "downloaded":2, "error":3, "incomplete":4, "404":404}
 
 
 sqlCREATEconfig = "CREATE TABLE config (confid INTEGER CONSTRAINT primkey PRIMARY KEY, confname TEXT NOT NULL, confdata TEXT NOT NULL);"

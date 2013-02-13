@@ -28,7 +28,7 @@ class PyPoCaDB_Podcast():
 
 
     def setHighestEpisodeIDByCastID(self, castID, episodeID):
-        self.executeCommand(SQLs.sqlUPDATEcastsAndEpisodes, (castID, episodeID), True)
+        self.executeCommand(SQLs.sqlUPDATEcastsAndEpisodes, (episodeID, castID), True)
 
 
     def episodes_INSERT(self, castID, episodeID, episodeURL, episodeName, episodeGUID):
