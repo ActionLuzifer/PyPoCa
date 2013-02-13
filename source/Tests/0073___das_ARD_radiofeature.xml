@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/DTDs/Podcast-1.0.dtd" version="2.0">
+<channel>
+<managingEditor>radioprogramm@ard.de</managingEditor>
+<title>das ARD radiofeature</title>
+<domain>http://radiofeature.ard.de</domain>
+<webmaster>technik-support@ard.de</webmaster>
+<description><![CDATA[ Das ARD radiofeature ist ein Gemeinschaftsprojekt der ARD mit aufwändigen, investigativ-journalistischen Dokumentationen. Abseits der Nachrichtenflut nehmen sich renommierte Hörfunk-Autoren unter dem Motto "hören, was dahinter steckt" den Raum, um Hintergründe und Zusammenhänge kritisch zu beleuchten – vom Internetbetrug bis zum Bankenskandal und vom Doping im Fußball bis zum internationalen Waffenhandel.]]></description>
+<link>http://radiofeature.ard.de</link>
+<itunes:summary> Das ARD radiofeature ist ein Gemeinschaftsprojekt der ARD mit aufwändigen, investigativ-journalistischen Dokumentationen. Abseits der Nachrichtenflut nehmen sich renommierte Hörfunk-Autoren unter dem Motto "hören, was dahinter steckt" den Raum, um Hintergründe und Zusammenhänge kritisch zu beleuchten – vom Internetbetrug bis zum Bankenskandal und vom Doping im Fußball bis zum internationalen Waffenhandel.</itunes:summary>
+<itunes:subtitle>hören, was dahinter steckt!</itunes:subtitle>
+<language>de-de</language>
+<copyright><![CDATA[Copyright 2011 ARD]]></copyright>
+<itunes:author>ARD</itunes:author>
+<itunes:owner>
+<itunes:name>ARD.de</itunes:name>
+<itunes:email>radioprogramm@ard.de</itunes:email>
+</itunes:owner>
+<pubDate>Sun, 31 Jan 2010 11:00:00 +0200</pubDate>
+<lastBuildDate>Sun, 31 Jan 2010 11:00:00 +0200</lastBuildDate>
+<image>
+<title>das ARD radiofeature</title>
+<link><![CDATA[http://radiofeature.ard.de]]></link>
+<url><![CDATA[http://www.ard.de/static/radio/radiofeature/rss/podcast_radiofeature.jpg]]></url>
+</image>
+<itunes:image href="http://www.ard.de/static/radio/radiofeature/rss/podcast_radiofeature.jpg">
+</itunes:image>
+<itunes:link rel="image" type="video/jpeg" href="http://www.ard.de/static/radio/radiofeature/rss/podcast_radiofeature.jpg">das ARD radiofeature</itunes:link>
+
+<category>Science</category>
+<category>Technology</category>
+<category>Society</category>
+<category>News &amp; Media</category>
+<category>Politics</category>
+
+
+<itunes:category text="Society &amp; Culture"/>
+<itunes:category text="Technology"/>
+<itunes:category text="News &amp; Politics"/>
+
+<itunes:keywords>ARD radiofeature, Podcast, Feature, Dokumentation</itunes:keywords>
+
+<item>
+<title><![CDATA[Zins und Zockerei ade]]></title>
+<pubDate><![CDATA[Wed, 23 Jan 2013 23:00:00 +0200]]></pubDate>
+<description><![CDATA[Mit der Pleite der amerikanischen Investmentbank Lehman Brothers begann 2008 die Wirtschaftskrise, und noch immer sind Politiker damit beschäftigt, Banken zu stabilisieren. Jetzt will ein Verein aus Bankern und Bürgern beweisen, dass ein anderes Geschäftsmodell möglich ist, wenn Anleger auf Zinsen verzichten und beim Bankgeschäft andere Regeln gelten. 2013 soll in Österreich die erste "demokratische Bank" eröffnet werden. Dass solche Alternativen funktionieren können, zeigen die GLS Bank, Triodos oder die Umweltbank. Sie agieren jedoch bis heute in einer Nische. Können sie da herauskommen oder werden die Platzhirsche ihre Bemühungen hintertreiben, um sie von den Finanzmärkten zu drängen?]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/zins_und_zockerei_swr_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/zins_und_zockerei_swr_compl.mp3" length="51357696" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/zins_und_zockerei_swr_compl.mp3]]></guid>
+<itunes:author><![CDATA[SWR]]></itunes:author>
+<itunes:summary><![CDATA[Mit der Pleite der amerikanischen Investmentbank Lehman Brothers begann 2008 die Wirtschaftskrise, und noch immer sind Politiker damit beschäftigt, Banken zu stabilisieren. Jetzt will ein Verein aus Bankern und Bürgern beweisen, dass ein anderes Geschäftsmodell möglich ist, wenn Anleger auf Zinsen verzichten und beim Bankgeschäft andere Regeln gelten. 2013 soll in Österreich die erste "demokratische Bank" eröffnet werden. Dass solche Alternativen funktionieren können, zeigen die GLS Bank, Triodos oder die Umweltbank. Sie agieren jedoch bis heute in einer Nische. Können sie da herauskommen oder werden die Platzhirsche ihre Bemühungen hintertreiben, um sie von den Finanzmärkten zu drängen?]]></itunes:summary>
+<itunes:keywords><![CDATA[SWR, Südwestrundfunk, ARD radiofeature, Wolfram Wessels, demokratische Bank, Banken, Caspar Dohmen, Podcast]]></itunes:keywords>
+<itunes:duration><![CDATA[53:30]]></itunes:duration>
+</item>
+<item>
+<title><![CDATA[Die Spur der Keime]]></title>
+<pubDate><![CDATA[Sun, 25 Nov 2012 20:00:00 +0200]]></pubDate>
+<description><![CDATA[In einer Bremer Klinik starben drei Frühgeborene an einer Bakterien-Infektion. Nur wenige Wochen nach der Komplettsanierung der Neugeborenen-Station tauchte der Keim erneut auf. Woher kam dieser Keim? Wirkte er auch deshalb so verheerend, weil Personalnot, Selbstüberschätzung und Eitelkeit, Geldmangel und handwerkliche Fehler ihm sein tödliches Werk erleichterten?]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/spur_der_keime_rb_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/spur_der_keime_rb_compl.mp3" length="51182481" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/spur_der_keime_rb_compl.mp3]]></guid>
+<itunes:author><![CDATA[Radio Bremen]]></itunes:author>
+<itunes:summary><![CDATA[In einer Bremer Klinik starben drei Frühgeborene an einer Bakterien-Infektion. Nur wenige Wochen nach der Komplettsanierung der Neugeborenen-Station tauchte der Keim erneut auf. Woher kam dieser Keim? Wirkte er auch deshalb so verheerend, weil Personalnot, Selbstüberschätzung und Eitelkeit, Geldmangel und handwerkliche Fehler ihm sein tödliches Werk erleichterten?]]></itunes:summary>
+<itunes:keywords><![CDATA[RB, Radio Bremen, ARD radiofeature, Gaby Mayr, Bremen, Krankenhauskeime, Michael Augustin, Podcast]]></itunes:keywords>
+<itunes:duration><![CDATA[53:19]]></itunes:duration>
+</item>
+<item>
+<title><![CDATA[Der Schutzmann in Kabul]]></title>
+<pubDate><![CDATA[Sun, 28 Oct 2012 20:00:00 +0200]]></pubDate>
+<description><![CDATA[Deutsche Polizisten bilden am Hindukusch afghanische Polizeirekruten aus. Die Ausbilder sitzen in abgeschirmten Festungen ohne jeden Kontakt zur Bevölkerung, die sie schützen sollen. Unterdessen werden die jungen Rekruten zu Hunderten erschossen oder desertieren zu den Taliban.]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/Schutzmann_in_Kabul_ndr_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/Schutzmann_in_Kabul_ndr_compl.mp3" length="50815059" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/Schutzmann_in_Kabul_ndr_compl.mp3]]></guid>
+<itunes:author><![CDATA[Norddeutscher Rundfunk]]></itunes:author>
+<itunes:summary><![CDATA[Deutsche Polizisten bilden am Hindukusch afghanische Polizeirekruten aus. Die Ausbilder sitzen in abgeschirmten Festungen ohne jeden Kontakt zur Bevölkerung, die sie schützen sollen. Unterdessen werden die jungen Rekruten zu Hunderten erschossen oder desertieren zu den Taliban.]]></itunes:summary>
+<itunes:keywords><![CDATA[NDR, Norddeutscher Rundfunk, ARD radiofeature, Thilo Guschas, Afghanistan, Kabul, Ulrike Toma, Podcast]]></itunes:keywords>
+<itunes:duration><![CDATA[52:55]]></itunes:duration>
+</item>
+<item>
+<title><![CDATA[Genosse Quelle, Kamerad V-Mann]]></title>
+<pubDate><![CDATA[Sun, 30 Sep 2012 20:00:00 +0200]]></pubDate>
+<description><![CDATA[Informanten des Verfassungsschutzes sind Mitglieder extremistischer Gruppen und zugleich Agenten der Staatsmacht. Sie beteiligen sich an politischen Versammlungen und Aktionen im links- oder rechtsextremistischen Milieu und informieren die Verfassungsschutzbehörden über das Innenleben und die Pläne der Szene, der sie angehören. Das „V“ in ihrem Namen steht, je nach Standpunkt für: Verbindung, Vertrauen oder Verrat. Wem gilt ihre Loyalität? Das Feature untersucht das Doppelleben der V-Leute.]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/genosse_quelle_br_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/genosse_quelle_br_compl.mp3" length="50881097" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/genosse_quelle_br_compl.mp3]]></guid>
+<itunes:author><![CDATA[Bayerischer Rundfunk]]></itunes:author>
+<itunes:summary><![CDATA[Sie sind Mitglieder extremistischer Gruppen und zugleich Agenten der Staatsmacht. Das Feature untersucht das Doppelleben von Informanten.]]></itunes:summary>
+<itunes:keywords><![CDATA[BR, Bayerischer Rundfunk, ARD radiofeature, V-Mann, Verfassungsschutz, Ulrich Chaussy, Podcast]]></itunes:keywords>
+<itunes:duration><![CDATA[53:00]]></itunes:duration>
+</item>
+<item>
+<title><![CDATA[Norwegens Stunde Null]]></title>
+<pubDate><![CDATA[Sun, 24 Jun 2012 20:00:00 +0200]]></pubDate>
+<description><![CDATA[Am 22. Juli 2011 erschoss Anders Behring Breivik 77 Menschen. Ist er ein wahnsinniger Einzelgänger - oder ist seine Tat Ausdruck für einen neuen aggressiven Nationalismus und Fremdenhass in der norwegischen Gesellschaft?]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/norwegen_ndr_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/norwegen_ndr_compl.mp3" length="50567627" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/norwegen_ndr_compl.mp3]]></guid>
+<itunes:author><![CDATA[Norddeutscher Rundfunk]]></itunes:author>
+<itunes:summary><![CDATA[Am 22. Juli 2011 erschoss Anders Behring Breivik 77 Menschen. Ist er ein wahnsinniger Einzelgänger - oder ist seine Tat Ausdruck für einen neuen aggressiven Nationalismus und Fremdenhass in der norwegischen Gesellschaft?]]></itunes:summary>
+<itunes:keywords><![CDATA[NDR, Norddeutscher Rundfunk, ARD radiofeature, Norwegen, Breivik, Hannelore Hippe, Ulrike Toma, Podcast]]></itunes:keywords>
+<itunes:duration><![CDATA[52:40]]></itunes:duration>
+</item>
+<item>
+<title><![CDATA[Geschäftsadresse: Gaddafi-Clan]]></title>
+<pubDate><![CDATA[Sun, 27 May 2012 20:00:00 +0200]]></pubDate>
+<description><![CDATA[Gaddafis Söhne ließen sich in Deutschland und Österreich von der Politik, Justiz und Polizei hofieren. Das Feature dokumentiert die guten Geschäftsverbindungen des Gaddafi-Clans und fahndet nach den Strippenziehern und Unterstützern im Hintergrund. ]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/gaddafi_hr_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/gaddafi_hr_compl.mp3" length="" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/gaddafi_hr_compl.mp3]]></guid>
+<itunes:author><![CDATA[Hessischer Rundfunk]]></itunes:author>
+<itunes:summary><![CDATA[Gaddafis Söhne ließen sich in Deutschland und Österreich von der Politik, Justiz und Polizei hofieren. Das Feature dokumentiert die guten Geschäftsverbindungen des Gaddafi-Clans und fahndet nach den Strippenziehern und Unterstützern im Hintergrund. ]]></itunes:summary>
+<itunes:keywords><![CDATA[HR, Hessischer Rundfunk, ARD radiofeature, Gaddafi, Gaddafi-Clan, Peter Rothammer, Dorothee Meyer-Kahrweg, Podcast]]></itunes:keywords>
+<itunes:duration>
+</itunes:duration>
+</item>
+<item>
+<title><![CDATA[Rechter Terror]]></title>
+<pubDate><![CDATA[Sun, 29 Apr 2012 20:00:00 +0200]]></pubDate>
+<description><![CDATA[Als im November 2011 eine rechte Terrorzelle entdeckt wurde, war das Entsetzen groß. Seit mindestens zehn Jahren ermordete die Gruppe Menschen in ganz Deutschland. Obwohl ihre Mitglieder Polizei und Verfassungsschutz bekannt waren, blieben sie unerkannt.]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/rechter_terror_swr_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/rechter_terror_swr_compl.mp3" length="51348480" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/rechter_terror_swr_compl.mp3]]></guid>
+<itunes:author><![CDATA[Südwestrundfunk]]></itunes:author>
+<itunes:summary><![CDATA[Als im November 2011 eine rechte Terrorzelle entdeckt wurde, war das Entsetzen groß. Seit mindestens zehn Jahren ermordete die Gruppe Menschen in ganz Deutschland. Obwohl ihre Mitglieder Polizei und Verfassungsschutz bekannt waren, blieben sie unerkannt.]]></itunes:summary>
+<itunes:keywords><![CDATA[SWR, Südwestrundfunk, ARD radiofeature, Rechter Terror, Walter Filz, Holger Schmidt, Oliver Bendixen, Michaela Schenk, Ludwig Kendzia, Podcast]]></itunes:keywords>
+<itunes:duration><![CDATA[53:29]]></itunes:duration>
+</item>
+<item>
+<title><![CDATA[Der Anführer]]></title>
+<pubDate><![CDATA[Sun, 25 Mar 2012 20:00:00 +0200]]></pubDate>
+<description><![CDATA[In Stuttgart steht seit Anfang Mai 2011 ein mutmaßlicher Kriegsverbrecher aus Ruanda vor Gericht. Ignace Murwanashyaka soll von Deutschland aus eine Miliz befehligt haben, die im Kongo Verbrechen gegen die Menschlichkeit begeht.]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/anfuehrer_wdr_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/anfuehrer_wdr_compl.mp3" length="49305600" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/anfuehrer_wdr_compl.mp3]]></guid>
+<itunes:author><![CDATA[Westdeutscher Rundfunk]]></itunes:author>
+<itunes:summary><![CDATA[In Stuttgart steht seit Anfang Mai 2011 ein mutmaßlicher Kriegsverbrecher aus Ruanda vor Gericht. Ignace Murwanashyaka soll von Deutschland aus eine Miliz befehligt haben, die  im Kongo Verbrechen gegen die Menschlichkeit begeht.]]></itunes:summary>
+<itunes:keywords><![CDATA[WDR, Westdeutscher Rundfunk, ARD radiofeature, Der Anführer, Ruanda, Verbrechen gegen die MenschlichkeitDeutschland, Bettina Rühl, Murwanashyaka, Podcast]]></itunes:keywords>
+<itunes:duration><![CDATA[51:21]]></itunes:duration>
+</item>
+<item>
+<title><![CDATA[Abstellgleis für alle]]></title>
+<pubDate><![CDATA[Sun, 26 Feb 2012 20:00:00 +0200]]></pubDate>
+<description><![CDATA[Stuttgart ist eine Sackgasse der deutschen Verkehrspolitik. Anhand bahninterner Unterlagen wird der Schacher um das schwäbische Großprojekt als Beispiel für unkoordinierte Verkehrspolitik und regionale Egoismen rekonstruiert. ]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/abstellgleis_swr_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/abstellgleis_swr_compl.mp3" length="51216718" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/abstellgleis_swr_compl.mp3]]></guid>
+<itunes:author><![CDATA[Südwestrundfunk]]></itunes:author>
+<itunes:summary><![CDATA[Stuttgart ist eine Sackgasse der deutschen Verkehrspolitik. Anhand bahninterner Unterlagen wird der Schacher um das schwäbische Großprojekt als Beispiel für unkoordinierte Verkehrspolitik und regionale Egoismen rekonstruiert. ]]></itunes:summary>
+<itunes:keywords><![CDATA[SWR, Südwestrundfunk, ARD radiofeature, Abstellgleis, Stuttgart 21, Deutschland, Wilm Hüffer, Podcast]]></itunes:keywords>
+<itunes:duration><![CDATA[53:21]]></itunes:duration>
+</item>
+<item>
+<title><![CDATA[Tretmühle Telekom]]></title>
+<pubDate><![CDATA[Sun, 29 Jan 2012 20:00:00 +0200]]></pubDate>
+<description><![CDATA[Die Deutsche Telekom beschreibt sich gern als soziales Unternehmen. Doch viele Beschäftigte erleben ihren Arbeitgeber anders: Permanente Umorganisation, Arbeitsverdichtung und Standortverlagerungen werden auf dem Rücken der Mitarbeiter ausgetragen.]]></description>
+<link><![CDATA[http://mp3-download.ard.de/radio/radiofeature/telekom_sr_compl.mp3]]></link>
+<enclosure url="http://mp3-download.ard.de/radio/radiofeature/telekom_sr_compl.mp3" length="50974720" type="audio/mpeg">
+</enclosure>
+<guid><![CDATA[http://mp3-download.ard.de/radio/radiofeature/telekom_sr_compl.mp3]]></guid>
+<itunes:author><![CDATA[Saarländischer Rundfunk]]></itunes:author>
+<itunes:summary><![CDATA[Die Deutsche Telekom beschreibt sich gern als soziales Unternehmen. Doch viele Beschäftigte erleben ihren Arbeitgeber anders: Permanente Umorganisation, Arbeitsverdichtung und Standortverlagerungen werden auf dem Rücken der Mitarbeiter ausgetragen.]]></itunes:summary>
+<itunes:keywords><![CDATA[SR, Saarländischer Rundfunk, ARD radiofeature, Telekom, Tretmühle, Deutschland, Charly Kowalczyk, Podcast]]></itunes:keywords>
+<itunes:duration><![CDATA[54:10]]></itunes:duration>
+</item>
+
+</channel>
+</rss>

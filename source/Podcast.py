@@ -78,6 +78,33 @@ def f_fileToString(file):
     return caststring
 
 
+def _getEpisodesByHTML(htmlpage, castID):
+    ''' zieht aus der html-datei die einzelnen Episoden-Urls
+    '''
+    episoden = []
+    
+    rss = RSS20.RSS20()
+    rssBody = rss.getRSSObject(htmlpage)
+    
+    channelItem = rssBody.getItemWithName("channel")
+    if channelItem:
+        items = channelItem.getSubitemsWithName("item")
+        for rssitem in items:
+            titleitem     = rssitem.getSubitemWithName("title")
+            enclosureitem = rssitem.getSubitemWithName("enclosure")
+            guiditem      = rssitem.getSubitemWithName("guid")
+            if enclosureitem:
+                linkitem = enclosureitem.getSubitemWithName("url")
+                if guiditem is False:
+                    guiditem = linkitem
+                if titleitem and linkitem:
+                    episode = Episode.Episode(castID, -1, linkitem.getContent(), 
+                                              titleitem.getContent(), guiditem.getContent(), SQLs.episodestatus["new"])
+                    episoden.insert(0, episode)
+    
+    return episoden
+
+
 class Podcast:
     '''
     classdocs
@@ -187,7 +214,7 @@ class Podcast:
             # getEpisodesFromDB
             episodesDB = self.mDB.getAllEpisodesByCastID(self.mID)
             # getEpisodesFromURL
-            episodesURL = self.getEpisodesByHTML(htmlpage)
+            episodesURL = _getEpisodesByHTML(htmlpage, self.mID)
 
             # make a diff
             changedEpisodes = self.getChangedEpisodes(episodesDB, episodesURL)
@@ -220,33 +247,6 @@ class Podcast:
                 result = episode
                 break
         return result
-
-
-    def getEpisodesByHTML(self, htmlpage):
-        ''' zieht aus der html-datei die einzelnen Episoden-Urls
-        '''
-        episoden = []
-        
-        rss = RSS20.RSS20()
-        rssBody = rss.getRSSObject(htmlpage)
-        
-        channelItem = rssBody.getItemWithName("channel")
-        if channelItem:
-            items = channelItem.getSubitemsWithName("item")
-            for rssitem in items:
-                titleitem     = rssitem.getSubitemWithName("title")
-                enclosureitem = rssitem.getSubitemWithName("enclosure")
-                guiditem      = rssitem.getSubitemWithName("guid")
-                if enclosureitem:
-                    linkitem = enclosureitem.getSubitemWithName("url")
-                    if guiditem is False:
-                        guiditem = linkitem
-                    if titleitem and linkitem:
-                        episode = Episode.Episode(self.mID, -1, linkitem.getContent(), 
-                                                  titleitem.getContent(), guiditem.getContent(), SQLs.episodestatus["new"])
-                        episoden.insert(0, episode)
-        
-        return episoden
 
 
     def getChangedEpisodes(self, episodesDB, episodesURL):
@@ -296,7 +296,9 @@ class Podcast:
                 episoden = self.mDB.getAllEpisodesByCastID(self.mID)
                 for episode in episoden:
                     isError = False
-                    if not episode.episodeStatus == SQLs.episodestatus["downloaded"]:
+                    if ((episode.episodeStatus == SQLs.episodestatus["new"]) or
+                        (episode.episodeStatus == SQLs.episodestatus["error"]) or  
+                        (episode.episodeStatus == SQLs.episodestatus["incomplete"])):
                         try:                        
                             try:
                                 if downloadMethod=="wget":
@@ -306,13 +308,16 @@ class Podcast:
                                 elif downloadMethod=="intern":
                                     downloader = DownIntern(self)
                                     
-                                isError, castFileNames = self.downloadEpisode(downloader, episode)
+                                isError, statuscode, castFileNames = self.downloadEpisode(downloader, episode)
                             finally:
                                 if not isError:
                                     self.mDB.updateEpisodeStatus(episode, "downloaded")
                                     downloadedEpisodes.append(castFileNames)
                                 else:
-                                    self.mDB.updateEpisodeStatus(episode, "error")
+                                    if statuscode == 404 or statuscode == "404":
+                                        self.mDB.updateEpisodeStatus(episode, "404")
+                                    else:
+                                        self.mDB.updateEpisodeStatus(episode, "error")
                                 self.mDB.writeChanges()
                         except (KeyboardInterrupt, SystemExit):
                             self.mDB.updateEpisodeStatus(episode, "incomplete")
@@ -346,8 +351,8 @@ class Podcast:
         eID = "{:0>4}".format(episode.episodeID)
         castFileName = os.path.normpath("{0}/{1}_-_{2}".format(self.mDownloadPath,eID,public_functions.f_replaceBadCharsFiles(episode.episodeName+self.getFileExtension(episode.episodeURL))))
         episode.printName()
-        isError = downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
-        return isError, castFileName
+        isError, statuscode = downloader.download(episode.episodeID, castFileName, episode.episodeURL, episode.episodeStatus)
+        return isError, statuscode, castFileName
 
 
     def checkDownloadPath(self):

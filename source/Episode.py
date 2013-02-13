@@ -21,6 +21,10 @@ class Episode:
         self.episodeStatus = episodeStatus
 
 
+    def getName(self):
+        return self.episodeName
+
+
     def printName(self):
         try:
             eID = "{:0>4}".format(self.episodeID)
