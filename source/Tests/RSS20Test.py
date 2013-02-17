@@ -1,3 +1,4 @@
+# coding=utf-8
 '''
 Created on 30.01.2013
 
@@ -13,7 +14,7 @@ class RSS20Test(unittest.TestCase):
 
 
     def setUp(self):
-        self.rssTextFile = open(os.path.normpath("{0}/source/Tests/0073___das_ARD_radiofeature.xml".format(os.getcwd())), 'r')
+        self.rssTextFile = open(os.path.normpath("{0}/source/Tests/0073___das_ARD_radiofeature.xml".format(os.getcwd())), 'r', encoding='utf-8')
         self.rssText = self.rssTextFile.read()
         rss = RSS20.RSS20()
         self.rssBody = rss.getRSSObject(self.rssText)
@@ -37,10 +38,12 @@ class RSS20Test(unittest.TestCase):
         found = 0
         episodesURL = Podcast._getEpisodesByHTML(self.rssText, castID=0)
         for episode in episodesURL:
-            print(episode.getName())
             if episode.getName() in itemTitles:
                 found = found+1
-        self.assertEqual(found, 11)
+        if found != len(itemTitles):
+            for episode in episodesURL:
+                print(episode.getName())
+            self.assertEqual(found, len(itemTitles))
 
 
 if __name__ == "__main__":
