@@ -9,6 +9,7 @@ import urllib.request
 from urllib.error import HTTPError, URLError
 import source.SQLs as SQLs
 import sys
+from io import BufferedWriter
 
 class Intern(BasisDownloader.Downloader):
     '''Downloadklasse die mithilfe von den Pythonklassen die Dateien herunterlaedt'''
@@ -48,5 +49,6 @@ class Intern(BasisDownloader.Downloader):
             isError = True
             statuscode = "unknown"
         finally:
-            castFile.close()
+            if type(castFile) is BufferedWriter:
+                castFile.close()
         return isError, statuscode
