@@ -146,7 +146,7 @@ class RSS20():
                         endNameIndex = str.find(elem, ">", 1)
                         
                         name = elem[1:endNameIndex]
-                        content = elem[endNameIndex+1:elem.__len__()]
+                        content = elem[endNameIndex+1:]
                         item = self.addItem(item, name, content)
         except:
             import sys
@@ -217,9 +217,7 @@ class RSS20():
                     elemEnd = elemEnd2
                 else:
                     elemEnd = elemEnd1
-                
-                    
-                    
+        
         elemStr = rssString[elemBegin:elemEnd]
         # Test auf ungewuenschte HTML-Codierungsstrings
         if isCDATAelem:
