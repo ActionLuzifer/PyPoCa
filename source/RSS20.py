@@ -124,30 +124,39 @@ class RSS20():
         index = 1
         item = RSSItem(0, "BODY", "")
         root = item
-        while(index>0):
-            elem, index, isCDATAelem = self.getNextElem(rssString, index)
-            elem = elem.lstrip().rstrip()
-            if("</"==elem[0:2]):
-                # Ende eines Items
-                item = item.closeItem()
-            else:
-                # Anfang eines Items
-                if("/>"==elem[-2:]) and not isCDATAelem:
-                    # sich selbst schliessend
-                    endNameIndex = str.find(elem, ">", 1)
-                    endNameIndex = endNameIndex - 1
-
-                    name = elem[1:endNameIndex]
-                    content = ""
-                    
-                    item = self.addSelfClosedItem(item, name, content)
+        try:
+            while(index>0):
+                elem, index, isCDATAelem = self.getNextElem(rssString, index)
+                elem = elem.lstrip().rstrip()
+                if("</"==elem[0:2]):
+                    # Ende eines Items
+                    item = item.closeItem()
                 else:
-                    endNameIndex = str.find(elem, ">", 1)
-                    
-                    name = elem[1:endNameIndex]
-                    content = elem[endNameIndex+1:elem.__len__()]
-                    item = self.addItem(item, name, content)
-                    
+                    # Anfang eines Items
+                    if("/>"==elem[-2:]) and not isCDATAelem:
+                        # sich selbst schliessend
+                        endNameIndex = str.find(elem, ">", 1)
+                        endNameIndex = endNameIndex - 1
+    
+                        name = elem[1:endNameIndex]
+                        content = ""
+                        
+                        item = self.addSelfClosedItem(item, name, content)
+                    else:
+                        endNameIndex = str.find(elem, ">", 1)
+                        
+                        name = elem[1:endNameIndex]
+                        content = elem[endNameIndex+1:elem.__len__()]
+                        item = self.addItem(item, name, content)
+        except:
+            import sys
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR@RSS20::getRSSObject(self, podcast)")
+            print("Typ:  "+repr(exctype))
+            print("Wert: "+repr(value))
+            print()
+            root=None
+
         return root
 
 
