@@ -142,12 +142,8 @@ class RSS20():
                     
                     item = self.addSelfClosedItem(item, name, content)
                 else:
-                    if (isCDATAelem == False):
-                        #TODO: beide Male das gleiche?
-                        endNameIndex = str.find(elem, ">", 1)
-                    else:
-                        endNameIndex = str.find(elem, ">", 1)
-                
+                    endNameIndex = str.find(elem, ">", 1)
+                    
                     name = elem[1:endNameIndex]
                     content = elem[endNameIndex+1:elem.__len__()]
                     item = self.addItem(item, name, content)
