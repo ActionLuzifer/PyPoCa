@@ -132,7 +132,7 @@ class RSS20():
                 item = item.closeItem()
             else:
                 # Anfang eines Items
-                if("/>"==elem[elem.__len__()-2:elem.__len__()]):
+                if("/>"==elem[elem.__len__()-2:elem.__len__()]) and not isCDATAelem:
                     # sich selbst schliessend
                     endNameIndex = str.find(elem, ">", 1)
                     endNameIndex = endNameIndex - 1
