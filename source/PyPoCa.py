@@ -157,10 +157,20 @@ class PyPoCa:
 
 
     def removePodcastByID(self, _id):
-        if not self.mDB.removeCast(_id):
-            print("Fehler: konnte den Podcast NICHT korrekt aus der Datenbank entfernen!")
-        else:
-            self.mDB.writeChanges()
+        try:
+            if not self.mDB.removeCast(_id):
+                print("Fehler: konnte den Podcast NICHT korrekt aus der Datenbank entfernen!")
+            else:
+                self.mDB.writeChanges()
+        except:
+            exctype, value = sys.exc_info()[:2]
+            self.sendErrorRemovePodcast(_id, exctype, value)
+            print("ERROR@PyPoCa::removePodcast(self, _url)")
+            print("ERROR: "+repr(exctype))
+            print("       "+repr(value))
+            raise exctype
+
+            
 
 
     def enablePodcastByID(self, _id):
@@ -400,11 +410,22 @@ class PyPoCa:
 
     def createRegisterLists(self):
         self.registeredsendErrorAddPodcast = []
+        self.registeredsendErrorRemovePodcast = []
+
 
     def sendErrorAddPodcast(self, name, _url, exctype, value):
         for e in self.registeredsendErrorAddPodcast: 
             e.receiveErrorAddPodcast(self, name, _url, exctype, value)
-    
+
+
     def registersendErrorAddPodcast(self, gui):
         self.registeredsendErrorAddPodcast.append(gui)
 
+
+    def sendErrorRemovePodcast(self, _id, exctype, value):
+        for e in self.registeredsendErrorRemovePodcast: 
+            e.receiveErrorDeletePodcast(self, _id, exctype, value)
+
+
+    def registersendErrorRemovePodcast(self, gui):
+        self.registeredsendErrorRemovePodcast.append(gui)
