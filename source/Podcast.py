@@ -55,8 +55,9 @@ def _getCastNameByRSS(rssBody):
         if channelItem:
             item = channelItem.getSubitemWithName("title")
             if item:
-                print(item.getContent())
-                return item.getContent()
+                name = public_functions.f_replaceBadCharsByRegEx(item.getContent())
+                print(name)
+                return name
     else:
         return ""
 
