@@ -74,6 +74,10 @@ class PyPoCa:
         self.mDB.writeChanges()
         
 
+    def getPodcasts(self):
+        return self.mPodcasts
+
+
     def getPodcastByID(self, castID):
         result = False
         for podcast in self.mPodcasts:
