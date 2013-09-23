@@ -27,6 +27,16 @@ def starten():
             print()
             if dbstatus < 1:
                 # db is fine
+                if commandStr=="QT":
+                    from source.GUI import QT4
+                    from PyQt4 import QtGui
+                    
+                    qapp = QtGui.QApplication(sys.argv);
+                    newgui = QT4.PyPoCaGUI_QT(pypoca)
+                    sys.exit(qapp.exec_()) 
+
+                    continue
+                        
                 if commandStr=="update":
                     pypoca.updateAll()
                     continue
