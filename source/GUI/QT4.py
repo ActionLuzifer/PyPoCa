@@ -7,9 +7,7 @@ Created on 14.08.2013
 
 
 from PyQt4 import QtGui, QtCore
-from PyQt4 import Qt
 from PyQt4.QtGui import QPushButton
-from source import PyPoCa
 from source.GUI.PyItem import PyAbstractItemHandler, PyScrollWidget
 
 class PyPoCaGUI_QT(QtGui.QWidget):
