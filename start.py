@@ -32,7 +32,7 @@ def starten():
                     from PyQt4 import QtGui
                     
                     qapp = QtGui.QApplication(sys.argv);
-                    newgui = QT4.PyPoCaGUI_QT(pypoca)
+                    QT4.PyPoCaGUI_QT(pypoca)
                     sys.exit(qapp.exec_()) 
 
                     continue
