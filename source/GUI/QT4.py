@@ -8,6 +8,7 @@ Created on 14.08.2013
 
 from PyQt4 import QtGui, QtCore
 from PyQt4 import Qt
+from PyQt4.QtGui import QPushButton
 from source import PyPoCa
 from source.GUI.PyItem import PyAbstractItemHandler, PyScrollWidget
 
@@ -42,27 +43,71 @@ class PyPoCaGUI_QT(QtGui.QWidget):
         self.menuPlugins = self.menuBar.addMenu("&Menü")
         self.testaction = QtGui.QAction("Zeige alle Podcasts", self)
         self.menuPlugins.addAction(self.testaction)
-        self.connect(self.testaction, Qt.SIGNAL("triggered()"), self.showPodcasts)
+        self.connect(self.testaction, QtCore.SIGNAL("triggered()"), self.showPodcasts)
         self.menuBar.show()
+
+
+    def priv_loadAllPodcast(self):
+        msgBox = QtGui.QMessageBox()
+        msgBox.setStandardButtons(QtGui.QMessageBox.Ok)
+        msgBox.setText("Ich lade jetzt alle Podcasts")
+        msgBox.exec()
+        print("self.pypoca.downloadAll()")
 
 
     def priv_loadSelectedPodcast(self):
         msgBox = QtGui.QMessageBox()
         msgBox.setStandardButtons(QtGui.QMessageBox.Ok)
         for btn in self.btnHandler.buttonListSelected:
-            msgBox.setText(btn.title)
+            msgBox.setText(str(btn.number)+btn.title)
+            msgBox.exec()
+
+
+    def priv_updateAllPodcasts(self):
+        msgBox = QtGui.QMessageBox()
+        msgBox.setStandardButtons(QtGui.QMessageBox.Ok)
+        msgBox.setText("Ich update jetzt alle Podcasts")
+        msgBox.exec()
+        print("self.pypoca.updateAll()")
+        
+
+    def priv_updateSelectedPodcasts(self):
+        msgBox = QtGui.QMessageBox()
+        msgBox.setStandardButtons(QtGui.QMessageBox.Ok)
+        msgBox.setText("Ich update jetzt diese Podcasts:")
+        msgBox.exec()
+        for btn in self.btnHandler.buttonListSelected:
+            msgBox.setText(str(btn.number)+btn.title)
             msgBox.exec()
 
 
     def _createMainPage(self):
-        goButtonYdelta = self.menuBar.height()+5
-        self.goButton = Qt.QPushButton("Lade ausgewählten Podcasts", self)
-        self.goButton.move(0, goButtonYdelta)
-        self.goButton.show()
-        self.connect(self.goButton, Qt.SIGNAL("clicked()"), self.priv_loadSelectedPodcast)
+        abstandX = 5
+        abstandY = 5
+        btnLoadSelectedYdelta = self.menuBar.height()+abstandY
         
+                
+        btnUpdateAll = QPushButton("Update alle Podcasts", self)
+        btnUpdateAll.move(abstandX, btnLoadSelectedYdelta)
+        btnUpdateAll.show()
+        self.connect(btnUpdateAll, QtCore.SIGNAL("clicked()"), self.priv_updateAllPodcasts)
         
-        self.scrollWidgetDelta = goButtonYdelta + self.goButton.height()+10
+        btnUpdateSelected      = QPushButton("Update ausgewählte Podcasts", self)
+        btnUpdateSelected.move(btnUpdateAll.x()+btnUpdateAll.width()+abstandX, btnLoadSelectedYdelta)
+        btnUpdateSelected.show()
+        self.connect(btnUpdateSelected, QtCore.SIGNAL("clicked()"), self.priv_updateSelectedPodcasts)
+        
+        btnLoadAll = QPushButton("Lade alle Podcasts", self)
+        btnLoadAll.move(btnUpdateSelected.x()+btnUpdateSelected.width()+abstandX, btnLoadSelectedYdelta)
+        btnLoadAll.show()
+        self.connect(btnLoadAll, QtCore.SIGNAL("clicked()"), self.priv_loadAllPodcast)
+        
+        btnLoadSelected = QPushButton("Lade ausgewählten Podcast", self)
+        btnLoadSelected.move(btnLoadAll.x()+btnLoadAll.width()+abstandX, btnLoadSelectedYdelta)
+        btnLoadSelected.show()
+        self.connect(btnLoadSelected, QtCore.SIGNAL("clicked()"), self.priv_loadSelectedPodcast)
+        
+        self.scrollWidgetDelta = btnLoadSelectedYdelta + btnUpdateAll.height()+10
         self.scrollWidget = PyScrollWidget(self)
         self.scrollWidget.move(0, self.scrollWidgetDelta)
         self.scrollWidget.resize(self.width(), self.height()-self.scrollWidgetDelta)
