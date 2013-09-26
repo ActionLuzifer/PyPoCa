@@ -31,8 +31,8 @@ def starten():
                     from source.GUI import QT4
                     from PyQt4 import QtGui
                     
-                    qapp = QtGui.QApplication(sys.argv);
-                    QT4.PyPoCaGUI_QT(pypoca)
+                    qapp = QtGui.QApplication(sys.argv)
+                    dingdong = QT4.PyPoCaGUI_QT(pypoca)
                     sys.exit(qapp.exec_()) 
 
                     continue
