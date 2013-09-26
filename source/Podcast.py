@@ -55,8 +55,9 @@ def _getCastNameByRSS(rssBody):
         if channelItem:
             item = channelItem.getSubitemWithName("title")
             if item:
-                print(item.getContent())
-                return item.getContent()
+                name = public_functions.f_replaceBadCharsByRegEx(item.getContent())
+                print(name)
+                return name
     else:
         return ""
 
@@ -99,7 +100,7 @@ def _getEpisodesByHTML(htmlpage, castID):
                     guiditem = linkitem
                 if titleitem and linkitem:
                     episode = Episode.Episode(castID, -1, linkitem.getContent(), 
-                                              titleitem.getContent(), guiditem.getContent(), SQLs.episodestatus["new"])
+                                              public_functions.f_replaceBadCharsByRegEx(titleitem.getContent()), guiditem.getContent(), SQLs.episodestatus["new"])
                     episoden.insert(0, episode)
     
     return episoden
