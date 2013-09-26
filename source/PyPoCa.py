@@ -366,7 +366,7 @@ class PyPoCa:
 
 
     def printVersion(self):
-        print("0.0.3.0")
+        print("0.0.2.0")
         
         
     def rsstest(self):
