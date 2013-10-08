@@ -34,6 +34,9 @@ class PyPoCaGUI_QT(QtGui.QWidget):
         print("anzahl Podcasts:", len(podcasts))
         for podcast in podcasts:
             self.btnHandler.addButton(podcast.getID(), podcast.getName())
+        if self.scrollWidget.verticalScrollBar().maximum() != self.scrollWidget.verticalScrollBar().minimum():
+            self.scrollWidget.emit(QtCore.SIGNAL(self.scrollWidget.SIGNAL_onWidthChange), self.scrollWidget.getWidthForButtons())
+
 
 
     def _fcreateMenus(self):
