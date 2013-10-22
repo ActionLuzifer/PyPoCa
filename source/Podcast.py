@@ -206,7 +206,7 @@ class Podcast:
         htmlpage = ""
         isHTML = False
         if byFile:
-            htmlpage = self.f_fileToString(os.path.normpath("C:\\Office\\arbeit\\pypoca\\Doc\\podcasts\\Breitband-feed.xml"))
+            htmlpage = self.f_fileToString(self.mURL)
             isHTML = True
         else:
             htmlpage, isHTML = f_urlToString(self.mURL)
