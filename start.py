@@ -33,7 +33,7 @@ def starten():
                     
                     qapp = QtGui.QApplication(sys.argv)
                     dingdong = QT4.PyPoCaGUI_QT(pypoca)
-                    sys.exit(qapp.exec_()) 
+                    sys.exit(qapp.exec_())
 
                     continue
                         
