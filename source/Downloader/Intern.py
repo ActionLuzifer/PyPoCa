@@ -30,11 +30,14 @@ class Intern(BasisDownloader.Downloader):
             statuscode = downloaddingens.getcode()
             castFile.write(downloaddingens.read())
         except URLError as e:
-            print("URL Error:", e.code, url)
-            statuscode = e.code
+            print("URL Error at URL:  ", url)
+            print("URL ErrorReason :  ", e.reason, url)
+            statuscode = e.reason
             isError = True
         except HTTPError as e:
-            print("HTTP Error:", e.code, url)
+            print("HTTP Error at URL: ", url)
+            print("HTTP ErrorCode:    ", e.code)
+            print("HTTP ErrorReason:  ", e.reason)
             statuscode = e.code
             isError = True
         except:
