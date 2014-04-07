@@ -14,6 +14,7 @@ from source.Downloader.Intern import Intern as DownIntern
 import source.RSS20 as RSS20
 import source.Episode as Episode
 import source.public_functions as public_functions
+import time, sys
 
 
 def f_decodeCastReader(reader):
@@ -94,16 +95,43 @@ def _getEpisodesByHTML(htmlpage, castID):
             titleitem     = rssitem.getSubitemWithName("title")
             enclosureitem = rssitem.getSubitemWithName("enclosure")
             guiditem      = rssitem.getSubitemWithName("guid")
+            pubDateItem   = rssitem.getSubitemWithName("pubDate")
+            if pubDateItem:
+                pubDate = getEpisodeTime(pubDateItem.getContent())
+            else:
+                pubDate = time.gmtime(0)
             if enclosureitem:
                 linkitem = enclosureitem.getSubitemWithName("url")
                 if guiditem is False:
                     guiditem = linkitem
                 if titleitem and linkitem:
-                    episode = Episode.Episode(castID, -1, linkitem.getContent(), 
-                                              public_functions.f_replaceBadCharsByRegEx(titleitem.getContent()), guiditem.getContent(), SQLs.episodestatus["new"])
+                    episode = Episode.Episode(castID, -1, linkitem.getContent(), public_functions.f_replaceBadCharsByRegEx(titleitem.getContent()), 
+                                              guiditem.getContent(), SQLs.episodestatus["new"], pubDate)
                     episoden.insert(0, episode)
     
     return episoden
+    
+    
+def getEpisodeTime(timeStr):
+    try:
+        mytime = time.strptime(timeStr[:-6], "%a, %d %b %Y %H:%M:%S")
+    except:
+        try:
+            mytime = time.strptime(timeStr[:-4], "%a, %d %b %Y %H:%M:%S")
+        except:
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR@Podcast:getEpisodeTime(timeStr)")
+            print("Typ:  "+repr(exctype))
+            print("Wert: "+repr(value))
+            print("Time: ",timeStr)
+            print()
+            mytime = time.gmtime(0)
+    return mytime
+        
+
+def getKey(episode):
+        return episode.pubDate
+
 
 
 class Podcast:
@@ -217,8 +245,13 @@ class Podcast:
             # getEpisodesFromURL
             episodesURL = _getEpisodesByHTML(htmlpage, self.mID)
 
-            # make a diff
-            changedEpisodes = self.getChangedEpisodes(episodesDB, episodesURL)
+            
+            self.sortEpisodes(episodesURL)
+
+            # check for new or changed episodes
+            changedEpisodes, newEpisodes = self.getChangedAndNewEpisodes(episodesDB, episodesURL)
+            
+            # Update Episodes
             if len(changedEpisodes)>0:
                 for newEpisode in changedEpisodes:
                     oldEpisode = self.getEpisodeByGUID(newEpisode.episodeGUID)
@@ -229,11 +262,11 @@ class Podcast:
                             self.mDB.updateEpisodeName(self.getID(), oldEpisode.episodeID, newEpisode.episodeName)
                 self.mDB.writeChanges()
 
-            # check for new episodes  
-            newEpisodes = self.getNewEpisodes(episodesDB, episodesURL)
             # send new episodes to DB
             if ( len(newEpisodes)>0 ):
                 print("--> +",len(newEpisodes)," Episoden")
+                for episode in newEpisodes:
+                    print("----> ",episode.episodeName)
                 self.mDB.insertEpisodes(newEpisodes, self.mID)
 
 
@@ -250,44 +283,39 @@ class Podcast:
         return result
 
 
-    def getChangedEpisodes(self, episodesDB, episodesURL):
+    def sortEpisodes(self, episodes):
+        episodes.sort(key=getKey)
+        return episodes
+
+
+    def getChangedAndNewEpisodes(self, episodesDB, episodesURL):
         ''' gleicht die vorhandenen Episoden mit denen vom Feed auf Änderungen ab '''
         changedEpisodes = []
+        newEpisodes = []
         if len(episodesDB):
             for episodeurl in episodesURL:
                 found = False
+                changed = False
                 for episodedb in episodesDB:
                     if (episodeurl.episodeGUID == episodedb.episodeGUID):
-                        if episodeurl.episodeURL != episodedb.episodeURL:
-                            found = True
-                        if episodeurl.episodeName != episodedb.episodeName:
-                            found = True
-                        break 
-                if found:
-                    changedEpisodes.insert(0,episodeurl)
-        return changedEpisodes
-
-
-
-    def getNewEpisodes(self, episodesDB, episodesURL):
-        ''' Zieht die Episoden aus der episodesURL ab die bereits in der episodesDB
-            vorhanden sind.
-        '''
-        if len(episodesDB):
-            newEpisodes = []
-            
-            for episodeurl in episodesURL:
-                found = False
-                for episodedb in episodesDB:
-                    # TODO: Datenbank cleanen und url == url wieder entfernen
-                    if (episodeurl.episodeGUID == episodedb.episodeGUID) or (episodeurl.episodeURL  == episodedb.episodeURL):
                         found = True
+                        if episodeurl.episodeURL != episodedb.episodeURL:
+                            changed = True
+                        if episodeurl.episodeName != episodedb.episodeName:
+                            changed = True
                         break 
+                if changed:
+                    changedEpisodes.insert(0,episodeurl)
                 if not found:
-                    newEpisodes.insert(0,episodeurl)
-        else:
-            newEpisodes = episodesURL
-        return newEpisodes
+                    newEpisodes.insert(0, episodeurl)
+
+        # Listen sortieren
+        if len(changedEpisodes)>0:
+            changedEpisodes = self.sortEpisodes(changedEpisodes)
+        if len(newEpisodes)>0:
+            newEpisodes = self.sortEpisodes(newEpisodes)
+        
+        return changedEpisodes, newEpisodes
 
 
     def download(self, downloadMethod):

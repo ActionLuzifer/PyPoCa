@@ -8,6 +8,7 @@ import source.SQLs as SQLs
 import sys
 import source.Episode as Episode
 import source.public_functions as public_functions
+import time
 
 class PyPoCaDB_Podcast():
     
@@ -81,7 +82,7 @@ class PyPoCaDB_Podcast():
         episodes = []
         for qepisode in episodesQuery:
             episode = Episode.Episode(qepisode[0], qepisode[1], qepisode[2], 
-                                      qepisode[3], qepisode[4], qepisode[5])
+                                      qepisode[3], qepisode[4], qepisode[5], time.gmtime(0))
             episodes.append(episode)
         return episodes
 

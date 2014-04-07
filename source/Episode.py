@@ -12,13 +12,14 @@ class Episode:
 
     stdout_encoding = sys.stdout.encoding or sys.getfilesystemencoding()
 
-    def __init__(self, castID, episodeID, episodeURL, episodeName, episodeGUID, episodeStatus):
+    def __init__(self, castID, episodeID, episodeURL, episodeName, episodeGUID, episodeStatus, pubDate):
         self.castID        = castID
         self.episodeID     = episodeID
         self.episodeURL    = episodeURL
         self.episodeName   = episodeName
         self.episodeGUID   = episodeGUID
         self.episodeStatus = episodeStatus
+        self.pubDate       = pubDate
 
 
     def getName(self):
