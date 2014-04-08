@@ -62,3 +62,9 @@ def f_replaceBadSQLChars(mf_executeStr):
     mf_executeStr = mf_executeStr.replace("&amp;", "&")
     
     return mf_executeStr
+
+
+def getFindRegEx(searchstring, regexstring, groupname):
+    REprogramm = re.compile(regexstring);
+    foundObject = REprogramm.search(searchstring);
+    return foundObject.group(groupname)

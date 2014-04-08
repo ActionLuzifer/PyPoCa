@@ -15,20 +15,40 @@ import source.RSS20 as RSS20
 import source.Episode as Episode
 import source.public_functions as public_functions
 import time, sys
-
+import gzip
+from io import BytesIO as _StringIO
 
 
 def f_decodeCastReader(reader, showError):
     alreadyread = reader.read()
+    if 'gzip' in reader.headers.get('content-encoding', '').lower():
+        try:
+            alreadyread = gzip.GzipFile(fileobj=_StringIO(alreadyread)).read()
+        except:
+            alreadyread = ""
+    
     readString = str(alreadyread)
-    if('encoding="ISO-8859-1"' in readString) or (('encoding="iso-8859-1"' in readString)):
-        decodedStr = alreadyread.decode('iso-8859-1', errors='ignore')
-    elif('encoding="utf-8"' in readString) or ('encoding="UTF-8"' in readString):
-        decodedStr = alreadyread.decode('utf_8', errors='ignore')
-    else:
-        if showError:
-            print("UNKNOWN ENCODING!!!")
-        decodedStr = readString
+    
+    encodingFound = False
+    searchString = readString.replace('"', "'")
+    xmlIndex = str.find(searchString, "<?xml ",0)
+    if xmlIndex>=0:
+        encodingIndex = str.find(searchString, "encoding='", xmlIndex)+10
+        if encodingIndex>xmlIndex:
+            encodingEndIndex = str.find(searchString, "'", encodingIndex)
+            if encodingEndIndex>encodingIndex:
+                decodedStr = alreadyread.decode(searchString[encodingIndex:encodingEndIndex], errors='ignore')
+                encodingFound = True
+    
+    if encodingFound is False:
+        if('encoding="ISO-8859-1"'.lower() in readString.lower()):
+            decodedStr = alreadyread.decode('iso-8859-1', errors='ignore')
+        elif('encoding="utf-8"'.lower() in readString.lower()):
+            decodedStr = alreadyread.decode('utf_8', errors='ignore')
+        else:
+            if showError:
+                print("UNKNOWN ENCODING!!!")
+            decodedStr = readString
     return decodedStr
 
 
@@ -37,6 +57,11 @@ def f_urlToString(url, showError):
         htmldings = urllib.request.urlopen(url)
         return f_decodeCastReader(htmldings, showError), True
     except:
+        if showError:
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR@Podcast::f_urlToString(url, showError)")
+            print("ERROR: "+repr(exctype))
+            print("       "+repr(value))
         return "", False
 
 
