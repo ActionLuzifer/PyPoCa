@@ -17,7 +17,8 @@ import source.public_functions as public_functions
 import time, sys
 
 
-def f_decodeCastReader(reader):
+
+def f_decodeCastReader(reader, showError):
     alreadyread = reader.read()
     readString = str(alreadyread)
     if('encoding="ISO-8859-1"' in readString) or (('encoding="iso-8859-1"' in readString)):
@@ -25,21 +26,22 @@ def f_decodeCastReader(reader):
     elif('encoding="utf-8"' in readString) or ('encoding="UTF-8"' in readString):
         decodedStr = alreadyread.decode('utf_8', errors='ignore')
     else:
-        print("UNKNOWN ENCODING!!!")
+        if showError:
+            print("UNKNOWN ENCODING!!!")
         decodedStr = readString
     return decodedStr
 
 
-def f_urlToString(url):
+def f_urlToString(url, showError):
     try:
         htmldings = urllib.request.urlopen(url)
-        return f_decodeCastReader(htmldings), True
+        return f_decodeCastReader(htmldings, showError), True
     except:
         return "", False
 
 
-def _getCastName(htmlstring):
-    rss = RSS20.RSS20()
+def _getCastName(htmlstring, showError):
+    rss = RSS20.RSS20(showError)
     rssBody = rss.getRSSObject(htmlstring)
     
     channelItem = rssBody.getItemWithName("channel")
@@ -63,29 +65,29 @@ def _getCastNameByRSS(rssBody):
         return ""
 
 
-def _getCastNameByURL(url):
-    htmlpage = f_urlToString(url)
+def _getCastNameByURL(url, showError):
+    htmlpage = f_urlToString(url, showError)
     print("htmlpage: "+htmlpage)
-    return _getCastName(htmlpage)
+    return _getCastName(htmlpage, showError)
 
 
-def _getCastNameByFile(url):
-    htmlpage = f_fileToString(url)
-    return _getCastName(htmlpage)
+def _getCastNameByFile(url, showError):
+    htmlpage = f_fileToString(url, showError)
+    return _getCastName(htmlpage, showError)
 
 
-def f_fileToString(file):
+def f_fileToString(file, showError):
     castreader = io.FileIO(file)
-    caststring = f_decodeCastReader(castreader)
+    caststring = f_decodeCastReader(castreader, showError)
     return caststring
 
 
-def _getEpisodesByHTML(htmlpage, castID):
+def _getEpisodesByHTML(htmlpage, castID, showError):
     ''' zieht aus der html-datei die einzelnen Episoden-Urls
     '''
     episoden = []
     
-    rss = RSS20.RSS20()
+    rss = RSS20.RSS20(showError)
     rssBody = rss.getRSSObject(htmlpage)
     
     channelItem = rssBody.getItemWithName("channel")
@@ -138,11 +140,12 @@ class Podcast:
     '''
     classdocs
     '''
-    def __init__(self, ID, DB, downloadPath):
+    def __init__(self, ID, DB, downloadPath, _showError):
         '''
         Constructor
         '''
 
+        self.showError = _showError
         self.mDB = PyPoCaDB_Podcast.PyPoCaDB_Podcast(DB)
         ''' CAST-ID '''
         self.mID = ID
@@ -229,7 +232,11 @@ class Podcast:
         return result
 
 
-    def update(self, byFile):
+    def update(self, byFile, isShowEpisodes, isUpdateAll):
+        isPodcastNamePrinted = False
+        if (not isUpdateAll) or (isShowEpisodes):
+            self.printName()
+            isPodcastNamePrinted = True
         # catch the url
         htmlpage = ""
         isHTML = False
@@ -237,13 +244,13 @@ class Podcast:
             htmlpage = self.f_fileToString(self.mURL)
             isHTML = True
         else:
-            htmlpage, isHTML = f_urlToString(self.mURL)
+            htmlpage, isHTML = f_urlToString(self.mURL, self.showError)
 
         if isHTML:
             # getEpisodesFromDB
             episodesDB = self.mDB.getAllEpisodesByCastID(self.mID)
             # getEpisodesFromURL
-            episodesURL = _getEpisodesByHTML(htmlpage, self.mID)
+            episodesURL = _getEpisodesByHTML(htmlpage, self.mID, self.showError)
 
             
             self.sortEpisodes(episodesURL)
@@ -264,6 +271,10 @@ class Podcast:
 
             # send new episodes to DB
             if ( len(newEpisodes)>0 ):
+                if (not isPodcastNamePrinted):
+                    print()
+                    self.printName() 
+                
                 print("--> +",len(newEpisodes)," Episoden")
                 for episode in newEpisodes:
                     print("----> ",episode.episodeName)

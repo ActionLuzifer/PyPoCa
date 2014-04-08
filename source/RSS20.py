@@ -68,6 +68,10 @@ class RSSItem():
 
 class RSS20():
     
+    def __init__(self, showError):
+        self.showError = showError
+
+    
     def addItem(self, item, itemString, content):
         itemString = (itemString.replace("\n", " ")).strip()
         leerzeichenIndex = str.find(itemString, " ", 1)
@@ -99,7 +103,8 @@ class RSS20():
                         item = item.closeItem()
                     else:
                         if len(itemString[nextSpaceBegin+1:nextSpaceEnd])>0:
-                            print("bloed gelaufen bei: #" + itemString[nextSpaceBegin+1:nextSpaceEnd]+"#")
+                            if self.showError:
+                                print("bloed gelaufen bei: #" + itemString[nextSpaceBegin+1:nextSpaceEnd]+"#")
 
                 except:
                     print("ERROR@PyPoCa::addPodcast(self, _url)")

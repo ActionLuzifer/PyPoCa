@@ -27,20 +27,29 @@ class PyPoCa:
         self.STR_CONFIG_RegExTemplateKey = "$KEY"
         self.STR_CONFIG_RegExTemplate = "(.)*<"+self.STR_CONFIG_RegExTemplateKey+">(?P<"+self.STR_CONFIG_RegExTemplateKey+">(.)*)</"+self.STR_CONFIG_RegExTemplateKey+">(.)*"
         self.STR_configxmlFilename = configxml
+        self.STR_dbname_STD = "pypoca.sqlite"
         self.STR_lastCastID = 'lastCastID'
         self.STR_numberOfCasts = 'numberOfCasts'
         self.STR_basepath = 'downloadpath'
+        self.STR_basepath_STD = 'podcasts'
         self.STR_lastused = 'lastused'
+        self.STR_showOnlyUpdatesWithNewEpisodes = 'showOnlyUpdatesWithNewEpisodes' 
+        self.STR_showOnlyUpdatesWithNewEpisodes_STD = 'True'
+        self.STR_showError = "showError"
+        self.STR_showError_STD = False 
         self.longestCastName = 1
         self.longestCastURL = 1
+        self.isUpdateAll = False
 
 
     def check4configfile(self, configxml):
         if os.path.exists(configxml):
             return
         newfile = open(configxml, 'w')
-        newfile.write("<downloadpath>podcasts</downloadpath>\r\n")
-        newfile.write("<dbName>pypoca.sqlite</dbName>\r\n")
+        newfile.write("<downloadpath>"+self.STR_basepath_STD+"</downloadpath>\r\n")
+        newfile.write("<dbName>"++"</dbName>\r\n")
+        newfile.write("<showOnlyUpdatesWithNewEpisodes>"+self.STR_showOnlyUpdatesWithNewEpisodes_STD+"</showOnlyUpdatesWithNewEpisodes>")
+        newfile.write("<"+self.STR_showError+">"+self.STR_showError_STD+"</"+self.STR_showError+">")
         newfile.close()
 
 
@@ -51,17 +60,18 @@ class PyPoCa:
 
     def loadConfig(self):
         result = self._openDatabase(self.getDBnameInConfig())
-        self.mPodcasts = list()
         if result < 2:
             # Config
             self.mConfig = {self.STR_lastCastID:"0", 
                             self.STR_numberOfCasts:"0",
                             self.STR_basepath:self.getDownloadpathInConfig(),
-                            self.STR_lastused:"0"}
+                            self.STR_lastused:"0",
+                            self.STR_showOnlyUpdatesWithNewEpisodes:self.getShowOnlyUpdatesWithNewEpisodes(),
+                            self.STR_showError:self.getShowError()}
             self.mDB.getConfig(self.mConfig)
             
             # Podcasts
-            self.longestCastName, self.longestCastURL = self.mDB.getPodcasts(self.mPodcasts, self.mConfig[self.STR_basepath])
+            self.longestCastName, self.longestCastURL, self.mPodcasts = self.mDB.getPodcasts(self.mConfig[self.STR_basepath], self.mConfig[self.STR_showError])
         else:
             self.longestCastName = 1
             self.longestCastURL = 1
@@ -175,8 +185,6 @@ class PyPoCa:
             raise exctype
 
             
-
-
     def enablePodcastByID(self, _id):
         ''' enables the podcast with this ID '''
         self.mDB.updateStatusOfPodcast(_id, 1)
@@ -207,8 +215,7 @@ class PyPoCa:
 
     def update(self, podcast):
         try:
-            podcast.printName()
-            podcast.update(False)
+            podcast.update(False, not self.mConfig[self.STR_showOnlyUpdatesWithNewEpisodes], self.isUpdateAll)
             self.mDB.writeChanges()
         except:
             exctype, value = sys.exc_info()[:2]
@@ -217,13 +224,18 @@ class PyPoCa:
             print("Wert: "+repr(value))
             print()
 
+
     def updateAll(self):
         try:
-            for podcast in self.mPodcasts:
-                if int(podcast.getStatus())==1:
-                    self.update(podcast)
-        except (KeyboardInterrupt, SystemExit):
-            raise
+            self.isUpdateAll = True
+            try:
+                for podcast in self.mPodcasts:
+                    if int(podcast.getStatus())==1:
+                        self.update(podcast)
+            except (KeyboardInterrupt, SystemExit):
+                raise
+        finally:
+            self.isUpdateAll = False
 
 
     def updateID(self, castID):
@@ -253,7 +265,6 @@ class PyPoCa:
             raise
         return downloadedEpisodes
                         
-
 
     def downloadID(self, castID):
         downloadedEpisodes = []
@@ -363,6 +374,44 @@ class PyPoCa:
         # Ausdruck finden
         key = "downloadpath"
         return self.getFindRegEx(result, self.STR_CONFIG_RegExTemplate.replace(self.STR_CONFIG_RegExTemplateKey, key), key)
+
+
+    def getShowOnlyUpdatesWithNewEpisodes(self):
+        result = self.getConfigfileStr()
+        
+        # Ausdruck finden
+        key = self.STR_showOnlyUpdatesWithNewEpisodes
+        try:
+            result = self.getFindRegEx(result, self.STR_CONFIG_RegExTemplate.replace(self.STR_CONFIG_RegExTemplateKey, key), key)
+        except:
+            result = self.STR_showOnlyUpdatesWithNewEpisodes_STD
+        
+        result = result.lower()
+        if "false" in result:
+            result = False
+        else:
+            result = True
+
+        return result
+
+
+    def getShowError(self):
+        result = self.getConfigfileStr()
+        
+        # Ausdruck finden
+        key = self.STR_showError
+        try:
+            result = self.getFindRegEx(result, self.STR_CONFIG_RegExTemplate.replace(self.STR_CONFIG_RegExTemplateKey, key), key)
+        except:
+            result = self.STR_showError_STD
+        
+        result = result.lower()
+        print("result:",result)
+        if "false" in result:
+            result = False
+        else:
+            result = True
+        return result
 
 
     def printVersion(self):

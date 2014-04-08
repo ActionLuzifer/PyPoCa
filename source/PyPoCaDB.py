@@ -121,20 +121,21 @@ class PyPoCaDB:
             _config[qconfig[1]] = qconfig[2]
 
 
-    def getPodcasts(self, _podcasts, downloadpath):
+    def getPodcasts(self, downloadpath, showError):
+        podcasts = list()
         longestCastName = 0
         longestCastURL = 0
         podcastsQuery = self._executeCommand(SQLs.sqlGETALLpodcasts)
         for qpodcast in podcastsQuery:
-            podcast = Podcast.Podcast(qpodcast[0], self, downloadpath)
+            podcast = Podcast.Podcast(qpodcast[0], self, downloadpath, showError)
             podcast.setName(qpodcast[1])
             if len(qpodcast[1]) > longestCastName:
                 longestCastName = len(qpodcast[1])
             podcast.setURL(qpodcast[2])
             if len(qpodcast[2]) > longestCastURL:
                 longestCastURL = len(qpodcast[2])
-            _podcasts.append(podcast)
-        return longestCastName, longestCastURL
+            podcasts.append(podcast)
+        return longestCastName, longestCastURL, podcasts
 
 
     def addPodcast(self, _id, _name, _url, _status):
