@@ -27,7 +27,8 @@ class PyPoCa:
         self.STR_CONFIG_RegExTemplateKey = "$KEY"
         self.STR_CONFIG_RegExTemplate = "(.)*<"+self.STR_CONFIG_RegExTemplateKey+">(?P<"+self.STR_CONFIG_RegExTemplateKey+">(.)*)</"+self.STR_CONFIG_RegExTemplateKey+">(.)*"
         self.STR_configxmlFilename = configxml
-        self.STR_dbname_STD = "pypoca.sqlite"
+        self.STR_dbname = 'dbName'
+        self.STR_dbname_STD = 'pypoca.sqlite'
         self.STR_lastCastID = 'lastCastID'
         self.STR_numberOfCasts = 'numberOfCasts'
         self.STR_basepath = 'downloadpath'
@@ -361,52 +362,36 @@ class PyPoCa:
     
     
     def getDBnameInConfig(self):
-        result = self.getConfigfileStr()
-        
-        # Ausdruck finden
-        key = "dbName"
-        return self.getFindRegEx(result, self.STR_CONFIG_RegExTemplate.replace(self.STR_CONFIG_RegExTemplateKey, key), key)
-
-
-    def getDownloadpathInConfig(self):
-        result = self.getConfigfileStr()
-        
-        # Ausdruck finden
-        key = "downloadpath"
-        return self.getFindRegEx(result, self.STR_CONFIG_RegExTemplate.replace(self.STR_CONFIG_RegExTemplateKey, key), key)
-
-
-    def getShowOnlyUpdatesWithNewEpisodes(self):
-        result = self.getConfigfileStr()
-        
-        # Ausdruck finden
-        key = self.STR_showOnlyUpdatesWithNewEpisodes
-        try:
-            result = self.getFindRegEx(result, self.STR_CONFIG_RegExTemplate.replace(self.STR_CONFIG_RegExTemplateKey, key), key)
-        except:
-            result = self.STR_showOnlyUpdatesWithNewEpisodes_STD
-        
-        result = result.lower()
-        if "false" in result:
-            result = False
-        else:
-            result = True
-
+        result = self.getFromConfig(self.STR_dbname, self.STR_dbname_STD)
+        print("dbName:",result)
         return result
 
 
+    def getDownloadpathInConfig(self):
+        return self.getFromConfig(self.STR_basepath, self.STR_basepath_STD)
+
+
+    def getShowOnlyUpdatesWithNewEpisodes(self):
+        return self.getBoolFromConfig(self.STR_showOnlyUpdatesWithNewEpisodes, self.STR_showOnlyUpdatesWithNewEpisodes_STD)
+
+
     def getShowError(self):
+        return self.getBoolFromConfig(self.STR_showError, self.STR_showError_STD)
+
+
+    def getFromConfig(self, key, standardkey):
         result = self.getConfigfileStr()
         
         # Ausdruck finden
-        key = self.STR_showError
         try:
             result = self.getFindRegEx(result, self.STR_CONFIG_RegExTemplate.replace(self.STR_CONFIG_RegExTemplateKey, key), key)
         except:
-            result = self.STR_showError_STD
-        
-        result = result.lower()
-        print("result:",result)
+            result = standardkey
+        return result
+
+
+    def getBoolFromConfig(self, key, standardkey):
+        result = self.getFromConfig(key, standardkey).lower()
         if "false" in result:
             result = False
         else:
