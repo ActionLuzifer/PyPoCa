@@ -363,7 +363,6 @@ class PyPoCa:
     
     def getDBnameInConfig(self):
         result = self.getFromConfig(self.STR_dbname, self.STR_dbname_STD)
-        print("dbName:",result)
         return result
 
 
