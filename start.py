@@ -87,6 +87,12 @@ def starten():
                     pypoca.changeURLofPodcast(sys.argv[i+1], sys.argv[i+2])
                     i+=2
                     continue
+                elif commandStr=="showNewEpisodes":
+                    pypoca.showNewEpisodes()
+                    continue
+                elif commandStr=="showIncompleteEpisodes":
+                    pypoca.showIncompleteEpisodes()
+                    continue
 
             if dbstatus < 2:
                 if commandStr=="--version" or commandStr=="-v":

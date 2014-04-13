@@ -214,6 +214,26 @@ class PyPoCa:
         self.mDB.writeChanges()
 
 
+    def showNewEpisodes(self):
+        try:
+            for podcast in self.mPodcasts:
+                podcast.showNewEpisodes()
+        except:
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR: "+repr(exctype))
+            print("       "+repr(value))
+
+
+    def showIncompleteEpisodes(self):
+        try:
+            for podcast in self.mPodcasts:
+                podcast.showIncompleteEpisodes()
+        except:
+            exctype, value = sys.exc_info()[:2]
+            print("ERROR: "+repr(exctype))
+            print("       "+repr(value))
+
+
     def update(self, podcast):
         try:
             podcast.update(False, not self.mConfig[self.STR_showOnlyUpdatesWithNewEpisodes], self.isUpdateAll)
@@ -430,20 +450,22 @@ class PyPoCa:
     def printHelp(self):
         self.printVersion()
         print("Usage: pypoca [options [sub-options]]\n\
- -h, --help     Displays this help message\n\
- -v, --version  Displays the current version\n\
- update         updates all enabled podcasts from it sources (internet or file)\n\
- updateID       updates the podcast with the given ID from it source\n\
- download       download new episodes of all enabled podcasts\n\
- downloadID     download new episodes of the podcast with the given ID\n\
- list           shows all podcasts\n\
- (list OPTION   shows all podcasts) not yet implemented\n\
- add URL        add a new podcast from internet (per http(s))\n\
- addf FILE      add a new podcast from a file\n\
- remove ID      removes the podcast with this ID\n\
- (removeN NAME  remove the podcast with this NAME) not yet implemented\n\
- enable ID      enables the podcast with this ID\n\
- disable ID     disables the podcast with this ID")
+ -h, --help             Displays this help message\n\
+ -v, --version          Displays the current version\n\
+ update                 updates all enabled podcasts from it sources (internet or file)\n\
+ updateID               updates the podcast with the given ID from it source\n\
+ download               download new episodes of all enabled podcasts\n\
+ downloadID             download new episodes of the podcast with the given ID\n\
+ list                   shows all podcasts\n\
+ (list OPTION           shows all podcasts) not yet implemented\n\
+ showNewEpisodes        shows all Episodes which are new\n\
+ showIncompleteEpisodes shows all Episodes which are new,error,incomplete or 404\n\
+ add URL                add a new podcast from internet (per http(s))\n\
+ addf FILE              add a new podcast from a file\n\
+ remove ID              removes the podcast with this ID\n\
+ (removeN NAME          remove the podcast with this NAME) not yet implemented\n\
+ enable ID              enables the podcast with this ID\n\
+ disable ID             disables the podcast with this ID")
 
 
     def createRegisterLists(self):

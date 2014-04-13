@@ -441,3 +441,28 @@ class Podcast:
                 print("Cast: ", eID, " | ", self.getName().encode(self.stdout_encoding, 'ignore').decode('utf-8','ignore')) 
         except:
             print("Problem bei der Darstellung von dem Podcast")
+
+
+    def showNewEpisodes(self):
+        wasPodcastNamePrinted = False
+        for episode in self.getEpisodes():
+            if episode.episodeStatus == SQLs.episodestatus["new"]:
+                if not wasPodcastNamePrinted:
+                    wasPodcastNamePrinted = True
+                    self.printName()
+                episode.printName()
+        if wasPodcastNamePrinted:
+            print()
+        
+
+    def showIncompleteEpisodes(self):
+        wasPodcastNamePrinted = False
+        for episode in self.getEpisodes():
+            if episode.episodeStatus == (SQLs.episodestatus["new"] or SQLs.episodestatus["error"]
+                                         or SQLs.episodestatus["incomplete"] or SQLs.episodestatus["404"]):
+                if not wasPodcastNamePrinted:
+                    wasPodcastNamePrinted = True
+                    self.printName()
+                episode.printNameAndStatus()
+        if wasPodcastNamePrinted:
+            print()
