@@ -116,7 +116,7 @@ class PyPoCa:
                 self.mDB.addEpisodeConfig(castID, 0)
                 
                 # Podcast-spezifische Daten erstellen
-                podcast = Podcast.Podcast(castID, self.mDB, self.mConfig[self.STR_basepath])
+                podcast = Podcast.Podcast(castID, self.mDB, self.mConfig[self.STR_basepath], self.mConfig[self.STR_showError])
                 podcast.updateName(name)
 
                 # allgemeine Daten in die DB schreiben
@@ -145,8 +145,8 @@ class PyPoCa:
 
     def addPodcastByURL(self, _url):
         try:
-            rss = RSS20.RSS20()
-            rssString, isRSSstringOK = Podcast.f_urlToString(_url)
+            rss = RSS20.RSS20(self.mConfig[self.STR_showError])
+            rssString, isRSSstringOK = Podcast.f_urlToString(_url, self.mConfig[self.STR_showError])
             if isRSSstringOK:
                 rssBody = rss.getRSSObject(rssString)
                 name = Podcast._getCastNameByRSS(rssBody)
