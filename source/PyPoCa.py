@@ -383,7 +383,6 @@ class PyPoCa:
     
     def getDBnameInConfig(self):
         result = self.getFromConfig(self.STR_dbname, self.STR_dbname_STD)
-        print("dbName:",result)
         return result
 
 
@@ -411,11 +410,12 @@ class PyPoCa:
 
 
     def getBoolFromConfig(self, key, standardkey):
-        result = self.getFromConfig(key, standardkey).lower()
-        if "false" in result:
-            result = False
-        else:
-            result = True
+        result = self.getFromConfig(key, standardkey)
+        if type(result) is not bool:
+            if "false" in result.lower():
+                result = False
+            else:
+                result = True
         return result
 
 
