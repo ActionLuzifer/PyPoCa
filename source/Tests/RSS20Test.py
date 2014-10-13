@@ -27,7 +27,7 @@ class RSS20Test(unittest.TestCase):
 
     def test_Title(self):
         castTitle = "das ARD radiofeature"
-        castName = Podcast._getCastNameByRSS(self.rssBody)
+        castName = Podcast.getCastNameByRSS(self.rssBody)
         self.assertEqual(castTitle, castName)
         
         

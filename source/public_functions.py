@@ -19,9 +19,9 @@ def f_replaceBadCharsByRegEx(badstring):
     if len(matches) > 0:
         hits = set(matches)
         for hit in hits:
-            hex = hit[3:-1]
+            hhex = hit[3:-1]
             try:
-                entnum = int(hex, 16)
+                entnum = int(hhex, 16)
                 badstring = badstring.replace(hit, chr(entnum))
             except ValueError:
                 pass
@@ -65,6 +65,6 @@ def f_replaceBadSQLChars(mf_executeStr):
 
 
 def getFindRegEx(searchstring, regexstring, groupname):
-    REprogramm = re.compile(regexstring);
-    foundObject = REprogramm.search(searchstring);
+    REprogramm = re.compile(regexstring)
+    foundObject = REprogramm.search(searchstring)
     return foundObject.group(groupname)

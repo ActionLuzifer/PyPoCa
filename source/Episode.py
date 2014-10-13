@@ -1,14 +1,14 @@
-'''
+"""
 Created on 12.03.2012
 
 @author: ActionLuzifer
-'''
+"""
 
 import sys
 
 class Episode:
-    ''' beinhaltet die Daten einer Episode
-    '''
+    """ beinhaltet die Daten einer Episode
+    """
 
     stdout_encoding = sys.stdout.encoding or sys.getfilesystemencoding()
 

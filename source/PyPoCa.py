@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-'''
+"""
 Created on 2011-09-24
 
 @author: actionluzifer
-'''
+"""
 
 import source.PyPoCaDB as PyPoCaDB
 import source.Podcast as Podcast
@@ -22,7 +22,10 @@ class PyPoCa:
     stdout_encoding = sys.stdout.encoding or sys.getfilesystemencoding()
     
     def __init__(self, configxml=os.path.normpath("{0}/config.xml".format(os.getcwd()))):
-        self.createRegisterLists()
+        # createRegisterLists
+        self.registeredsendErrorAddPodcast = []
+        self.registeredsendErrorRemovePodcast = []
+
         self.check4configfile(configxml)
         self.STR_CONFIG_RegExTemplateKey = "$KEY"
         self.STR_CONFIG_RegExTemplate = "(.)*<"+self.STR_CONFIG_RegExTemplateKey+">(?P<"+self.STR_CONFIG_RegExTemplateKey+">(.)*)</"+self.STR_CONFIG_RegExTemplateKey+">(.)*"
@@ -41,6 +44,8 @@ class PyPoCa:
         self.longestCastName = 1
         self.longestCastURL = 1
         self.isUpdateAll = False
+        self.mConfig = None
+        self.mPodcasts = list()
 
 
     def check4configfile(self, configxml):
@@ -48,9 +53,9 @@ class PyPoCa:
             return
         newfile = open(configxml, 'w')
         newfile.write("<downloadpath>"+self.STR_basepath_STD+"</downloadpath>\r\n")
-        newfile.write("<dbName>"++"</dbName>\r\n")
+        newfile.write("<dbName>"+self.STR_dbname_STD+"</dbName>\r\n")
         newfile.write("<showOnlyUpdatesWithNewEpisodes>"+self.STR_showOnlyUpdatesWithNewEpisodes_STD+"</showOnlyUpdatesWithNewEpisodes>")
-        newfile.write("<"+self.STR_showError+">"+self.STR_showError_STD+"</"+self.STR_showError+">")
+        newfile.write("<"+self.STR_showError+">"+str(self.STR_showError_STD)+"</"+self.STR_showError+">")
         newfile.close()
 
 
@@ -144,12 +149,13 @@ class PyPoCa:
 
 
     def addPodcastByURL(self, _url):
+        name = ""
         try:
             rss = RSS20.RSS20(self.mConfig[self.STR_showError])
             rssString, isRSSstringOK = Podcast.f_urlToString(_url, self.mConfig[self.STR_showError])
             if isRSSstringOK:
                 rssBody = rss.getRSSObject(rssString)
-                name = Podcast._getCastNameByRSS(rssBody)
+                name = Podcast.getCastNameByRSS(rssBody)
         except (KeyboardInterrupt, SystemExit):
             raise
         except:
@@ -161,9 +167,9 @@ class PyPoCa:
     def addPodcastByFile(self, _path):
         try:
             _url = os.path.normpath(_path)
-            rss = RSS20.RSS20()
-            rssBody = rss.getRSSObject(Podcast.f_fileToString(_url))
-            name =  Podcast._getCastNameByRSS(rssBody)
+            rss = RSS20.RSS20(self.mConfig[self.STR_showError])
+            rssBody = rss.getRSSObject(Podcast.f_fileToString(_url, self.mConfig[self.STR_showError]))
+            name =  Podcast.getCastNameByRSS(rssBody)
         except (KeyboardInterrupt, SystemExit):
             raise
         except:
@@ -187,19 +193,19 @@ class PyPoCa:
 
             
     def enablePodcastByID(self, _id):
-        ''' enables the podcast with this ID '''
+        """ enables the podcast with this ID """
         self.mDB.updateStatusOfPodcast(_id, 1)
         self.mDB.writeChanges()
 
         
     def disablePodcastByID(self, _id):
-        ''' disables the podcast with this ID '''
+        """ disables the podcast with this ID """
         self.mDB.updateStatusOfPodcast(_id, 0)
         self.mDB.writeChanges()
 
 
     def renamePodcast(self, _podcastID, _newName):
-        ''' renames the podcast with this ID '''
+        """ renames the podcast with this ID """
         podcast = self.getPodcastByID(_podcastID)
         podcast.setName(_newName)
         self.mDB.renamePodcast(_podcastID, _newName)
@@ -207,7 +213,7 @@ class PyPoCa:
 
 
     def changeURLofPodcast(self, _podcastID, _newURL):
-        ''' changes the URL of the podcast with this ID '''
+        """ changes the URL of the podcast with this ID """
         podcast = self.getPodcastByID(_podcastID)
         podcast.setURL(_newURL)
         self.mDB.changeURLofPodcast(_podcastID, _newURL)
@@ -268,7 +274,8 @@ class PyPoCa:
             raise
 
 
-    def download(self, podcast):
+    @staticmethod
+    def download(podcast):
         podcast.printName()
         return podcast.download("intern")
 
@@ -366,18 +373,21 @@ class PyPoCa:
 
     def getConfigfileStr(self):
         # Datei einlesen
+        myfile = None
         try:
             myfileName = self.STR_configxmlFilename
             myfile = open(myfileName, 'r')
             result = myfile.read()
         finally:
-            myfile.close()
+            if type(myfile) is not None:
+                myfile.close()
         return result
 
 
-    def getFindRegEx(self, searchstring, regexstring, groupname):
-        REprogramm = re.compile(regexstring);
-        foundObject = REprogramm.search(searchstring);
+    @staticmethod
+    def getFindRegEx(searchstring, regexstring, groupname):
+        REprogramm = re.compile(regexstring)
+        foundObject = REprogramm.search(searchstring)
         return foundObject.group(groupname)
     
     
@@ -419,15 +429,16 @@ class PyPoCa:
         return result
 
 
-    def printVersion(self):
-        print("0.0.2.0")
+    @staticmethod
+    def printVersion():
+        print("0.0.2.1")
         
         
     def rsstest(self):
-        rssHtml, allright = Podcast.f_urlToString("http://feeds.feedburner.com/wrint/wrint")
+        rssHtml, allright = Podcast.f_urlToString("http://feeds.feedburner.com/wrint/wrint", self.getShowError())
         #rssHtml = Podcast.f_urlToString("http://www.dradio.de/rss/podcast/sendungen/breitband")
         if allright:
-            rss = RSS20.RSS20()
+            rss = RSS20.RSS20(self.getShowError())
             rssobject = rss.getRSSObject(rssHtml)
             rss.debugItem2(rssobject)
 
@@ -439,7 +450,8 @@ class PyPoCa:
         return os.path.normpath("{0}/{1}.m3u".format(self.mConfig[self.STR_basepath], nowStr))
 
 
-    def writePlaylist(self, downloadedEpisodes, playlistname):
+    @staticmethod
+    def writePlaylist(downloadedEpisodes, playlistname):
         file = open(playlistname, 'a')
         for episode in downloadedEpisodes:
             file.write(episode+"\n")
@@ -466,11 +478,6 @@ class PyPoCa:
  (removeN NAME          remove the podcast with this NAME) not yet implemented\n\
  enable ID              enables the podcast with this ID\n\
  disable ID             disables the podcast with this ID")
-
-
-    def createRegisterLists(self):
-        self.registeredsendErrorAddPodcast = []
-        self.registeredsendErrorRemovePodcast = []
 
 
     def sendErrorAddPodcast(self, name, _url, exctype, value):

@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
-'''
+"""
 Created on 2011-09-24
 
 @author: actionluzifer
-'''
+"""
 
 import sqlite3
 import source.Podcast as Podcast
@@ -13,10 +13,13 @@ import sys
 import time
         
 class PyPoCaDB:
-    ''' dumme Klasse, sendet nur die Daten an die Datenbank wie sie sie uebergeben bekommt
-    '''
+    """ dumme Klasse, sendet nur die Daten an die Datenbank wie sie sie uebergeben bekommt
+    """
     def __init__(self):
         self.mDBopen = False
+        self.mDBconnection = None
+        self.mDBcursor = None
+
 
 
     def openDB(self, dbname=":memory:"):
@@ -36,7 +39,7 @@ class PyPoCaDB:
         result = 0
         errorMsg = ""
         try:
-            self._executeCommand(SQLs.sqlUPDATEconfig_lastused, (int(time.time()),), True)
+            self.executeCommand(SQLs.sqlUPDATEconfig_lastused, (int(time.time()),), True)
             self.writeChanges()
 
         except sqlite3.OperationalError as e:
@@ -59,8 +62,6 @@ class PyPoCaDB:
             print("ERROR: "+repr(exctype))
             print("       "+repr(value))
             print()
-            errorMsg = exctype
-            result = 2
             raise exctype
 
         return result, errorMsg
@@ -71,17 +72,17 @@ class PyPoCaDB:
             tables = tablesC.fetchall()
                 
             if not len(tables) == 4:
-                self.mtablesArray = {'config': False, 'podcasts': False, 'episodes': False, 'podcastsAndEpisodes': False}
+                mtablesArray = {'config': False, 'podcasts': False, 'episodes': False, 'podcastsAndEpisodes': False}
                 for table in tables:
                     print(table[0])
-                    self.mtablesArray[table[0]] = True
-                if not self.mtablesArray['config']:
+                    mtablesArray[table[0]] = True
+                if not mtablesArray['config']:
                     self.createTableConfig()
-                if not self.mtablesArray['podcasts']:
+                if not mtablesArray['podcasts']:
                     self.createTablePodcasts()
-                if not self.mtablesArray['episodes']:
+                if not mtablesArray['episodes']:
                     self.createTableEpisodes()
-                if not self.mtablesArray['podcastsAndEpisodes']:
+                if not mtablesArray['podcastsAndEpisodes']:
                     self.createTablepodcastsAndEpisodes()
                 self.writeChanges()
             return 0
@@ -97,26 +98,26 @@ class PyPoCaDB:
 
 
     def createTableConfig(self):
-        self._executeCommand(SQLs.sqlCREATEconfig)
-        self._executeCommand(SQLs.sqlINSERTconfig_lastCastID)
-        self._executeCommand(SQLs.sqlINSERTconfig_numberOfCasts)
-        self._executeCommand(SQLs.sqlINSERTconfig_lastused, (int(time.time()),), True)
+        self.executeCommand(SQLs.sqlCREATEconfig)
+        self.executeCommand(SQLs.sqlINSERTconfig_lastCastID)
+        self.executeCommand(SQLs.sqlINSERTconfig_numberOfCasts)
+        self.executeCommand(SQLs.sqlINSERTconfig_lastused, (int(time.time()),), True)
 
 
     def createTablePodcasts(self):
-        self._executeCommand(SQLs.sqlCREATEpodcasts)
+        self.executeCommand(SQLs.sqlCREATEpodcasts)
 
 
     def createTableEpisodes(self):
-        self._executeCommand(SQLs.sqlCREATEepisodes)
+        self.executeCommand(SQLs.sqlCREATEepisodes)
 
 
     def createTablepodcastsAndEpisodes(self):
-        self._executeCommand(SQLs.sqlCREATEcastsAndEpisodes)
+        self.executeCommand(SQLs.sqlCREATEcastsAndEpisodes)
 
 
     def getConfig(self, _config):
-        configQuery = self._executeCommand(SQLs.sqlGETALLconfig)
+        configQuery = self.executeCommand(SQLs.sqlGETALLconfig)
         for qconfig in configQuery:
             _config[qconfig[1]] = qconfig[2]
 
@@ -125,7 +126,7 @@ class PyPoCaDB:
         podcasts = list()
         longestCastName = 0
         longestCastURL = 0
-        podcastsQuery = self._executeCommand(SQLs.sqlGETALLpodcasts)
+        podcastsQuery = self.executeCommand(SQLs.sqlGETALLpodcasts)
         for qpodcast in podcastsQuery:
             podcast = Podcast.Podcast(qpodcast[0], self, downloadpath, showError)
             podcast.setName(qpodcast[1])
@@ -139,7 +140,7 @@ class PyPoCaDB:
 
 
     def addPodcast(self, _id, _name, _url, _status):
-        self._executeCommand(SQLs.sqlINSERTpodcasts, (_id, _name, _url, _status), True)
+        self.executeCommand(SQLs.sqlINSERTpodcasts, (_id, _name, _url, _status), True)
 
 
     def addEpisodeConfig(self, _castID, _episodeID):
@@ -147,40 +148,39 @@ class PyPoCaDB:
 
 
     def addEpisode(self, _episodeId, _idCast, _episodeUrl, _episodeName, _episodeGUID, _status):
-        self._executeCommand(SQLs.sqlINSERTepisodes, (_episodeId, _idCast, _episodeUrl, _episodeName, _episodeGUID, _status), True)
+        self.executeCommand(SQLs.sqlINSERTepisodes, (_episodeId, _idCast, _episodeUrl, _episodeName, _episodeGUID, _status), True)
 
 
     def updatePodcast(self, _id, _url, _name, _status):
-        self._executeCommand(SQLs.sqlUPDATEpodcasts_url, (_id, _url), True)
-        self._executeCommand(SQLs.sqlUPDATEpodcasts_name, (_id, _name), True)
-        self._executeCommand(SQLs.sqlUPDATEpodcasts_status, (_id, _status), True)
+        self.executeCommand(SQLs.sqlUPDATEpodcasts_url, (_id, _url), True)
+        self.executeCommand(SQLs.sqlUPDATEpodcasts_name, (_id, _name), True)
+        self.executeCommand(SQLs.sqlUPDATEpodcasts_status, (_id, _status), True)
 
 
     def updateConfigLastCastID(self, _id):
-        self._executeCommand(SQLs.sqlUPDATEconfig_lastCastID, (_id,), True)
+        self.executeCommand(SQLs.sqlUPDATEconfig_lastCastID, (_id,), True)
 
 
     def updateConfigNumberOfCasts(self, number):
-        self._executeCommand(SQLs.sqlUPDATEconfig_numberOfCasts, (number,), True)
+        self.executeCommand(SQLs.sqlUPDATEconfig_numberOfCasts, (number,), True)
 
 
     def insertCastsAndEpisodes(self, _castID, _episodeID): 
-        self._executeCommand(SQLs.sqlINSERTcastsAndEpisodes, (_castID, _episodeID), True) 
+        self.executeCommand(SQLs.sqlINSERTcastsAndEpisodes, (_castID, _episodeID), True)
 
 
     def updateCastsAndEpisodes(self, _castID, _episodeID): 
-        self._executeCommand(SQLs.sqlUPDATEcastsAndEpisodes, (_castID, _episodeID), True) 
+        self.executeCommand(SQLs.sqlUPDATEcastsAndEpisodes, (_castID, _episodeID), True)
 
 
     def writeChanges(self):
         self.mDBconnection.commit()
 
 
-    def _executeCommand(self, command, args=None, hasArgs=False):
+    def executeCommand(self, command, args=None, hasArgs=False):
         try:
-            #try:
             if hasArgs:
-                self.mDBcursor.execute(command, (args))
+                self.mDBcursor.execute(command, (args,))
             else:
                 self.mDBcursor.execute(command)
             return self.mDBcursor.fetchall()
@@ -198,11 +198,10 @@ class PyPoCaDB:
             print("type: "+str(type(command)))
             print()
             raise
-        return 0
 
 
     def getAllEpisodes(self):
-        episodesQuery = self._executeCommand("SELECT * FROM episodes")
+        episodesQuery = self.executeCommand("SELECT * FROM episodes")
         episodes = set()
         for qepisode in episodesQuery:
             episode = [qepisode[0], qepisode[1], qepisode[2], qepisode[3], qepisode[4], qepisode[5]]
@@ -211,17 +210,17 @@ class PyPoCaDB:
 
 
     def insertEpisodes(self, episodes):
-        ''' erwartet ein Set von Episoden
-        '''
+        """ erwartet ein Set von Episoden
+        """
         for episode in episodes:
-            self._executeCommand(SQLs.sqlINSERTepisodes, (episode[0], episode[1], episode[2], episode[3], episode[4], episode[5]), True)
+            self.executeCommand(SQLs.sqlINSERTepisodes, (episode[0], episode[1], episode[2], episode[3], episode[4], episode[5]), True)
 
 
     def removeAllEpisodesOfCast(self, _id):
-        ''' erwartet die ID des Podcasts
-        '''
+        """ erwartet die ID des Podcasts
+        """
         try:
-            self._executeCommand(SQLs.sqlDELETEepisodesByCast, (_id,), True)
+            self.executeCommand(SQLs.sqlDELETEepisodesByCast, (_id,), True)
         except:
             exctype, value = sys.exc_info()[:2]
             print("ERROR@PyPoCaDB::removeAllEpisodesOfCast(self,id)")
@@ -233,13 +232,13 @@ class PyPoCaDB:
 
 
     def removeCast(self, _id):
-        ''' erwartet die ID des Podcasts
-        '''
+        """ erwartet die ID des Podcasts
+        """
         try:
             if not self.removeAllEpisodesOfCast(_id):
                 print("Fehler: konnte nicht alle Episoden aus der Datenbank entfernen")
-            self._executeCommand(SQLs.sqlDELETEcastsAndEpisodes, (_id,), True)
-            self._executeCommand(SQLs.sqlDELETEpodcasts, (_id,), True)
+            self.executeCommand(SQLs.sqlDELETEcastsAndEpisodes, (_id,), True)
+            self.executeCommand(SQLs.sqlDELETEpodcasts, (_id,), True)
         except:
             exctype, value = sys.exc_info()[:2]
             print("ERROR@PyPoCaDB::removeAllEpisodesOfCast(self,id)")
@@ -251,15 +250,15 @@ class PyPoCaDB:
 
 
     def updateStatusOfPodcast(self, _id, _status):
-        self._executeCommand(SQLs.sqlUPDATEpodcasts_status, (_status, _id), True)
+        self.executeCommand(SQLs.sqlUPDATEpodcasts_status, (_status, _id), True)
 
 
     def renamePodcast(self, _podcastID, _newName):
-        self._executeCommand(SQLs.sqlUPDATEpodcasts_name, (_newName, _podcastID), True)
+        self.executeCommand(SQLs.sqlUPDATEpodcasts_name, (_newName, _podcastID), True)
 
 
     def changeURLofPodcast(self, _podcastID, _newURL):
-        self._executeCommand(SQLs.sqlUPDATEpodcasts_url, (_newURL, _podcastID), True)
+        self.executeCommand(SQLs.sqlUPDATEpodcasts_url, (_newURL, _podcastID), True)
 
 
     def updateConfig(self, lastCastID, numberOfCasts):

@@ -1,8 +1,8 @@
-'''
+"""
 Created on 27.09.2011
 
 @author: DuncanMCLeod
-'''
+"""
 
 sqlCREATEpodcasts = "CREATE TABLE podcasts (castid INTEGER CONSTRAINT primkey PRIMARY KEY, castname TEXT NOT NULL, casturl TEXT NOT NULL, status INTEGER NOT NULL);"
 sqlINSERTpodcasts = "INSERT INTO podcasts VALUES (?, ?, ?, ?);"

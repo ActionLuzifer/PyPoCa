@@ -1,9 +1,9 @@
 # coding=utf-8
-'''
+"""
 Created on 14.08.2013
 
 @author: Duncan MC Leod
-'''
+"""
 
 
 from PyQt4 import QtGui, QtCore
@@ -48,7 +48,8 @@ class PyPoCaGUI_QT(QtGui.QWidget):
         self.menuBar.show()
 
 
-    def priv_loadAllPodcast(self):
+    @staticmethod
+    def priv_loadAllPodcast():
         msgBox = QtGui.QMessageBox()
         msgBox.setStandardButtons(QtGui.QMessageBox.Ok)
         msgBox.setText("Ich lade jetzt alle Podcasts")
@@ -64,7 +65,8 @@ class PyPoCaGUI_QT(QtGui.QWidget):
             msgBox.exec()
 
 
-    def priv_updateAllPodcasts(self):
+    @staticmethod
+    def priv_updateAllPodcasts():
         msgBox = QtGui.QMessageBox()
         msgBox.setStandardButtons(QtGui.QMessageBox.Ok)
         msgBox.setText("Ich update jetzt alle Podcasts")

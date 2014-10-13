@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 # coding=utf-8
-'''
+"""
 Created on 2011-09-24
 
 @author: actionluzifer
-'''
+"""
 
 import sys
 import source.PyPoCa as PyPoCa
@@ -17,7 +17,7 @@ def starten():
     anzArguments = len(sys.argv)
     print("anzArguments: "+str(anzArguments))
     print()
-    if (anzArguments > 1):
+    if anzArguments > 1:
         i = 0
         dbstatus = pypoca.loadConfig()
         while not i == anzArguments-1:
@@ -32,11 +32,9 @@ def starten():
                     from PyQt4 import QtGui
                     
                     qapp = QtGui.QApplication(sys.argv)
-                    dingdong = QT4.PyPoCaGUI_QT(pypoca)
+                    dingdong = QT4.PyPoCaGUI_QT(pypoca) #@unusedVariable
                     sys.exit(qapp.exec_())
 
-                    continue
-                        
                 if commandStr=="update":
                     pypoca.updateAll()
                     continue
@@ -61,7 +59,6 @@ def starten():
                     pypoca.saveConfig()
                     continue
                 elif commandStr=="addf":
-                    continue
                     pypoca.addPodcastByFile(sys.argv[i+1])
                     i+=1
                     pypoca.saveConfig()

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on 25.09.2011
 
 @author: DuncanMCLeod
-'''
+"""
 
 import io
 import os
@@ -20,6 +20,7 @@ from io import BytesIO as _StringIO
 
 
 def f_decodeCastReader(reader, showError):
+    decodedStr = ""
     alreadyread = reader.read()
     if 'gzip' in reader.headers.get('content-encoding', '').lower():
         try:
@@ -41,9 +42,9 @@ def f_decodeCastReader(reader, showError):
                 encodingFound = True
     
     if encodingFound is False:
-        if('encoding="ISO-8859-1"'.lower() in readString.lower()):
+        if 'encoding="ISO-8859-1"'.lower() in readString.lower():
             decodedStr = alreadyread.decode('iso-8859-1', errors='ignore')
-        elif('encoding="utf-8"'.lower() in readString.lower()):
+        elif 'encoding="utf-8"'.lower() in readString.lower():
             decodedStr = alreadyread.decode('utf_8', errors='ignore')
         else:
             if showError:
@@ -72,13 +73,13 @@ def _getCastName(htmlstring, showError):
     channelItem = rssBody.getItemWithName("channel")
     if channelItem:
         item = channelItem.getSubitemWithName("title")
-        if (item):
+        if item:
             print(item.getContent())
             return item.getContent()
 
 
-def _getCastNameByRSS(rssBody):
-    if (rssBody != False):
+def getCastNameByRSS(rssBody):
+    if rssBody is not False:
         channelItem = rssBody.getItemWithName("channel")
         if channelItem:
             item = channelItem.getSubitemWithName("title")
@@ -92,7 +93,7 @@ def _getCastNameByRSS(rssBody):
 
 def _getCastNameByURL(url, showError):
     htmlpage = f_urlToString(url, showError)
-    print("htmlpage: "+htmlpage)
+    print("htmlpage: "+str(htmlpage))
     return _getCastName(htmlpage, showError)
 
 
@@ -108,8 +109,8 @@ def f_fileToString(file, showError):
 
 
 def _getEpisodesByHTML(htmlpage, castID, showError):
-    ''' zieht aus der html-datei die einzelnen Episoden-Urls
-    '''
+    """ zieht aus der html-datei die einzelnen Episoden-Urls
+    """
     episoden = []
     
     rss = RSS20.RSS20(showError)
@@ -141,18 +142,30 @@ def _getEpisodesByHTML(htmlpage, castID, showError):
     
 def getEpisodeTime(timeStr):
     try:
-        mytime = time.strptime(timeStr[:-6], "%a, %d %b %Y %H:%M:%S")
+        plusIdx = timeStr.find(" +")
+        if plusIdx>-1:
+            idx = len(timeStr) - plusIdx
+        else:
+            idx = 0
+        tStr = timeStr[:-idx]
+        mytime = time.strptime(tStr, "%a, %d %B %Y %H:%M:%S")
     except:
         try:
-            mytime = time.strptime(timeStr[:-4], "%a, %d %b %Y %H:%M:%S")
+            mytime = time.strptime(timeStr[:-6], "%a, %d %b %Y %H:%M:%S")
         except:
-            exctype, value = sys.exc_info()[:2]
-            print("ERROR@Podcast:getEpisodeTime(timeStr)")
-            print("Typ:  "+repr(exctype))
-            print("Wert: "+repr(value))
-            print("Time: ",timeStr)
-            print()
-            mytime = time.gmtime(0)
+            try:
+                mytime = time.strptime(timeStr[:-4], "%a, %d %b %Y %H:%M:%S")
+            except:
+                try:
+                    mytime = time.strptime(timeStr[:-2], "%a, %d %b %Y %H:%M:%S +")
+                except:
+                    exctype, value = sys.exc_info()[:2]
+                    print("ERROR@Podcast:getEpisodeTime(timeStr)")
+                    print("Typ:  "+repr(exctype))
+                    print("Wert: "+repr(value))
+                    print("Time: ",timeStr)
+                    print()
+                    mytime = time.gmtime(0)
     return mytime
         
 
@@ -162,18 +175,22 @@ def getKey(episode):
 
 
 class Podcast:
-    '''
+    """
     classdocs
-    '''
+    """
     def __init__(self, ID, DB, downloadPath, _showError):
-        '''
+        """
         Constructor
-        '''
-
+        """
+        self.stdout_encoding = sys.stdout.encoding or sys.getfilesystemencoding()
         self.showError = _showError
         self.mDB = PyPoCaDB_Podcast.PyPoCaDB_Podcast(DB)
-        ''' CAST-ID '''
+        # CAST-ID
         self.mID = ID
+        self.mNAME = ""
+        self.mURL = ""
+        self.mStatus = ""
+        self.mDownloadPath = ""
         self.mDownloadPathBase = downloadPath[:3] + public_functions.f_replaceBadCharsPath(downloadPath[3:])
         self.reloadData()
 
@@ -182,13 +199,13 @@ class Podcast:
         try:
             cast = self.mDB.getPodcastInfosByCastID(self.mID)
         except:
-            cast = False
+            cast = None
             print("ERROR@Podcast::reloadData: castID=="+repr(self.mID))
-        if cast:        
-            ''' CAST-Name '''
+        if cast is not None:
+            # CAST-Name
             self.mNAME = cast["castname"]
         
-            ''' CAST-URL '''
+            # CAST-URL
             self.mURL = cast["casturl"]
             
             self.mStatus = cast["status"]
@@ -205,15 +222,16 @@ class Podcast:
 
 
     def updateNameByURL(self, url):
-        ''' holt sich die html-seite und benennt sich nach dem '<title>'-Tag um
+        """ holt sich die html-seite und benennt sich nach dem '<title>'-Tag um
             ausserdem speichert sich der Podcast die neue 'url'
-        '''
+        """
         self.mURL = url
-        self.mNAME = _getCastNameByURL(url)
+        self.mNAME = _getCastNameByURL(url, self.showError)
+
 
     def updateNameByFile(self, url):
         self.mURL = url
-        self.mNAME = _getCastNameByFile(url)
+        self.mNAME = _getCastNameByFile(url, self.showError)
 
 
     def getID(self):
@@ -221,8 +239,8 @@ class Podcast:
 
 
     def setName(self, name):
-        ''' aendert seinen Namen in "name" um
-        '''
+        """ aendert seinen Namen in "name" um
+        """
         self.mNAME = name
 
 
@@ -247,26 +265,22 @@ class Podcast:
 
 
     def getStatusStr(self):
-        result = ""
+        result = "?"
         if self.mStatus == 0:
             result = "-"
         elif self.mStatus == 1:
             result = "+"
-        else:
-            result = "?"
         return result
 
 
     def update(self, byFile, isShowEpisodes, isUpdateAll):
         isPodcastNamePrinted = False
-        if (not isUpdateAll) or (isShowEpisodes):
+        if (not isUpdateAll) or isShowEpisodes:
             self.printName()
             isPodcastNamePrinted = True
         # catch the url
-        htmlpage = ""
-        isHTML = False
         if byFile:
-            htmlpage = self.f_fileToString(self.mURL)
+            htmlpage = f_fileToString(self.mURL, self.showError)
             isHTML = True
         else:
             htmlpage, isHTML = f_urlToString(self.mURL, self.showError)
@@ -295,8 +309,8 @@ class Podcast:
                 self.mDB.writeChanges()
 
             # send new episodes to DB
-            if ( len(newEpisodes)>0 ):
-                if (not isPodcastNamePrinted):
+            if len(newEpisodes)>0:
+                if not isPodcastNamePrinted:
                     print()
                     self.printName() 
                 
@@ -319,13 +333,14 @@ class Podcast:
         return result
 
 
-    def sortEpisodes(self, episodes):
+    @staticmethod
+    def sortEpisodes(episodes):
         episodes.sort(key=getKey)
         return episodes
 
 
     def getChangedAndNewEpisodes(self, episodesDB, episodesURL):
-        ''' gleicht die vorhandenen Episoden mit denen vom Feed auf Änderungen ab '''
+        """ gleicht die vorhandenen Episoden mit denen vom Feed auf Änderungen ab """
         changedEpisodes = []
         newEpisodes = []
         if len(episodesDB):
@@ -333,7 +348,7 @@ class Podcast:
                 found = False
                 changed = False
                 for episodedb in episodesDB:
-                    if (episodeurl.episodeGUID == episodedb.episodeGUID):
+                    if episodeurl.episodeGUID == episodedb.episodeGUID:
                         found = True
                         if episodeurl.episodeURL != episodedb.episodeURL:
                             changed = True
@@ -344,6 +359,8 @@ class Podcast:
                     changedEpisodes.insert(0,episodeurl)
                 if not found:
                     newEpisodes.insert(0, episodeurl)
+        else:
+            newEpisodes = episodesURL
 
         # Listen sortieren
         if len(changedEpisodes)>0:
@@ -372,6 +389,8 @@ class Podcast:
                                     downloader = False                                
                                 elif downloadMethod=="intern":
                                     downloader = DownIntern(self)
+                                else:
+                                    downloader = False
                                     
                                 isError, statuscode, castFileNames = self.downloadEpisode(downloader, episode)
                             finally:
@@ -387,7 +406,7 @@ class Podcast:
                         except (KeyboardInterrupt, SystemExit):
                             self.mDB.updateEpisodeStatus(episode, "incomplete")
                             raise
-                        except urllib.error.URLError as e:
+                        except urllib.request.URLError as e:
                             print("Podcast@download(self, downloadMethod):")
                             print("ERROR: ", e.args[0])
                             print("method:   ", downloadMethod)
@@ -403,7 +422,8 @@ class Podcast:
             return downloadedEpisodes
 
 
-    def getFileExtension(self, url):
+    @staticmethod
+    def getFileExtension(url):
         foundAt = url.rfind(".")
         if foundAt > 0:
             result = url[foundAt:len(url)]
