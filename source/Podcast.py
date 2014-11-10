@@ -55,11 +55,17 @@ def f_decodeCastReader(reader, showError):
 
 def f_urlToString(url, showError):
     try:
-        htmldings = urllib.request.urlopen(url)
+        #headers = {'User-Agent':'PyPoCa_0.2'}
+        req = urllib.request.Request(url)
+        req.add_header('User-Agent','PyPoCa_0.2')
+        htmldings = urllib.request.urlopen(req)
+        #htmldings = urllib.request.urlopen(url, None, headers)
         return f_decodeCastReader(htmldings, showError), True
     except:
+        exctype, value = sys.exc_info()[:2]
+        if type(exctype) is urllib.error.HTTPError:
+            print("bla")
         if showError:
-            exctype, value = sys.exc_info()[:2]
             print("ERROR@Podcast::f_urlToString(url, showError)")
             print("ERROR: "+repr(exctype))
             print("       "+repr(value))
