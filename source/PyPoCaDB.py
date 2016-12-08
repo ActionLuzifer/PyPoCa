@@ -11,7 +11,12 @@ import source.Podcast as Podcast
 import source.SQLs as SQLs
 import sys
 import time
-        
+
+DB_NOERROR = 0
+DB_LOCKED  = 1
+DB_UNKNOWN = 2
+
+
 class PyPoCaDB:
     """ dumme Klasse, sendet nur die Daten an die Datenbank wie sie sie uebergeben bekommt
     """
@@ -27,9 +32,9 @@ class PyPoCaDB:
         self.mDBcursor = self.mDBconnection.cursor()
         self.mDBcursor.row_factory = sqlite3.Row
         result, errorMsg = self.writeCheck()
-        if result < 2 or 'no such table:' in errorMsg:
+        if result <= DB_LOCKED or 'no such table:' in errorMsg:
             self.mDBopen = True
-            if result < 1 or  'no such table:' in errorMsg:
+            if result == DB_NOERROR or 'no such table:' in errorMsg:
                 result = self.checkDB()
 
         return result
@@ -45,16 +50,16 @@ class PyPoCaDB:
         except sqlite3.OperationalError as e:
             errorMsg = e.args[0]
             if e.args[0] == "database is locked":
-                result = 1
+                result = DB_LOCKED
             else:
-                result = 2
+                result = DB_UNKNOWN
 
         except sqlite3.Error as e:
             errorMsg = e.args[0]
             print("An error occurred:", e.args[0])
             print("Fehler beim oeffnen der Datenbank")
             print()                    
-            result = 2
+            result = DB_UNKNOWN
 
         except:
             print("ERROR@PyPoCaDB::writeCheck(self):")
@@ -180,7 +185,7 @@ class PyPoCaDB:
     def executeCommand(self, command, args=None, hasArgs=False):
         try:
             if hasArgs:
-                self.mDBcursor.execute(command, (args,))
+                self.mDBcursor.execute(command, args)
             else:
                 self.mDBcursor.execute(command)
             return self.mDBcursor.fetchall()
