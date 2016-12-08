@@ -26,7 +26,6 @@ class PyPoCa:
         self.registeredsendErrorAddPodcast = []
         self.registeredsendErrorRemovePodcast = []
 
-        self.check4configfile(configxml)
         self.STR_CONFIG_RegExTemplateKey = "$KEY"
         self.STR_CONFIG_RegExTemplate = "(.)*<"+self.STR_CONFIG_RegExTemplateKey+">(?P<"+self.STR_CONFIG_RegExTemplateKey+">(.)*)</"+self.STR_CONFIG_RegExTemplateKey+">(.)*"
         self.STR_configxmlFilename = configxml
@@ -46,6 +45,7 @@ class PyPoCa:
         self.isUpdateAll = False
         self.mConfig = None
         self.mPodcasts = list()
+        self.check4configfile(configxml)
 
 
     def check4configfile(self, configxml):
