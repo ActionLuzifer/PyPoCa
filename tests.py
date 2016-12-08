@@ -20,10 +20,9 @@ def getTestSuiteFromModule(Module):
     return testsuite
 
 
-if __name__ == '__main__':
-    testsuite = getTestSuiteFromModule(RSS20Test)
-    runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
-    result = runner.run(testsuite)
-    
-    testSuite = unittest.TestLoader().loadTestsFromTestCase(PyPoCaTest.PyPoCaTestCase)
-    unittest.TextTestRunner(verbosity=2).run(testSuite)
+testsuite = getTestSuiteFromModule(RSS20Test)
+runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
+result = runner.run(testsuite)
+
+testSuite = unittest.TestLoader().loadTestsFromTestCase(PyPoCaTest.PyPoCaTestCase)
+unittest.TextTestRunner(verbosity=2).run(testSuite)
