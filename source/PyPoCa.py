@@ -258,7 +258,10 @@ class PyPoCa:
             try:
                 for podcast in self.mPodcasts:
                     if int(podcast.getStatus())==1:
+                        print("Update: {} - {}".format(podcast.getID(), podcast.getName()))
                         self.update(podcast)
+                    else:
+                        print("skip: {} - {}".format(podcast.getID(), podcast.getName()))
             except (KeyboardInterrupt, SystemExit):
                 raise
         finally:
@@ -483,6 +486,10 @@ class PyPoCa:
     def sendErrorAddPodcast(self, name, _url, exctype, value):
         for e in self.registeredsendErrorAddPodcast: 
             e.receiveErrorAddPodcast(self, name, _url, exctype, value)
+
+
+    def registerGUI(self, gui):
+        self.registersendErrorAddPodcast(gui)
 
 
     def registersendErrorAddPodcast(self, gui):

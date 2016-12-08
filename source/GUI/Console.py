@@ -18,8 +18,3 @@ class Console(GUI.GUI):
         """
         #super.__init__(self)
         super(Console, self).__init__()
-
-
-    def register(self, where):
-        where.registersendErrorAddPodcast(self)
- 
