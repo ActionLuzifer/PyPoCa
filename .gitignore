@@ -4,3 +4,6 @@
 .settings
 config.xml
 pypoca.sqlite
+.idea
+backup/
+podcasts/
