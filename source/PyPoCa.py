@@ -240,13 +240,13 @@ class PyPoCa:
             print("       "+repr(value))
 
 
-    def update(self, podcast):
+    def updatePodcast(self, podcast):
         try:
             podcast.update(False, not self.mConfig[self.STR_showOnlyUpdatesWithNewEpisodes], self.isUpdateAll)
             self.mDB.writeChanges()
         except:
             exctype, value = sys.exc_info()[:2]
-            print("ERROR@PyPoCa::update(self, podcast)")
+            print("ERROR@PyPoCa::updatePodcast(self, podcast)")
             print("Typ:  "+repr(exctype))
             print("Wert: "+repr(value))
             print()
@@ -259,7 +259,7 @@ class PyPoCa:
                 for podcast in self.mPodcasts:
                     if int(podcast.getStatus())==1:
                         print("Update: {} - {}".format(podcast.getID(), podcast.getName()))
-                        self.update(podcast)
+                        self.updatePodcast(podcast)
                     else:
                         print("skip: {} - {}".format(podcast.getID(), podcast.getName()))
             except (KeyboardInterrupt, SystemExit):
@@ -272,7 +272,7 @@ class PyPoCa:
         try:
             podcast = self.getPodcastByID(castID)
             if podcast:
-                self.update(podcast)
+                self.updatePodcast(podcast)
         except (KeyboardInterrupt, SystemExit):
             raise
 
